@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "마음의 빙산",
@@ -18,9 +19,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#F7F3EF"
     },
-    "plugins": [
-      "@react-native-async-storage/async-storage"
-    ],
     "icon": "./icon.png"
   }
 }
