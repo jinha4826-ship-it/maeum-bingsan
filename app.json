@@ -3,9 +3,15 @@
   "expo": {
     "name": "마음의 빙산",
     "slug": "maeum-bingsan",
+    "owner": "maeumbingsans-team",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "sdkVersion": "54.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.maeumbingsan.app",
@@ -19,6 +25,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#F7F3EF"
     },
-    "icon": "./icon.png"
+    "icon": "./icon.png",
+    "extra": {
+      "eas": {
+        "projectId": "cc40e76a-bb97-4394-90c4-5dfff6baff89"
+      }
+    }
   }
 }
+
