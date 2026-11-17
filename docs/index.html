@@ -184,7 +184,9 @@ details.ev[open] summary .ev-a{transform:rotate(180deg)}
    마음의 빙산 v3.1 — 심층 리포트(NVC·CBT) + 감정 패턴 + 빙하 지도
    + 매일 체크인 리마인더(브라우저 알림/배너) + 월간 정밀 리포트 미리보기
    + 기관·스터디 코드(B2B 파일럿 프로토타입)
-   · 기록은 이 기기의 localStorage에만 저장됩니다.
+   · 기록은 기본으로 이 기기의 localStorage에만 저장됩니다.
+   · 설정에서 '클라우드 동기화'에 로그인하면, 그때만 기록 사본이 내
+     Supabase 계정(서울 리전)에 저장됩니다(행 수준 보안으로 본인 행만 접근).
    · Gemini API 키도 이 브라우저 localStorage에만 저장되고,
      사용자가 직접 'AI 코멘트'를 요청할 때만 Google 서버로 전송됩니다.
    · 알림 시간·기관 코드·사전 알림 신청도 모두 이 기기에만 남고
@@ -366,6 +368,7 @@ function saveRecord(){
     records.unshift(rec);
   }
   persist();
+  if(rec) cloudPushOne(rec);
   deepId=rec?rec.id:null;
   aiState={loading:false,error:'',model:''};
   renderDeep(); show('deep');
@@ -453,6 +456,7 @@ function saveQuick(){
   var rec={id:Date.now(),date:new Date().toISOString(),situation:note,feeling:quickFeels.slice(0,QUICK_MAX),need:[],other:'',action:'',ai:null};
   records.unshift(rec);
   persist();
+  cloudPushOne(rec);
   quickFeels=[]; if(el) el.value='';
   renderQuick();
   deepId=rec.id;
@@ -508,9 +512,9 @@ function editRecord(id){
   idx=0; renderStep(); show('write');
 }
 function deleteRecord(id){
-  if(!confirm('이 기록을 삭제할까요? 되돌릴 수 없어요.')) return;
+  if(!confirm('이 기록을 삭제할까요? 되돌릴 수 없어요.'+(cloudOn()?'\n클라우드에 백업된 사본도 함께 지워져요.':''))) return;
   records=records.filter(function(x){return x.id!==id});
-  persist(); show('records');
+  persist(); cloudDeleteOne(id); show('records');
 }
 
 /* ---------- 심층 리포트 엔진 ---------- */
@@ -1744,17 +1748,251 @@ function showImportModal(arr){
   function close(){ ov.remove(); }
   document.getElementById('impMerge').onclick=function(){
     var ids={},i; for(i=0;i<records.length;i++) ids[records[i].id]=1;
-    var added=0;
-    arr.forEach(function(r){ if(!ids[r.id]){ records.push(r); ids[r.id]=1; added++; } });
+    var added=0, addedRecs=[];
+    arr.forEach(function(r){ if(!ids[r.id]){ records.push(r); ids[r.id]=1; added++; addedRecs.push(r); } });
     records.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
-    persist(); close(); renderReport(); toast(added+'개를 합쳤어요 (중복 '+(arr.length-added)+'개 제외)');
+    persist(); cloudPushMany(addedRecs).catch(function(){}); close(); renderReport(); toast(added+'개를 합쳤어요 (중복 '+(arr.length-added)+'개 제외)');
   };
   document.getElementById('impReplace').onclick=function(){
     if(!confirm('지금 기기의 기록을 이 파일의 기록으로 바꿀까요? 기존 기록은 사라져요.')) return;
+    var oldIds=records.map(function(r){return r.id});
     records=arr.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date)});
-    persist(); close(); renderReport(); toast('기록을 교체했어요');
+    persist(); close(); renderReport(); cloudAfterReplace(oldIds); toast('기록을 교체했어요');
   };
   document.getElementById('impCancel').onclick=close;
+}
+
+/* =========================================================
+   ☁️ 클라우드 동기화 (선택) · Supabase Auth + PostgREST
+   · 로그인하지 않으면 아무 것도 전송되지 않고 이 기기에만 저장됩니다.
+   · 로그인하면 RLS(행 수준 보안) 덕분에 내 계정의 행만 읽고 쓸 수 있어요.
+   · anon(publishable) 키는 클라이언트 공개용이고, 실제 권한은 로그인
+     사용자 토큰 + RLS가 결정합니다.
+   ========================================================= */
+var LS_CLOUD='maeum-cloud', LS_CLOUD_TOMB='maeum-cloud-tomb', LS_CLOUD_STAMP='maeum-cloud-stamp';
+var SB_URL='https://gcugcphbpcxjbkbddacc.supabase.co';
+var SB_KEY='sb_publishable_pmYdrdNXfGHRGjX-6XHyww_3sVTXaDR';
+var cloud={email:'',uid:'',token:'',refresh:'',exp:0,at:0,msg:'',err:'',busy:false,auth:false};
+
+function cloudLoad(){
+  try{
+    var s=JSON.parse(localStorage.getItem(LS_CLOUD)||'null');
+    if(s&&typeof s==='object'){
+      cloud.email=String(s.email||''); cloud.uid=String(s.uid||'');
+      cloud.token=String(s.token||''); cloud.refresh=String(s.refresh||'');
+      cloud.exp=Number(s.exp)||0; cloud.at=Number(s.at)||0;
+    }
+  }catch(e){}
+}
+function cloudPersist(){
+  try{ localStorage.setItem(LS_CLOUD,JSON.stringify({email:cloud.email,uid:cloud.uid,token:cloud.token,refresh:cloud.refresh,exp:cloud.exp,at:cloud.at})); }catch(e){}
+}
+function cloudOn(){ return !!(cloud.email&&(cloud.refresh||cloud.token)); }
+function cloudTime(ts){ try{ return new Date(ts).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } }
+function cloudTomb(){ try{ var t=JSON.parse(localStorage.getItem(LS_CLOUD_TOMB)||'{}'); return (t&&typeof t==='object')?t:{}; }catch(e){ return {}; } }
+function cloudTombSet(o){ try{ localStorage.setItem(LS_CLOUD_TOMB,JSON.stringify(o)); }catch(e){} }
+function cloudStamps(){ try{ var t=JSON.parse(localStorage.getItem(LS_CLOUD_STAMP)||'{}'); return (t&&typeof t==='object')?t:{}; }catch(e){ return {}; } }
+function cloudStampSet(id,iso){
+  try{ var t=cloudStamps(); if(iso) t[String(id)]=iso; else delete t[String(id)]; localStorage.setItem(LS_CLOUD_STAMP,JSON.stringify(t)); }catch(e){}
+}
+function cloudStampGet(id){ var t=cloudStamps(); return t[String(id)]||''; }
+function cloudLocalTime(r){ var s=cloudStampGet(r.id); var t=s?new Date(s).getTime():0; if(!t) t=new Date(r.date).getTime()||0; return t; }
+
+function sbFetch(path,opts){
+  opts=opts||{};
+  var headers={'apikey':SB_KEY};
+  if(cloud.token) headers['Authorization']='Bearer '+cloud.token;
+  var o=Object.assign({},opts);
+  o.headers=Object.assign(headers,opts.headers||{});
+  return fetch(SB_URL+path,o).then(function(res){
+    return res.text().then(function(t){
+      var body=null;
+      try{ body=t?JSON.parse(t):null; }catch(e){ body=t||null; }
+      if(!res.ok){
+        var msg=(body&&(body.msg||body.message||body.error_description||body.error))||('HTTP '+res.status);
+        var err=new Error(String(msg)); err.status=res.status; err.body=body; throw err;
+      }
+      return body;
+    });
+  });
+}
+function sbAuth(path,body){
+  return sbFetch('/auth/v1/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+}
+function cloudApplySession(d){
+  d=d||{};
+  cloud.token=d.access_token||'';
+  if(d.refresh_token) cloud.refresh=d.refresh_token;
+  cloud.exp=(Number(d.expires_at)||0)*1000||(Date.now()+((Number(d.expires_in)||3600)*1000));
+  if(d.user){ cloud.uid=d.user.id||cloud.uid; cloud.email=d.user.email||cloud.email; }
+  cloudPersist();
+}
+function cloudSignUp(email,pw){
+  return sbAuth('signup',{email:email,password:pw}).then(function(d){
+    if(!d||!d.access_token) throw new Error('확인 메일 인증이 필요해요. 메일함에서 링크를 누른 뒤 로그인해 주세요.');
+    cloud.email=email; cloudApplySession(d); return true;
+  });
+}
+function cloudSignIn(email,pw){
+  return sbAuth('token?grant_type=password',{email:email,password:pw}).then(function(d){
+    cloud.email=email; cloudApplySession(d); return true;
+  });
+}
+function cloudToken(){
+  if(cloud.token && cloud.exp && Date.now()<cloud.exp-60000) return Promise.resolve(cloud.token);
+  if(!cloud.refresh) return Promise.reject(new Error('다시 로그인해 주세요.'));
+  return sbAuth('token?grant_type=refresh_token',{refresh_token:cloud.refresh}).then(function(d){
+    cloudApplySession(d); return cloud.token;
+  });
+}
+function cloudRowOf(r){
+  return {id:String(r.id),payload:r,updated_at:cloudStampGet(r.id)||new Date().toISOString()};
+}
+function cloudPushMany(arr){
+  if(!cloudOn()||!arr||!arr.length) return Promise.resolve();
+  var now=new Date().toISOString();
+  arr.forEach(function(r){ cloudStampSet(r.id,now); });
+  return cloudToken().then(function(){
+    return sbFetch('/rest/v1/iceberg_records',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(arr.map(cloudRowOf))});
+  });
+}
+function cloudPushOne(rec){
+  if(!cloudOn()||!rec) return;
+  cloudPushMany([rec]).catch(function(){});
+}
+function cloudDeleteOne(id){
+  if(!cloudOn()) return;
+  var t=cloudTomb(); t[String(id)]=new Date().toISOString(); cloudTombSet(t);
+  cloudStampSet(id,'');
+  cloudToken().then(function(){
+    return sbFetch('/rest/v1/iceberg_records?id=eq.'+encodeURIComponent(String(id)),{method:'DELETE',headers:{'Prefer':'return=minimal'}});
+  }).catch(function(){});
+}
+function cloudSync(silent){
+  if(!cloudOn()) return Promise.reject(new Error('먼저 로그인해 주세요.'));
+  if(cloud.busy) return Promise.resolve(null);
+  cloud.busy=true; cloud.err='';
+  if(!silent){ cloud.msg='동기화 중…'; renderSettings(); }
+  var tomb=cloudTomb();
+  return cloudToken().then(function(){
+    return sbFetch('/rest/v1/iceberg_records?select=id,payload,updated_at');
+  }).then(function(rows){
+    rows=Array.isArray(rows)?rows:[];
+    var byId={}, cloudById={}, i;
+    for(i=0;i<records.length;i++) byId[String(records[i].id)]=records[i];
+    rows.forEach(function(r){ if(r&&r.id!=null) cloudById[String(r.id)]=r; });
+    var added=0, adopted=0, toPush=[], toDelete=[];
+    rows.forEach(function(row){
+      var id=String(row.id);
+      if(tomb[id]){ toDelete.push(id); return; }
+      var rec=row.payload;
+      if(!rec||typeof rec!=='object') return;
+      rec=normalizeRecord(rec);
+      var srv=new Date(row.updated_at).getTime()||0;
+      var cur=byId[id];
+      if(!cur){ records.push(rec); byId[id]=rec; added++; if(row.updated_at) cloudStampSet(id,row.updated_at); return; }
+      var loc=cloudLocalTime(cur);
+      if(srv>loc+2000 && JSON.stringify(cur)!==JSON.stringify(rec)){
+        cur.situation=rec.situation; cur.feeling=rec.feeling; cur.need=rec.need;
+        cur.other=rec.other; cur.action=rec.action; cur.ai=rec.ai;
+        cur.date=rec.date; cloudStampSet(id,row.updated_at); adopted++;
+      }
+    });
+    records.forEach(function(r){
+      var id=String(r.id);
+      if(tomb[id]) return;
+      var crow=cloudById[id];
+      var loc=cloudLocalTime(r);
+      var srv=crow?(new Date(crow.updated_at).getTime()||0):0;
+      if(!crow||loc>=srv-2000) toPush.push(r);
+    });
+    var chain=Promise.resolve();
+    if(toPush.length){
+      chain=chain.then(function(){
+        var now=new Date().toISOString();
+        toPush.forEach(function(r){ cloudStampSet(r.id,now); });
+        return sbFetch('/rest/v1/iceberg_records',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(toPush.map(cloudRowOf))});
+      });
+    }
+    toDelete.forEach(function(id){
+      chain=chain.then(function(){
+        return sbFetch('/rest/v1/iceberg_records?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{'Prefer':'return=minimal'}});
+      }).catch(function(){});
+    });
+    return chain.then(function(){
+      records.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+      persist();
+      cloud.at=Date.now(); cloudPersist();
+      cloud.msg='동기화 완료 · '+records.length+'개'+(added?(' · 클라우드에서 '+added+'개 받음'):'')+(toPush.length?(' · '+toPush.length+'개 올림'):'');
+      return {added:added,pushed:toPush.length,adopted:adopted};
+    });
+  }).then(function(v){
+    cloud.busy=false; if(!silent) renderSettings(); return v;
+  },function(e){
+    cloud.busy=false;
+    cloud.err='동기화하지 못했어요: '+(e&&e.message?e.message:'알 수 없는 오류');
+    if(!silent) renderSettings();
+    throw e;
+  });
+}
+function cloudCreds(){
+  var e=document.getElementById('cloudEmail'), p=document.getElementById('cloudPass');
+  return {email:String((e&&e.value)||'').trim(), pw:String((p&&p.value)||'')};
+}
+function cloudAct(kind){
+  if(cloud.auth) return;
+  var c=cloudCreds();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email)){ cloud.err='이메일 주소를 확인해 주세요.'; cloud.msg=''; renderSettings(); return; }
+  if(c.pw.length<6){ cloud.err='비밀번호는 6자 이상으로 정해 주세요.'; cloud.msg=''; renderSettings(); return; }
+  cloud.err=''; cloud.auth=true; cloud.msg=(kind==='signup'?'가입하는 중…':'로그인하는 중…'); renderSettings();
+  var job=(kind==='signup')?cloudSignUp(c.email,c.pw):cloudSignIn(c.email,c.pw);
+  job.then(function(){
+    cloud.msg='연결됐어요. 기록을 합치는 중…'; renderSettings();
+    return cloudSync(true);
+  }).then(function(){
+    cloud.auth=false; cloud.msg='클라우드에 연결했어요 · '+records.length+'개 보관 중'; renderSettings(); toast('클라우드에 연결했어요');
+  }).catch(function(e){
+    cloud.auth=false;
+    cloud.err=(kind==='signup'?'회원가입':'로그인')+' 실패: '+(e&&e.message?e.message:'알 수 없는 오류');
+    renderSettings();
+  });
+}
+function cloudNow(){
+  if(cloud.busy) return;
+  cloud.err='';
+  cloudSync(false).then(function(){ toast('클라우드와 동기화했어요'); }).catch(function(){});
+}
+function cloudLogout(){
+  if(!confirm('이 기기에서 클라우드 연결을 해제할까요?\n기기에 있는 기록은 그대로 남아요.')) return;
+  cloud={email:'',uid:'',token:'',refresh:'',exp:0,at:0,msg:'클라우드 연결을 해제했어요',err:'',busy:false,auth:false};
+  try{ localStorage.removeItem(LS_CLOUD); }catch(e){}
+  renderSettings(); toast('클라우드 연결을 해제했어요');
+}
+function cloudAfterReplace(oldIds){
+  if(!cloudOn()) return;
+  var tomb=cloudTomb(), now=new Date().toISOString(), kept={};
+  records.forEach(function(r){ kept[String(r.id)]=1; });
+  (oldIds||[]).forEach(function(id){ if(!kept[String(id)]) tomb[String(id)]=now; });
+  cloudTombSet(tomb);
+  cloudSync(true).catch(function(){});
+}
+function cloudHTML(){
+  var h='<div class="sec"><div class="sec-h">☁️ 클라우드 동기화 <span class="bubble" style="margin-left:2px">선택</span></div>';
+  h+='<p>이메일로 로그인하면 기록 사본이 클라우드에 백업돼 기기를 바꾸거나 앱을 지워도 이어져요. <b>로그인하지 않아도</b> 지금처럼 이 기기에만 저장되고 모든 기능이 그대로 동작해요.</p>';
+  if(cloudOn()){
+    h+='<div class="orgrow" style="border-top:0;padding-top:0"><span>연결된 계정</span><b>'+esc(cloud.email)+'</b></div>';
+    h+='<div class="badgeline">'+(cloud.at?('🕒 마지막 동기화 '+esc(cloudTime(cloud.at))):'🕒 아직 동기화 전')+'</div>';
+    h+='<div class="row" style="margin-top:10px"><button class="btn small" onclick="cloudNow()">'+(cloud.busy?'동기화 중…':'지금 동기화')+'</button><button class="btn secondary small" onclick="cloudLogout()">로그아웃</button></div>';
+  }else{
+    h+='<input class="input" id="cloudEmail" type="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="이메일 주소">';
+    h+='<input class="input" id="cloudPass" type="password" autocomplete="current-password" spellcheck="false" placeholder="비밀번호 (6자 이상)" style="margin-top:8px" onkeydown="if(event.key===\'Enter\'){event.preventDefault();cloudAct(\'signin\');}">';
+    h+='<div class="row" style="margin-top:9px"><button class="btn small" onclick="cloudAct(\'signin\')">로그인</button><button class="btn secondary small" onclick="cloudAct(\'signup\')">회원가입</button></div>';
+  }
+  if(cloud.msg) h+='<div class="okline" style="margin-top:9px">'+esc(cloud.msg)+'</div>';
+  if(cloud.err) h+='<div class="errline" style="margin-top:9px">'+esc(cloud.err)+'</div>';
+  h+='<div class="note">로그인하면 기록이 <b>내 계정에만</b> 저장되고 다른 사람은 볼 수 없어요. 비밀번호는 앱에 저장되지 않고 로그인 유지용 토큰만 이 브라우저에 남아요. 기록은 서버(Supabase · 서울 리전)에 암호화된 연결로 전송되고, 기기에 있는 원본은 그대로 남아요.<br>문의·삭제: 계정 탈퇴나 자료 삭제를 원하면 말씀해 주세요.</div>';
+  h+='</div>';
+  return h;
 }
 
 /* ---------- 설정 ---------- */
@@ -1793,7 +2031,8 @@ function renderSettings(){
   html+='</div>';
   html+='<div class="sec"><div class="sec-h">⚙︎ 자동 코멘트</div><p>기록을 저장할 때마다 AI 코멘트를 자동으로 요청할지 정해요. 끄면 원할 때만 요청해서 호출을 아낄 수 있어요.</p><button class="btn '+(settings.aiAuto?'':'secondary')+' small" onclick="toggleAuto()">'+(settings.aiAuto?'자동 요청 켜짐 · 누르면 끄기':'자동 요청 꺼짐 · 누르면 켜기')+'</button></div>';
   html+='<div class="sec"><div class="sec-h">📦 데이터</div><p>총 '+records.length+'개의 기록이 이 기기에 저장돼 있어요.</p><div class="row"><button class="btn secondary small" onclick="exportData()">JSON 내보내기</button><button class="btn secondary small" onclick="triggerImport()">JSON 가져오기</button></div></div>';
-  html+='<p class="quiet" style="padding:0 4px">‘마음의 빙산’ v3.1 · 기록과 알림 설정은 서버로 가지 않고 이 기기에만 남아요.</p>';
+  html+=cloudHTML();
+  html+='<p class="quiet" style="padding:0 4px">‘마음의 빙산’ v3.1 · 기록은 이 기기에 남고, 클라우드 동기화에 로그인하면 내 계정에도 사본이 보관돼요.</p>';
   document.getElementById('settingsContent').innerHTML=html;
 }
 function saveKey(){
@@ -2074,4 +2313,6 @@ var layerCopy={situation:'상황은 빙산의 꼭대기처럼 겉으로 드러�
 renderRecent();
 loadReminder();
 startRemindLoop();
+cloudLoad();
+if(cloudOn()) cloudSync(true).catch(function(){});
 </script></body></html>
