@@ -1207,8 +1207,7 @@ function buildShareCard(){
   x.fillStyle=T.peak[1]; x.globalAlpha=.85; x.fill(); x.globalAlpha=1;
   /* 봉우리별 파스텔 */
   peaks.forEach(function(p){
-    if(!p.n) return;
-    var tone=themeOfEmotion(p.n);
+    var tone=p.n?themeOfEmotion(p.n):T;
     peakPath(p);
     var tg=x.createLinearGradient(0,wy-p.h,0,wy);
     tg.addColorStop(0,tone.peak[0]); tg.addColorStop(1,tone.peak[1]);
