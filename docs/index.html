@@ -1329,6 +1329,18 @@ function cardDateStr(){
   var d=new Date();
   return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
 }
+function showCardSheet(url,name){
+  var ov=document.createElement('div');
+  ov.className='overlay';
+  ov.innerHTML='<div class="modal" style="max-width:400px;max-height:88vh;overflow:auto"><h3>빙하 카드가 완성됐어요</h3>'
+    +'<p>이미지를 <b>길게 눌러</b> 사진에 저장하거나, 아래 <b>공유</b>로 저장해 주세요.</p>'
+    +'<img src="'+url+'" alt="내 빙하 카드" style="width:100%;border-radius:16px;display:block;margin:0 0 12px">'
+    +'<div class="row"><a class="btn small" href="'+url+'" download="'+esc(name)+'" style="text-decoration:none;display:flex;align-items:center;justify-content:center">파일로 저장</a><button class="btn secondary small" id="cardClose">닫기</button></div></div>';
+  document.body.appendChild(ov);
+  function close(){ ov.remove(); try{ URL.revokeObjectURL(url); }catch(e){} }
+  document.getElementById('cardClose').onclick=close;
+  ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
+}
 function saveShareCard(){
   var c;
   try{ c=buildShareCard(); }catch(e){ toast('카드를 만들지 못했어요: '+(e&&e.message?e.message:'알 수 없는 오류')); return; }
@@ -1336,10 +1348,13 @@ function saveShareCard(){
   var name='maeum-bingsan-card-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'.png';
   function done(blob){
     if(!blob){ toast('이미지를 만들지 못했어요'); return; }
+    var url=URL.createObjectURL(blob);
+    var ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='Macintosh'&&navigator.maxTouchPoints>1);
+    if(ios){ showCardSheet(url,name); toast('빙하 카드가 완성됐어요 · 길게 눌러 저장'); return; }
     var a=document.createElement('a');
-    a.href=URL.createObjectURL(blob); a.download=name;
+    a.href=url; a.download=name;
     document.body.appendChild(a); a.click();
-    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },2000);
+    setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); },2000);
     toast('빙하 카드를 저장했어요 · '+name);
   }
   if(c.toBlob) c.toBlob(done,'image/png');
