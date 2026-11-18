@@ -3296,6 +3296,7 @@ if(cloudOn()) cloudSync(true).catch(function(){});
 function esc2(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function pctOf(a,b){ return b? Math.round(a/b*100) : 0; }
 function nowISO(){ return new Date().toISOString(); }
+function dshort(d){ return new Date(d).toLocaleDateString(isEN()?'en-US':'ko-KR',{month:'long',day:'numeric'}); }
 function idOf(r){ return r? r.id : null; }
 
 /* ---------- 감정 (기존 키 그대로 — 저장된 기록과 호환) ---------- */
