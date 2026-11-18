@@ -3567,6 +3567,7 @@ function bindPicks(){
   for(i=0;i<els.length;i++){
     (function(el){
       el.addEventListener('click',function(){
+        collectCurrent();
         var k=el.getAttribute('data-pick');
         if(idx===0){ draft.situation.category=(draft.situation.category===k?'':k); }
         else if(idx===1){ draft.emotions=draft.emotions.indexOf(k)>=0? draft.emotions.filter(function(x){return x!==k}) : draft.emotions.concat([k]); }
@@ -3577,10 +3578,11 @@ function bindPicks(){
     })(els[i]);
   }
 }
-function pickUnsureEmotion(){ draft.emotions=[]; toast(tr('감정은 넘어가도 괜찮아요','It is okay to skip the feeling')); nextStep(); }
-function pickUnsureNeed(){ draft.needs=[]; draft.needUnsure=true; renderStep(); toast(tr('‘아직 모르겠어요’로 표시했어요','Marked as “not sure yet”')); }
+function pickUnsureEmotion(){ collectCurrent(); draft.emotions=[]; toast(tr('감정은 넘어가도 괜찮아요','It is okay to skip the feeling')); nextStep(); }
+function pickUnsureNeed(){ collectCurrent(); draft.needs=[]; draft.needUnsure=true; renderStep(); toast(tr('‘아직 모르겠어요’로 표시했어요','Marked as “not sure yet”')); }
 function addCustomNeed(){
   var el=document.getElementById('needCustom'); if(!el) return;
+  collectCurrent();
   var v=String(el.value||'').replace(/\s+/g,' ').trim(); if(!v) return;
   if(draft.needs.indexOf(v)<0) draft.needs=draft.needs.concat([v]);
   draft.needUnsure=false; el.value=''; renderStep();
@@ -4366,9 +4368,12 @@ function renderLayer(){
     return p.key===focusKey;
   });
   var pat=pats[0]||null;
+  var hiddenPat=pats.filter(function(p){return p.hidden;})[0]||null;
+  if(pat&&pat.hidden){ pat=null; }
   html+='<div class="card"><div class="card-title">'+esc(tr('이 층의 항목','Items in this layer'))+'</div><div class="chips">'
     +tops.slice(0,8).map(function(x){ return '<button class="chip '+(x.key===focusKey?'selected':'')+'" onclick="layerFocus=\''+esc(x.key)+'\';renderLayer()">'+esc(itemLabel(layerKind,x.key))+' <b style="opacity:.55">'+x.count+'</b></button>'; }).join('')+'</div>';
   if(pat) html+='<div style="margin-top:12px">'+patternCard(pat,{hideFb:false})+'</div>';
+  else if(hiddenPat) html+='<p class="quiet" style="margin-top:12px">'+tr('이 항목의 단서는 ‘내 마음과 달라요’로 숨겨 두었어요. 기록이 더 쌓여 내용이 달라지면 다시 보여드릴게요.','You hid this clue as “not like me”. It will come back if new entries change what it says.')+'</p>';
   else html+='<p class="quiet" style="margin-top:12px">'+tr('이 항목은 아직 ‘개별 기록’ 단계예요. 서로 다른 날에 세 번 이상 겹치면 반복 단서로 보여드릴게요.','This item is still at the “single entry” stage. When it repeats three or more times on different days, it appears as a clue.')+'</p>';
   var ev=pat? evidenceOfPattern(pat) : records.filter(function(r){
     if(layerKind==='situation') return sitCatOf(r)===focusKey;
@@ -4467,7 +4472,7 @@ function renderReport(){
     q = topEmo? ('Next month, when “'+emotionLabel(topEmo)+'” comes up, could you pause and ask what wish sits under it'+(topNeed?' — maybe “'+needLabel(topNeed)+'”':'')+'?')
               : 'Next month, could you write one sentence about what you wanted, even on an ordinary day?';
   }else{
-    q = topEmo? ('다음 달에 ‘'+emotionLabel(topEmo)+'’'+josa(emotionLabel(topEmo),'이','가')+' 올라오면, 그 아래에 어떤 바람이 있는지 한 번만 물어봐 줄래요'+(topNeed?' — ‘'+needLabel(topNeed)+'’일 수도 있어요':'')+'?')
+    q = topEmo? ('다음 달에 ‘'+emotionLabel(topEmo)+'’'+josa(emotionLabel(topEmo),'이','가')+' 올라오면, 그 아래에 어떤 바람이 있는지 한 번만 물어봐 줄래요?'+(topNeed?' 그게 ‘'+needLabel(topNeed)+'’일 수도 있어요.':''))
               : '다음 달에는 평범한 날에도 ‘내가 원했던 것’을 한 문장으로 남겨볼까요?';
   }
   html+='<div class="card"><div class="card-title">✦ '+tr('다음 달 질문','A question for next month')+'</div><div class="qbox">'+esc(q)+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 정해두지 않아도 돼요. 기록하다 보면 자연스럽게 답이 보여요.','You don’t have to answer it now. It tends to answer itself as you write.')+'</p></div>';

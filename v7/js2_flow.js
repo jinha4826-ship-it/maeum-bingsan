@@ -97,6 +97,7 @@ function bindPicks(){
   for(i=0;i<els.length;i++){
     (function(el){
       el.addEventListener('click',function(){
+        collectCurrent();
         var k=el.getAttribute('data-pick');
         if(idx===0){ draft.situation.category=(draft.situation.category===k?'':k); }
         else if(idx===1){ draft.emotions=draft.emotions.indexOf(k)>=0? draft.emotions.filter(function(x){return x!==k}) : draft.emotions.concat([k]); }
@@ -107,10 +108,11 @@ function bindPicks(){
     })(els[i]);
   }
 }
-function pickUnsureEmotion(){ draft.emotions=[]; toast(tr('감정은 넘어가도 괜찮아요','It is okay to skip the feeling')); nextStep(); }
-function pickUnsureNeed(){ draft.needs=[]; draft.needUnsure=true; renderStep(); toast(tr('‘아직 모르겠어요’로 표시했어요','Marked as “not sure yet”')); }
+function pickUnsureEmotion(){ collectCurrent(); draft.emotions=[]; toast(tr('감정은 넘어가도 괜찮아요','It is okay to skip the feeling')); nextStep(); }
+function pickUnsureNeed(){ collectCurrent(); draft.needs=[]; draft.needUnsure=true; renderStep(); toast(tr('‘아직 모르겠어요’로 표시했어요','Marked as “not sure yet”')); }
 function addCustomNeed(){
   var el=document.getElementById('needCustom'); if(!el) return;
+  collectCurrent();
   var v=String(el.value||'').replace(/\s+/g,' ').trim(); if(!v) return;
   if(draft.needs.indexOf(v)<0) draft.needs=draft.needs.concat([v]);
   draft.needUnsure=false; el.value=''; renderStep();
