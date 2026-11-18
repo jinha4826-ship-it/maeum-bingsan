@@ -437,7 +437,8 @@ function show(id){
   for(i=0;i<views.length;i++) views[i].classList.remove('active');
   document.getElementById(id).classList.add('active');
   var btns=document.querySelectorAll('.navbtn');
-  for(i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.view===id);
+  var navId=(id==='type')?'map':id;
+  for(i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.view===navId);
   if(id==='records') renderRecords();
   if(id==='home'){ renderHomeTop(); renderRecent(); }
   if(id==='report') renderReport();
