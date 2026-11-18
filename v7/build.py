@@ -51,6 +51,7 @@ head = '''<!doctype html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>window.__maeumErrors=[];window.addEventListener('error',function(e){try{window.__maeumErrors.push(String(e.message||e))}catch(x){}});window.addEventListener('unhandledrejection',function(e){try{window.__maeumErrors.push('rejection:'+String(e.reason))}catch(x){}});</script>
 <style>
 '''
 
