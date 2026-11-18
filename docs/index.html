@@ -883,7 +883,9 @@ function aiPayloadOf(r){
 function aiSummaryHTML(r){
   if(aiState.loading) return '<div class="quiet"><span class="spin"></span>'+tr('AI가 마음과 방어기제를 읽고 있어요…','AI is reading your feeling and defence…')+'</div>';
   if(aiState.localText) return '<div class="ai-text" style="font-size:12.5px">'+esc(cut(aiState.localText.comment,110))+'</div><button class="btn secondary small" style="margin-top:9px" onclick="askAI()">'+tr('AI 서버 다시 시도','Try the AI server again')+'</button>';
-  if(r.ai&&r.ai.comment) return '<div class="ai-text" style="font-size:12.5px">'+esc(cut(r.ai.comment,110))+'</div><button class="btn secondary small" style="margin-top:9px" onclick="scrollAI()">'+tr('AI 솔루션 전체 보기 ↓','See the full AI solution ↓')+'</button>';
+  if(r.ai&&r.ai.comment) return '<div class="ai-text" style="font-size:12.5px">'+esc(cut(r.ai.comment,110))+'</div>'
+    +((r.ai.lang&&r.ai.lang!==LANG)?'<div class="quiet" style="margin-top:6px">'+tr('영어로 받은 코멘트예요. 아래에서 다시 받으면 이 언어로 새로 받아요.','This comment was received in Korean. Ask again below for one in English.')+'</div>':'')
+    +'<button class="btn secondary small" style="margin-top:9px" onclick="scrollAI()">'+tr('AI 솔루션 전체 보기 ↓','See the full AI solution ↓')+'</button>';
   return '<button class="btn small" onclick="askAIAndScroll()">'+tr('✦ AI 심리 솔루션 받기 · 해부 + 오늘 할 3가지','✦ Get the AI solution · analysis + 3 things for today')+'</button>'
     +'<p class="quiet" style="margin-top:8px">'+tr('키 없이 바로 동작해요. 요청할 때만 이 기록이 AI 서버로 전송되고 서버에 저장되지 않아요.','Works with no key. Only when you ask is this entry sent to the AI server, and it is not stored there.')+'</p>';
 }
