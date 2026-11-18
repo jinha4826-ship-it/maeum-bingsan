@@ -24,3 +24,10 @@ python3 tests/unit_patterns.py                          # 패턴 엔진 22개 �
 ## 테스트
 - `tests/unit_patterns.py` — quickjs로 DOM 없이 analyzePatterns 검증(22 checks)
 - `tests/qa_live.py` — Playwright 회귀 테스트(브라우저 의존 라이브러리가 있는 환경에서 실행)
+
+## 배포·검증 상태 (2026-11-18)
+- 라이브: `https://jinha4826-ship-it.github.io/maeum-bingsan/?v=7` (GitHub Pages, main /docs)
+- Worker: `https://maeum-bingsan-ai.cba4826.workers.dev` → `GET /` 가 `version:7`, `mode:["sentence"]` 반환
+- 서비스 워커 캐시: `docs/sw.js` `SW_VERSION = '2026-11-18-v7'`
+- 패턴 엔진 단위 테스트: `python3 tests/unit_patterns.py` → 22 checks
+- Playwright 회귀 테스트: `tests/qa_live.py` (16 시나리오 · 21 체크)
