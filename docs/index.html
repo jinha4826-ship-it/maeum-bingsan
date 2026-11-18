@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbf7f3"><title>마음의 빙산</title>
-<meta name="description" content="30초 기록으로 지금의 감정과 그 아래의 욕구, 방어기제를 천천히 살펴보는 자기 성찰 앱.">
+<meta name="description" content="오늘의 마음을 기록하고, 반복되는 상황·감정·욕구의 단서를 발견하는 자기 탐구 앱.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -230,42 +230,82 @@ body.ko .en{display:none!important}body.en .ko{display:none!important}
 .cmp-stat{flex:1 1 30%;background:#faf7fd;border:1px solid var(--line);border-radius:13px;padding:9px 10px;font-size:10px;line-height:1.5;color:#8a79a0}
 .cmp-stat b{display:block;font-size:12.5px;color:#5b4a6e;font-weight:850;margin-bottom:3px}
 .cmp-flowline{font-size:12px;line-height:1.78;color:#5d5266;margin:9px 0 0;background:#faf7fd;border-radius:12px;padding:9px 11px}
-</style></head><body class="ko"><main class="app">
-<header><div class="logo">🧊</div><h1><span class="ko">마음의 빙산</span><span class="en">Mind’s Iceberg</span></h1><div class="header-right"><div class="langtog" role="group" aria-label="Language"><button type="button" id="langKo" onclick="setLang('ko')">KO</button><button type="button" id="langEn" onclick="setLang('en')">EN</button></div><button class="gearbtn" id="gearBtn" aria-label="AI·백업 설정" onclick="show('settings')">✦</button></div></header>
+/* ---- v7 · 발견 카드 · 패턴 단서 · 층 지도 ---- */
+.clue{background:linear-gradient(135deg,#f9f4fb,#eef4f2);border:1px solid #e5dbee}
+.clue-h{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:850;color:#5b4a6e;margin-bottom:8px}
+.clue-badge{margin-left:auto;font-size:9.5px;font-weight:850;letter-spacing:.2px;color:#7d669b;background:#fffefa;border:1px solid #e4d9ef;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.clue-say{margin:0;font-size:13.5px;line-height:1.8;color:#4f4260;font-weight:700}
+.read-note{background:#fbf6ec;border:1px solid #efe1c9;border-radius:13px;padding:10px 12px;font-size:11px;line-height:1.7;color:#8a7355;margin:0 0 10px}
+.read-note b{color:#7a6040}
+.layer-band{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font:inherit;border:1px solid var(--line);border-radius:20px;padding:13px 14px;margin:9px 0;cursor:pointer;touch-action:manipulation;transition:transform .12s}
+.layer-band:active{transform:scale(.995)}
+.layer-band.surface{background:linear-gradient(120deg,#fffdfa,#f7f3ec);border-color:#ecdfc8}
+.layer-band.mid{background:linear-gradient(120deg,#f8f4fc,#f2edf8);border-color:#e2d7ec}
+.layer-band.deep{background:linear-gradient(120deg,#e9dff5,#dcd0ec);border-color:#c9b8dd}
+.layer-band .lb-k{flex:0 0 44px;font-size:9.5px;font-weight:850;letter-spacing:.4px;color:#9d8baa;line-height:1.3}
+.layer-band.deep .lb-k{color:#5f4a78}
+.layer-band .lb-t{flex:1;min-width:0}
+.layer-band .lb-t b{display:block;font-size:13.5px;color:#4f4260;letter-spacing:-.3px;margin-bottom:4px}
+.layer-band.deep .lb-t b{color:#3f3352}
+.layer-band .lb-chips{display:flex;flex-wrap:wrap;gap:5px}
+.layer-band .lb-a{color:#a48db8;font-size:17px}
+.pat-card{border:1px solid var(--line);border-radius:18px;background:#fffdfa;padding:13px;margin:9px 0}
+.pat-card.insight{background:linear-gradient(135deg,#fbf8fd,#f4f8f6);border-color:#e6dff0}
+.pat-h{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:7px}
+.pat-badge{font-size:9.5px;font-weight:850;letter-spacing:.2px;color:#6b5583;background:#f4eefc;border:1px solid #e0d3f0;border-radius:999px;padding:3px 8px}
+.pat-type{font-size:9.5px;font-weight:800;color:#9a8aa8;background:#f7f3fa;border-radius:999px;padding:3px 8px}
+.pat-say{margin:0;font-size:13px;line-height:1.78;color:#514661}
+.pat-fb{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.pat-fb button{flex:1 1 30%;border:1px solid var(--line);background:#fffdfa;color:#7c6b92;font:inherit;font-size:11px;font-weight:800;border-radius:999px;padding:8px 6px;cursor:pointer;touch-action:manipulation;min-height:36px}
+.pat-fb button.on{background:#efe7f8;border-color:#c9b3e2;color:#5b4374}
+.entry-sub{font-size:11px;color:#8a79a0;margin-top:6px;line-height:1.6}
+.prio{border:1px dashed #d6c7e6;border-radius:18px;padding:13px;background:#fbf7fd;margin:0 0 12px}
+.prio-h{font-size:10.5px;font-weight:850;letter-spacing:.5px;color:#9a7fb8;margin-bottom:7px}
+.prio .chips{gap:6px}
+.prio .qbox{background:#fffdfa;border:1px solid #e6dcf0}
 
-<section id="home" class="view active"><div id="checkinBanner"></div><div class="hero"><div class="eyebrow">A LITTLE SPACE FOR YOU ☁️</div><h2><span class="ko">보이는 감정 너머,<br>내 마음을 만나는 시간</span><span class="en">Beyond the feeling you see,<br>a moment to meet your mind</span></h2><p><span class="ko">마음속에 떠 있는 감정부터<br>그 아래 숨겨진 진짜 바람까지 천천히 살펴봐요.</span><span class="en">From the feelings on the surface<br>to the real wishes hidden underneath.</span></p></div>
+</style></head><body class="ko"><main class="app">
+<header><div class="logo">🧊</div><h1><span class="ko">마음의 빙산</span><span class="en">Mind’s Iceberg</span></h1><div class="header-right"><div class="langtog" role="group" aria-label="Language"><button type="button" id="langKo" onclick="setLang('ko')">KO</button><button type="button" id="langEn" onclick="setLang('en')">EN</button></div><button class="gearbtn" id="gearBtn" aria-label="설정" onclick="show('settings')">✦</button></div></header>
+
+<section id="home" class="view active"><div id="checkinBanner"></div><div class="hero"><div class="eyebrow">A LITTLE SPACE FOR YOU ☁️</div><h2><span class="ko">보이는 마음 아래,<br>반복되는 내 마음을 천천히</span><span class="en">Under what shows,<br>the feelings that keep returning</span></h2><p><span class="ko">오늘 있었던 일과 그때의 마음을 적어두면,<br>자주 돌아오는 상황과 감정, 그 아래 바람이 보이기 시작해요.</span><span class="en">Write down what happened and how it felt,<br>and the situations, feelings and wishes that keep returning begin to show.</span></p></div>
+<div id="foundHome"></div>
 <div id="chalHome"></div>
-<div class="card"><div class="card-title"><span class="ko">오늘의 마음 빙산</span><span class="en">Today’s mind iceberg</span> <span class="bubble"><span class="ko">✧ 나를 알아가는 중</span><span class="en">✧ getting to know me</span></span></div><div class="iceberg-wrap"><svg class="iceberg" viewBox="0 0 330 170" role="img" aria-label="눌러서 살펴보는 마음의 빙산"><defs><linearGradient id="topIce" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#d8c8eb"/></linearGradient><linearGradient id="underIce" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9c9eb"/><stop offset="1" stop-color="#a995c8"/></linearGradient></defs><path d="M8 72 Q45 65 80 72 T155 72 T230 72 T322 72" fill="none" stroke="#a9c9c6" stroke-width="2"/><path d="M8 75 Q45 68 80 75 T155 75 T230 75 T322 75 L322 166 L8 166Z" fill="#e8f1f0" opacity=".7"/><g class="ice-layer" role="button" tabindex="0" data-layer="situation"><path d="M103 73 L132 20 Q139 8 148 28 L167 47 L188 31 L220 73Z" fill="url(#topIce)" stroke="#c8b9dc" stroke-width="1.5"/><text id="iceTxtSit" x="161" y="64" text-anchor="middle" fill="#6e5c83" font-size="11" font-weight="800">상황</text></g><g class="ice-layer" role="button" tabindex="0" data-layer="feeling"><path d="M103 77 L220 77 L238 116 L86 116Z" fill="#d8c9e9" stroke="#bba8d1" stroke-width="1.5"/><text id="iceTxtFeel" x="161" y="101" text-anchor="middle" fill="#66527d" font-size="11" font-weight="800">♡ 느낌</text></g><g class="ice-layer" role="button" tabindex="0" data-layer="need"><path d="M86 120 L238 120 L267 163 L55 163Z" fill="url(#underIce)" stroke="#a995c8" stroke-width="1.5"/><text id="iceTxtNeed" x="161" y="145" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">✧ 욕구</text></g><g fill="#fff" opacity=".9"><circle cx="47" cy="33" r="3"/><circle cx="270" cy="27" r="2.5"/><path d="M65 20v9m-4.5-4.5h9M282 52v8m-4-4h8" stroke="#b29fc9" stroke-width="1.5"/></g></svg><div class="ice-hint"><span class="ko">빙산의 각 부분을 눌러 마음의 층을 살펴보세요</span><span class="en">Tap a layer of the iceberg to look inside</span></div><div class="layer-info" id="layerInfo"><span class="ko">겉으로 보이는 감정 아래에는 아직 말하지 못한 마음과 바람이 숨어 있을 수 있어요.</span><span class="en">Under the feeling you can see, there may be a wish you have not said out loud yet.</span></div></div><button class="btn" style="margin-top:14px" onclick="startNew()"><span class="ko">☁️ 마음 기록하기</span><span class="en">☁️ Write my feelings</span></button><button class="btn ghost small" style="margin-top:6px" onclick="show('report')"><span class="ko">✧ 이번 주 내 마음 패턴 보기</span><span class="en">✧ My mind pattern this week</span></button><button class="btn ghost small" style="margin-top:2px" onclick="show('map')"><span class="ko">🗺 내 무의식 빙하 지도 보기</span><span class="en">🗺 My unconscious glacier map</span></button></div>
-<button class="card quick-teaser" onclick="startQuick()"><span class="qt-ico">⚡</span><span class="qt-t"><b><span class="ko">30초 퀵 기록</span><span class="en">30-second quick log</span></b><span class="ko">지금 감정 + 한 줄 메모면 충분해요 · 저장하면 방어기제 분석과 AI 솔루션이 바로 열려요</span><span class="en">One feeling and one line is enough · the defence pattern and AI solution open right away</span></span><span class="qt-a">›</span></button>
-<button class="card tap-teaser" onclick="startTap()"><span class="qt-ico">🫧</span><span class="qt-t"><b><span class="ko">3초 원탭 기록</span><span class="en">3-second one-tap log</span></b><span class="ko">글 한 글자 안 써도 돼요 · 칩 2~3개만 톡톡 누르면 저장과 분석까지 바로</span><span class="en">Not one letter needed · tap two or three chips and it saves and reads it for you</span></span><span class="qt-a">›</span></button>
+<div class="card"><div class="card-title"><span class="ko">오늘의 마음 빙산</span><span class="en">Today’s mind iceberg</span> <span class="bubble"><span class="ko">✧ 나를 알아가는 중</span><span class="en">✧ getting to know me</span></span></div><div class="iceberg-wrap"><svg class="iceberg" viewBox="0 0 330 170" role="img" aria-label="눌러서 살펴보는 마음의 빙산"><defs><linearGradient id="topIce" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#d8c8eb"/></linearGradient><linearGradient id="underIce" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9c9eb"/><stop offset="1" stop-color="#a995c8"/></linearGradient></defs><path d="M8 72 Q45 65 80 72 T155 72 T230 72 T322 72" fill="none" stroke="#a9c9c6" stroke-width="2"/><path d="M8 75 Q45 68 80 75 T155 75 T230 75 T322 75 L322 166 L8 166Z" fill="#e8f1f0" opacity=".7"/><g class="ice-layer" role="button" tabindex="0" data-layer="situation"><path d="M103 73 L132 20 Q139 8 148 28 L167 47 L188 31 L220 73Z" fill="url(#topIce)" stroke="#c8b9dc" stroke-width="1.5"/><text id="iceTxtSit" x="161" y="64" text-anchor="middle" fill="#6e5c83" font-size="11" font-weight="800">상황</text></g><g class="ice-layer" role="button" tabindex="0" data-layer="emotion"><path d="M103 77 L220 77 L238 116 L86 116Z" fill="#d8c9e9" stroke="#bba8d1" stroke-width="1.5"/><text id="iceTxtFeel" x="161" y="101" text-anchor="middle" fill="#66527d" font-size="11" font-weight="800">♡ 감정</text></g><g class="ice-layer" role="button" tabindex="0" data-layer="need"><path d="M86 120 L238 120 L267 163 L55 163Z" fill="url(#underIce)" stroke="#a995c8" stroke-width="1.5"/><text id="iceTxtNeed" x="161" y="145" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">✧ 욕구</text></g><g fill="#fff" opacity=".9"><circle cx="47" cy="33" r="3"/><circle cx="270" cy="27" r="2.5"/><path d="M65 20v9m-4.5-4.5h9M282 52v8m-4-4h8" stroke="#b29fc9" stroke-width="1.5"/></g></svg><div class="ice-hint"><span class="ko">빙산의 각 부분을 눌러 마음의 층을 살펴보세요</span><span class="en">Tap a layer of the iceberg to look inside</span></div><div class="layer-info" id="layerInfo"><span class="ko">겉으로 보이는 장면 아래에는 아직 말하지 못한 마음과 바람이 숨어 있을 수 있어요.</span><span class="en">Under the scene you can see, there may be a feeling and a wish you have not said out loud yet.</span></div></div><button class="btn" style="margin-top:14px" onclick="startNew()"><span class="ko">☁️ 오늘 마음 기록하기</span><span class="en">☁️ Record today’s feeling</span></button><button class="btn ghost small" style="margin-top:6px" onclick="show('map')"><span class="ko">🗺 내 빙하 지도 보기</span><span class="en">🗺 My glacier map</span></button><button class="btn ghost small" style="margin-top:2px" onclick="show('report')"><span class="ko">✿ 이번 달 마음 리포트</span><span class="en">✿ This month’s report</span></button></div>
+<button class="card quick-teaser" onclick="startQuick()"><span class="qt-ico">⚡</span><span class="qt-t"><b><span class="ko">30초 퀵 기록</span><span class="en">30-second quick log</span></b><span class="ko">지금 감정 + 한 줄 메모면 충분해요</span><span class="en">One feeling and one line is enough</span></span><span class="qt-a">›</span></button>
+<button class="card tap-teaser" onclick="startTap()"><span class="qt-ico">🫧</span><span class="qt-t"><b><span class="ko">3초 원탭 기록</span><span class="en">3-second one-tap log</span></b><span class="ko">글 한 글자 안 써도 돼요 · 칩 2~3개만 톡톡</span><span class="en">Not one letter needed · tap two or three chips</span></span><span class="qt-a">›</span></button>
 <div class="recent-head"><b><span class="ko">나의 작은 기록</span><span class="en">My small entries</span></b><button onclick="show('records')"><span class="ko">모두 보기 →</span><span class="en">See all →</span></button></div><div id="recent"></div></section>
 
-<section id="write" class="view"><div class="hero"><div class="eyebrow">MY LITTLE JOURNAL ✎</div><h2><span class="ko">하나씩 천천히<br>마음을 정리해 봐요.</span><span class="en">One step at a time,<br>let the feeling settle.</span></h2><p><span class="ko">정답은 없어요. 떠오르는 만큼만 적어주세요.</span><span class="en">There is no right answer. Write as much as comes to you.</span></p></div><button class="btn quick small" style="margin:0 0 12px" onclick="startQuick()"><span class="ko">⚡ 30초 퀵 기록으로 바로 남기기</span><span class="en">⚡ Jump to the 30-second log</span></button><button class="btn ghost small" style="margin:0 0 12px" onclick="startTap()"><span class="ko">🫧 글 한 글자도 쓰기 싫다면 · 3초 원탭 기록</span><span class="en">🫧 Can’t write a word today? 3-second one-tap log</span></button><div class="steps" id="steps"></div><div class="card" id="stepCard"></div><div class="row"><button class="btn secondary" onclick="prevStep()"><span class="ko">이전</span><span class="en">Back</span></button><button class="btn" onclick="nextStep()"><span class="ko">다음 →</span><span class="en">Next →</span></button></div></section>
+<section id="write" class="view"><div class="hero"><div class="eyebrow">MY LITTLE JOURNAL ✎</div><h2><span class="ko">하나씩 천천히<br>마음을 정리해 봐요.</span><span class="en">One step at a time,<br>let the feeling settle.</span></h2><p><span class="ko">정답은 없어요. 건너뛰어도 괜찮고, 떠오르는 만큼만 적어주세요.</span><span class="en">There is no right answer. Skipping is fine — write as much as comes to you.</span></p></div><div class="steps" id="steps"></div><div class="card" id="stepCard"></div><div class="row"><button class="btn secondary" onclick="prevStep()"><span class="ko">이전</span><span class="en">Back</span></button><button class="btn" onclick="nextStep()"><span class="ko">다음 →</span><span class="en">Next →</span></button></div><button class="btn ghost small" style="margin-top:8px" onclick="skipStep()"><span class="ko">이 단계는 건너뛰기 · 지금까지 적은 것만 저장</span><span class="en">Skip this step · save what I have written</span></button><button class="btn ghost small" style="margin-top:4px" onclick="saveEarly()"><span class="ko">여기까지만 저장하기</span><span class="en">Save up to here</span></button></section>
 
-<section id="quick" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">⚡ 30 SECOND QUICK LOG</div><h2><span class="ko">30초면 충분해요.</span><span class="en">Thirty seconds is enough.</span></h2><p><span class="ko">지금 올라온 감정과 한 줄 메모만 남겨도<br>방어기제 분석과 AI 솔루션이 바로 이어져요.</span><span class="en">Even one feeling and one line<br>leads straight to a defence pattern and an AI solution.</span></p></div><div class="card">
-<div class="quick-step"><b>1</b><span class="ko">지금 표면 감정</span><span class="en">Surface feeling now</span> <em id="quickCount">0 / 3</em></div><p class="prompt" style="margin:-2px 0 9px"><span class="ko">마음과 가까운 감정을 1~3개 골라주세요. 여러 개 골라도 좋아요.</span><span class="en">Pick one to three feelings close to you. More than one is fine.</span></p><div class="chips" id="quickChips"></div>
+<section id="discovery" class="view"><div id="discoveryContent"></div></section>
+
+<section id="quick" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">⚡ 30 SECOND QUICK LOG</div><h2><span class="ko">30초면 충분해요.</span><span class="en">Thirty seconds is enough.</span></h2><p><span class="ko">지금 올라온 감정과 한 줄 메모만 남겨도<br>오늘의 마음이 한 조각 쌓여요.</span><span class="en">Even one feeling and one line<br>adds a piece to today’s picture.</span></p></div><div class="card">
+<div class="quick-step"><b>1</b><span class="ko">지금 마음에 가까운 감정</span><span class="en">Feelings closest right now</span> <em id="quickCount">0 / 3</em></div><p class="prompt" style="margin:-2px 0 9px"><span class="ko">1~3개 골라주세요. 여러 개 골라도 좋아요.</span><span class="en">Pick one to three. More than one is fine.</span></p><div class="chips" id="quickChips"></div>
 <div class="quick-step"><b>2</b><span class="ko">한 줄 메모</span><span class="en">One-line note</span> <em><span class="ko">선택</span><span class="en">optional</span></em></div><input class="input" id="quickNote" type="text" maxlength="160" autocomplete="off" placeholder="지금 가장 걸리는 생각 한 줄" onkeydown="if(event.key==='Enter'){event.preventDefault();saveQuick();}">
-<div class="sit-help"><div class="sit-h"><span class="ko">한 줄이 막막하면 눌러서 채워보세요</span><span class="en">Stuck for a line? Tap to fill it in</span><span><span class="ko">· 누른 곳에 바로 붙어요</span><span class="en"> · it lands where you tap</span></span></div><div class="chips"><button type="button" class="chip" title="예) 팀장님 · 친구 · 엄마" onclick="sitChip('quickNote','누구')"><span class="ko">누구</span><span class="en">Who</span></button><button type="button" class="chip" title="예) 회의 중 · 퇴근길 · 어젯밤" onclick="sitChip('quickNote','어디서·언제')"><span class="ko">어디서·언제</span><span class="en">Where·when</span></button><button type="button" class="chip" title="예) 내 아이디어를 자기 것처럼 말함" onclick="sitChip('quickNote','무슨 일·말')"><span class="ko">무슨 일·말</span><span class="en">What happened</span></button><button type="button" class="chip" title="예) 또 참았다 · 나는 왜 말을 못 하지" onclick="sitChip('quickNote','맴돈 생각')"><span class="ko">맴돈 생각</span><span class="en">Thought that stayed</span></button></div><p class="sit-ex"><span class="ko">예) <b>누구</b>: 팀장님 · <b>무슨 일·말</b>: 내 아이디어를 자기 것처럼 말함 · <b>맴돈 생각</b>: 또 참았다</span><span class="en">e.g. <b>Who</b>: my manager · <b>What happened</b>: said my idea as if it were his · <b>Thought that stayed</b>: I held it in again</span></p></div>
+<div class="sit-help"><div class="sit-h"><span class="ko">한 줄이 막막하면 눌러서 채워보세요</span><span class="en">Stuck for a line? Tap to fill it in</span><span><span class="ko">· 누른 곳에 바로 붙어요</span><span class="en"> · it lands where you tap</span></span></div><div class="chips"><button type="button" class="chip" onclick="sitChip('quickNote','누구')"><span class="ko">누구</span><span class="en">Who</span></button><button type="button" class="chip" onclick="sitChip('quickNote','어디서·언제')"><span class="ko">어디서·언제</span><span class="en">Where·when</span></button><button type="button" class="chip" onclick="sitChip('quickNote','무슨 일·말')"><span class="ko">무슨 일·말</span><span class="en">What happened</span></button><button type="button" class="chip" onclick="sitChip('quickNote','맴돈 생각')"><span class="ko">맴돈 생각</span><span class="en">Thought that stayed</span></button></div></div>
 <div class="quick-step"><b>3</b><span class="ko">저장</span><span class="en">Save</span></div><button class="btn quick" id="quickSave" onclick="saveQuick()" disabled>감정을 하나 골라 주세요</button>
-<div class="quick-tip"><span class="ko">🧊 저장하면 <b>방어기제 분석 → 심리학 기반 AI 솔루션 3가지</b>가 바로 열려요. 기록은 기기에만 남고, 7일 챌린지·누적 패턴·JSON 백업에도 함께 쌓여요.</span><span class="en">🧊 On save, the <b>defence pattern → three psychology-based AI solutions</b> open right away. Entries stay on this device and count toward the 7-day challenge, patterns and JSON backup.</span></div></div><button class="btn ghost small" onclick="startTap()"><span class="ko">🫧 글쓰기 싫은 날 · 3초 원탭 기록</span><span class="en">🫧 No words today · 3-second one-tap log</span></button><button class="btn ghost small" onclick="startNew()"><span class="ko">☁️ 5단계로 자세히 기록하기</span><span class="en">☁️ Write in five guided steps</span></button></section>
+<div class="quick-tip"><span class="ko">🧊 저장하면 오늘의 마음 발견 화면이 열려요. 여기서 한 문장을 고치거나, 분석에서 빼둘 수도 있어요.</span><span class="en">🧊 Saving opens today’s discovery screen, where you can rewrite the sentence or leave it out of the analysis.</span></div></div><button class="btn ghost small" onclick="startTap()"><span class="ko">🫧 글쓰기 싫은 날 · 3초 원탭 기록</span><span class="en">🫧 No words today · 3-second one-tap log</span></button><button class="btn ghost small" onclick="startNew()"><span class="ko">☁️ 단계별로 자세히 기록하기</span><span class="en">☁️ Record in guided steps</span></button></section>
 
-<section id="tap" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">⚡ 3-SECOND ONE-TAP LOG</div><h2><span class="ko">글쓰기 싫은 날,<br>톡톡 세 번이면 돼요.</span><span class="en">On a day words won’t come,<br>three taps is enough.</span></h2><p><span class="ko">상황·감정·몸과 마음의 반응 칩을 2~3개 누르면 바로 저장되고,<br>방어기제 분석과 AI 코멘트까지 이어져요. 한 글자도 쓰지 않아도 괜찮아요.</span><span class="en">Tap two or three chips for the situation, the feeling and how your body reacted.<br>It saves right away and opens the defence read and the AI comment — no typing at all.</span></p></div><div class="card"><div id="tapBody"></div></div><button class="btn ghost small" onclick="show('quick')"><span class="ko">⚡ 30초 퀵 기록으로 한 줄 남기기</span><span class="en">⚡ Add one line in the 30-second log</span></button><button class="btn ghost small" onclick="startNew()"><span class="ko">☁️ 5단계로 자세히 기록하기</span><span class="en">☁️ Write in five guided steps</span></button></section>
+<section id="tap" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">⚡ 3-SECOND ONE-TAP LOG</div><h2><span class="ko">글쓰기 싫은 날,<br>톡톡 세 번이면 돼요.</span><span class="en">On a day words won’t come,<br>three taps is enough.</span></h2><p><span class="ko">상황·감정·반응 칩을 2~3개 누르면 바로 저장돼요. 한 글자도 쓰지 않아도 괜찮아요.</span><span class="en">Tap two or three chips for the situation, feeling and reaction. No typing at all.</span></p></div><div class="card"><div id="tapBody"></div></div><button class="btn ghost small" onclick="show('quick')"><span class="ko">⚡ 30초 퀵 기록으로 한 줄 남기기</span><span class="en">⚡ Add one line in the 30-second log</span></button><button class="btn ghost small" onclick="startNew()"><span class="ko">☁️ 단계별로 자세히 기록하기</span><span class="en">☁️ Record in guided steps</span></button></section>
 
 <section id="records" class="view"><div class="hero"><div class="eyebrow">YOUR JOURNAL ♡</div><h2><span class="ko">나의 기록</span><span class="en">My entries</span></h2><p><span class="ko">작은 마음들이 모여 나를 이해하는 단서가 돼요.</span><span class="en">Small feelings gather into clues about who I am.</span></p></div><div id="allRecords"></div></section>
 
-<section id="report" class="view"><div class="hero"><div class="eyebrow">A GENTLE LOOK BACK ✧</div><h2><span class="ko">마음 패턴 모아보기</span><span class="en">My mind patterns</span></h2><p><span class="ko">내가 자주 만난 감정과, 그 아래 반복되던 바람을 살펴봐요.</span><span class="en">The feelings I kept meeting, and the wish repeating underneath.</span></p></div><div id="reportContent"></div></section>
+<section id="map" class="view"><div class="hero"><div class="eyebrow">MY GLACIER MAP ✧</div><h2><span class="ko">내 마음의<br>빙하 지도</span><span class="en">My mind’s<br>glacier map</span></h2><p><span class="ko">수면 위의 반복되는 상황, 중간층의 감정과 생각, 심해의 욕구를 기록이 쌓이는 만큼 그려요.</span><span class="en">Repeating situations above the surface, feelings and thoughts in the middle, wishes deep below — drawn as entries gather.</span></p></div><div id="mapContent"></div></section>
 
-<section id="map" class="view"><div class="hero"><div class="eyebrow">UNCONSCIOUS GLACIER MAP ✧</div><h2><span class="ko">나만의 무의식<br>빙하 지도</span><span class="en">My own<br>unconscious glacier</span></h2><p><span class="ko">기록이 쌓일수록 수면 아래 안개가 걷히고, 내 빙하의 지층이 하나씩 드러나요.</span><span class="en">As entries gather, the fog below the surface lifts and the layers of my glacier show.</span></p></div><div id="mapContent"></div></section>
+<section id="layer" class="view"><div id="layerContent"></div></section>
+
+<section id="report" class="view"><div class="hero"><div class="eyebrow">A GENTLE LOOK BACK ✧</div><h2><span class="ko">월간 마음 패턴<br>리포트</span><span class="en">Monthly mind<br>pattern report</span></h2><p><span class="ko">이번 달 기록에서 보이는 감정과 상황, 그 아래의 바람을 모아봐요.</span><span class="en">The feelings, situations and wishes that show in this month’s entries.</span></p></div><div id="reportContent"></div></section>
 
 <section id="deep" class="view"><div id="deepContent"></div></section>
 
 <section id="detail" class="view"><button class="btn ghost" onclick="show('records')"><span class="ko">← 기록 목록</span><span class="en">← All entries</span></button><div id="detailContent"></div></section>
 
-<section id="type" class="view"><button class="btn ghost" onclick="show('map')"><span class="ko">← 빙하 지도</span><span class="en">← Glacier map</span></button><div id="typeContent"></div></section>
-<section id="settings" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">SETTINGS ⚙︎</div><h2><span class="ko">설정</span><span class="en">Settings</span></h2><p><span class="ko">매일 체크인 알림, 기관 파일럿 코드, AI와 백업을 여기서 관리해요. AI는 키 없이 기본으로 동작해요.</span><span class="en">Check-in reminders, pilot codes, AI and backup. AI works by default with no key.</span></p></div><div class="card" id="settingsContent"></div></section>
+<section id="settings" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">SETTINGS ⚙︎</div><h2><span class="ko">설정</span><span class="en">Settings</span></h2><p><span class="ko">매일 체크인 알림, AI, 백업과 클라우드 동기화를 여기서 관리해요.</span><span class="en">Check-in reminders, AI, backup and cloud sync live here.</span></p></div><div class="card" id="settingsContent"></div></section>
 </main>
 <nav class="nav"><button class="navbtn active" data-view="home" onclick="show('home')"><span class="ico">⌂</span><span class="ko">홈</span><span class="en">Home</span></button><button class="navbtn" data-view="records" onclick="show('records')"><span class="ico">♡</span><span class="ko">기록</span><span class="en">Entries</span></button><button class="navbtn" data-view="map" onclick="show('map')"><span class="ico">🗺</span><span class="ko">빙하 지도</span><span class="en">Map</span></button><button class="navbtn" data-view="report" onclick="show('report')"><span class="ico">✿</span><span class="ko">리포트</span><span class="en">Report</span></button></nav>
 <div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept=".json,application/json" style="display:none">
+
 <script>
 /* =========================================================
    마음의 빙산 v3.2 — 심층 리포트(NVC·CBT) + 감정 패턴 + 빙하 지도
@@ -1142,7 +1182,7 @@ function connHTML(txt){
   if(!txt) return '';
   return '<div class="ai-conn"><b>🕮 '+tr('어제의 나와 이어보기','Connecting with the me of earlier days')+'</b>'+esc(txt)+'</div>';
 }
-function aiHTML(r){
+function aiHTMLBase(r){
   var dd=buildDeep(r), dn=defAnalyze([r]).main;
   function chip(k,v){ return '<span class="ai-chip"><b style="font-weight:850;opacity:.7">'+k+'</b> '+esc(cut(v,26))+'</span>'; }
   var dis='<div class="ai-flow" style="margin:0 0 9px">'
@@ -2787,8 +2827,7 @@ function cloudSync(silent){
       if(!cur){ records.push(rec); byId[id]=rec; added++; if(row.updated_at) cloudStampSet(id,row.updated_at); return; }
       var loc=cloudLocalTime(cur);
       if(srv>loc+2000 && JSON.stringify(cur)!==JSON.stringify(rec)){
-        cur.situation=rec.situation; cur.feeling=rec.feeling; cur.need=rec.need;
-        cur.other=rec.other; cur.action=rec.action; cur.ai=rec.ai;
+        Object.assign(cur,rec);
         cur.date=rec.date; cloudStampSet(id,row.updated_at); adopted++;
       }
     });
@@ -3242,5 +3281,1367 @@ if(cloudOn()) cloudSync(true).catch(function(){});
     }).catch(function(){ /* 오프라인 캐시는 없어도 앱은 그대로 동작합니다 */ });
   });
 })();
+</script>
+<script>
+/* ====== v7 · 마음의 빙산 2.0 Phase 1 ====== */
+/* =========================================================
+   마음의 빙산 2.0 · Phase 1 (v7)
+   기록 → 발견 → 축적 → 반복되는 상황·감정·욕구 패턴 발견
+   · 기존 기록·화면·기능은 그대로 두고 그 위에 얹는 비파괴 확장입니다.
+   ========================================================= */
+'use strict';
+
+/* ---------- 공통 유틸 (기존 정의를 그대로 쓰되 필요한 것만 보강) ---------- */
+function esc2(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function pctOf(a,b){ return b? Math.round(a/b*100) : 0; }
+function nowISO(){ return new Date().toISOString(); }
+function idOf(r){ return r? r.id : null; }
+
+/* ---------- 감정 (기존 키 그대로 — 저장된 기록과 호환) ---------- */
+var EMOTIONS=['기쁨','설렘','편안함','슬픔','서운함','속상함','불안함','화남','외로움','답답함','지침','혼란스러움'];
+var EMOTION_EN={'기쁨':'joy','설렘':'anticipation','편안함':'ease','슬픔':'sadness','서운함':'hurt','속상함':'upset','불안함':'anxiety','화남':'anger','외로움':'loneliness','답답함':'stifled','지침':'exhaustion','혼란스러움':'confusion'};
+function emotionLabel(k){ return isEN()? (EMOTION_EN[k]||k) : k; }
+
+/* ---------- 욕구 (추천 8개 + 직접 입력 + 아직 모르겠어요) ---------- */
+var NEED_KEYS=['인정','존중','이해','안정감','관심','자유','혼자만의 시간','공정함'];
+var NEED_DICT={
+  '인정':{en:'Recognition',line:{ko:'해온 것과 존재를 알아봐 주길 바라는 마음',en:'a wish for what I do and who I am to be noticed'},legacy:'인정받고 싶었어요'},
+  '존중':{en:'Respect',line:{ko:'내 판단과 경계를 존중받고 싶은 마음',en:'a wish for my judgement and boundaries to be respected'},legacy:'존중받고 싶었어요'},
+  '이해':{en:'Being understood',line:{ko:'내 이야기와 맥락을 알아봐 주길 바라는 마음',en:'a wish for my story and its context to be understood'},legacy:'이해받고 싶었어요'},
+  '안정감':{en:'Feeling safe',line:{ko:'괜찮다는 확신과 예측 가능성을 원하는 마음',en:'a wish for reassurance and predictability'},legacy:'안심하고 싶었어요'},
+  '관심':{en:'Attention',line:{ko:'곁에 있고 챙겨주길 바라는 마음',en:'a wish to be noticed and cared for'},legacy:'함께하고 싶었어요'},
+  '자유':{en:'Freedom',line:{ko:'스스로 정하고 움직이고 싶은 마음',en:'a wish to decide and move on my own terms'},legacy:'내 마음을 표현하고 싶었어요'},
+  '혼자만의 시간':{en:'Time alone',line:{ko:'아무에게도 설명하지 않아도 되는 시간을 원하는 마음',en:'a wish for time when I explain myself to no one'},legacy:'혼자만의 시간이 필요했어요'},
+  '공정함':{en:'Fairness',line:{ko:'같은 기준으로 다뤄지길 바라는 마음',en:'a wish to be treated by the same measure as others'},legacy:'공정함'},
+  '도움':{en:'Support',line:{ko:'혼자 다 하지 않아도 된다는 걸 확인하고 싶은 마음',en:'a wish to be reminded I don’t have to carry it alone'},legacy:'도움이 필요했어요'},
+  '표현':{en:'Expression',line:{ko:'느낀 그대로를 숨기지 않고 꺼내고 싶은 마음',en:'a wish to say what I feel without hiding it'},legacy:'내 마음을 표현하고 싶었어요'},
+  '아직 잘 모르겠어요':{en:'Not sure yet',line:{ko:'지금은 이름 붙이지 못한 바람',en:'a wish I cannot name yet'},legacy:'아직 잘 모르겠어요'}
+};
+var NEED_MIGRATE={
+  '인정받고 싶었어요':'인정','존중받고 싶었어요':'존중','이해받고 싶었어요':'이해','안심하고 싶었어요':'안정감',
+  '함께하고 싶었어요':'관심','혼자만의 시간이 필요했어요':'혼자만의 시간','도움이 필요했어요':'도움','내 마음을 표현하고 싶었어요':'표현',
+  '공정함':'공정함','자유':'자유','관심':'관심','안정감':'안정감','이해':'이해','존중':'존중','인정':'인정'
+};
+function needLabel(k){ var d=NEED_DICT[k]; if(!d) return String(k||''); return isEN()? d.en : k; }
+function needLine(k){ var d=NEED_DICT[k]; return d? (d.line[LANG]||d.line.ko) : ''; }
+function migrateNeed(k){ k=String(k||'').trim(); return NEED_MIGRATE[k]||k; }
+function legacyNeedOf(k){ var d=NEED_DICT[k]; return d? d.legacy : k; }
+function isUnsureNeed(k){ return k==='아직 잘 모르겠어요'; }
+
+/* ---------- 반응 (몸 · 마음) ---------- */
+var REACTIONS=[
+  {k:'몸이 굳었다',t:'body',en:'my body went stiff'},
+  {k:'가슴이 답답했다',t:'body',en:'my chest felt tight'},
+  {k:'얼굴이 뜨거워졌다',t:'body',en:'my face got hot'},
+  {k:'눈물이 났다',t:'body',en:'tears came'},
+  {k:'잠이 오지 않았다',t:'body',en:'I could not sleep'},
+  {k:'속이 울렁였다',t:'body',en:'my stomach turned'},
+  {k:'말을 못 하고 삼켰다',t:'mind',en:'I swallowed the words'},
+  {k:'웃으며 넘겼다',t:'mind',en:'I smiled it away'},
+  {k:'자리를 피했다',t:'mind',en:'I stepped away'},
+  {k:'혼자 계속 생각했다',t:'mind',en:'I kept going over it alone'},
+  {k:'아무것도 못 했다',t:'mind',en:'I could not do anything'},
+  {k:'다른 일로 바빴다',t:'mind',en:'I buried myself in other things'},
+  {k:'누군가에게 털어놨다',t:'mind',en:'I told someone'}
+];
+function reactionLabel(k){ var r=REACTIONS.filter(function(x){return x.k===k})[0]; if(!r) return String(k||''); return isEN()? r.en : r.k; }
+
+/* ---------- 상황 분류 ---------- */
+var SIT_CATS=[
+  {k:'일·업무',en:'Work',re:/회의|업무|일이|출근|퇴근|회사|상사|팀장|동료|야근|프로젝트|보고|발표|거래처|알바|장사/},
+  {k:'관계',en:'Relationships',re:/친구|연인|남친|여친|썸|약속|모임|사람|만나|연락/},
+  {k:'가족',en:'Family',re:/엄마|아빠|부모|가족|동생|형|누나|언니|오빠|집안|명절/},
+  {k:'공부·시험',en:'Study',re:/공부|시험|과제|수험|학원|강의|자격증|독서|인강/},
+  {k:'몸·건강',en:'Body & health',re:/잠|수면|몸이|아프|병원|운동|피곤|컨디션/},
+  {k:'돈·생활',en:'Money & daily life',re:/돈|월급|결제|청구|생활비|카드|집세|관리비/},
+  {k:'혼자 있는 시간',en:'Time alone',re:/혼자|새벽|밤에|아침에|산책|방에|누워/},
+  {k:'기타',en:'Other',re:null}
+];
+function sitCatLabel(k){ var c=SIT_CATS.filter(function(x){return x.k===k})[0]; if(!c) return String(k||''); return isEN()? c.en : c.k; }
+function inferSitCat(text){
+  var t=String(text||''),i;
+  for(i=0;i<SIT_CATS.length;i++){ if(SIT_CATS[i].re&&SIT_CATS[i].re.test(t)) return SIT_CATS[i].k; }
+  return '';
+}
+
+/* =========================================================
+   기록 접근자 — 예전 기록(문자열 situation, feeling/need/other/action)과
+   새 기록(emotions/reactions/thoughts/needs/selfExpression/analysis)을 함께 읽는다.
+   ========================================================= */
+function sitTextOf(r){ return situationString(r); }
+function situationString(r){
+  if(!r) return '';
+  if(r.situation&&typeof r.situation==='object') return String(r.situation.description||'');
+  return String(r.situation||'');
+}
+function sitCatOf(r){
+  if(!r) return '';
+  var c=String(r.situationCategory||((r.situation&&typeof r.situation==='object'&&r.situation.category)||''));
+  return c||inferSitCat(situationString(r));
+}
+function emotionsOf(r){
+  if(!r) return [];
+  var a=(r.emotions&&r.emotions.length? r.emotions : (r.feeling||[]));
+  return uniq((a||[]).map(String)).filter(function(f){ return EMOTIONS.indexOf(f)>=0; });
+}
+function needsOf(r){
+  if(!r) return [];
+  var a=(r.needs&&r.needs.length? r.needs : (r.need||[]).map(migrateNeed));
+  return uniq((a||[]).map(migrateNeed));
+}
+function reactionsOf(r){ return uniq(((r&&r.reactions)||[]).map(String)); }
+function thoughtsOf(r){ return String(r&&r.thoughts!=null? r.thoughts : ((r&&r.other)||'')); }
+function sentenceOf(r){ return String(r&&r.selfExpression!=null? r.selfExpression : ((r&&r.action)||'')); }
+function analysisOf(r){ return (r&&r.analysis&&typeof r.analysis==='object')? r.analysis : {confirmed:null,userFeedback:''}; }
+function recordRejected(r){ return analysisOf(r).userFeedback==='rejected'; }
+
+/* =========================================================
+   비파괴 정규화 — 모르는 필드도 그대로 보존하고, 빠진 필드만 기본값으로 채운다.
+   ========================================================= */
+function normalizeRecord(r){
+  var o=(r&&typeof r==='object')? r : {};
+  var rec={}, k;
+  for(k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) rec[k]=o[k]; }
+  rec.id=(typeof o.id==='number'&&isFinite(o.id))? o.id:(Number(o.id)||Date.now()+Math.floor(Math.random()*999));
+  rec.date=(o.date&&!isNaN(new Date(o.date).getTime()))? o.date:(rec.date||nowISO());
+  rec.situation=situationString(o);
+  rec.situationCategory=sitCatOf(o);
+  var emo=emotionsOf(o);
+  rec.emotions=emo; rec.feeling=emo.slice();
+  var ns=needsOf(o);
+  rec.needs=ns; rec.need=ns.map(legacyNeedOf);
+  rec.reactions=reactionsOf(o);
+  rec.thoughts=thoughtsOf(o); rec.other=rec.thoughts;
+  rec.selfExpression=sentenceOf(o); rec.action=rec.selfExpression;
+  var a=analysisOf(o);
+  rec.analysis={confirmed:(a.confirmed===true||a.userFeedback==='confirmed')?true:((a.confirmed===false||a.userFeedback==='rejected')?false:null),
+    userFeedback:String(a.userFeedback||''), at:String(a.at||'')};
+  if(!rec.ai&&o.ai&&typeof o.ai==='object') rec.ai=o.ai;
+  return rec;
+}
+
+/* ---------- 화면 전환 ---------- */
+function show2(id){
+  var i;
+  currentView=id;
+  var views=document.querySelectorAll('.view');
+  for(i=0;i<views.length;i++) views[i].classList.remove('active');
+  var el=document.getElementById(id); if(el) el.classList.add('active');
+  var btns=document.querySelectorAll('.navbtn');
+  var navId=(id==='layer'||id==='deep')?'map':id;
+  for(i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.view===navId);
+  if(id==='records') renderRecords();
+  if(id==='home'){ renderHomeTop(); renderRecent(); }
+  if(id==='report') renderReport();
+  if(id==='map') renderMap();
+  if(id==='layer') renderLayer();
+  if(id==='quick') renderQuick();
+  if(id==='tap') renderTap();
+  if(id==='deep') renderDeep();
+  if(id==='detail'){ if(detailId!=null) openDetail(detailId); }
+  if(id==='discovery'){ if(detailId!=null) renderDiscovery(detailId); }
+  if(id==='settings') renderSettings();
+  if(id==='type') renderType();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function show(id){ show2(id); }
+function refreshView(){ show2(currentView); }
+function syncLangUI2(){
+  try{ document.documentElement.lang=LANG; document.body.className=LANG; }catch(e){}
+  var a=document.getElementById('langKo'), b=document.getElementById('langEn');
+  if(a) a.className=(LANG==='ko')?'on':'';
+  if(b) b.className=(LANG==='en')?'on':'';
+  var q=document.getElementById('quickNote'); if(q) q.placeholder=tr('지금 가장 걸리는 생각 한 줄','One line about what is on your mind');
+  var t1=document.getElementById('iceTxtSit'); if(t1) t1.textContent=tr('상황','Situation');
+  var t2=document.getElementById('iceTxtFeel'); if(t2) t2.textContent=tr('♡ 감정','♡ Feeling');
+  var t3=document.getElementById('iceTxtNeed'); if(t3) t3.textContent=tr('✧ 욕구','✧ Need');
+  var g=document.getElementById('gearBtn'); if(g) g.setAttribute('aria-label',tr('설정','Settings'));
+}
+function setLang(l){
+  var next=String(l||'').toLowerCase()==='en'?'en':'ko';
+  if(next!==LANG){ LANG=next; try{ localStorage.setItem(LS_LANG,LANG); }catch(e){} }
+  syncLangUI2();
+  refreshView();
+  toast(isEN()?'Switched to English':'한국어로 바뀌었어요');
+}
+
+
+/* =========================================================
+   화면 ② 기록 — 상황 / 감정 / 몸과 마음의 반응 (핵심 3영역)
+   + 선택: 그때 떠오른 생각 · 내가 원했던 것(욕구) · 한 문장
+   3영역만 적어도 정상 저장되고, 모든 단계는 건너뛸 수 있다.
+   ========================================================= */
+function emptyDraft(){
+  return {situation:{category:'',description:''},emotions:[],reactions:[],thoughts:'',needs:[],needUnsure:false,selfExpression:''};
+}
+function draftFromRecord(r){
+  return {
+    situation:{category:sitCatOf(r),description:situationString(r)},
+    emotions:emotionsOf(r).slice(),
+    reactions:reactionsOf(r).slice(),
+    thoughts:thoughtsOf(r),
+    needs:needsOf(r).filter(function(n){return !isUnsureNeed(n)}),
+    needUnsure:needsOf(r).indexOf('아직 잘 모르겠어요')>=0,
+    selfExpression:sentenceOf(r)
+  };
+}
+function stepsMeta(){
+  return [
+    {key:'situation',ko:'상황',en:'Situation'},
+    {key:'emotion',ko:'감정',en:'Feeling'},
+    {key:'reaction',ko:'반응',en:'Reaction'},
+    {key:'thought',ko:'생각',en:'Thought'},
+    {key:'need',ko:'욕구',en:'Need'},
+    {key:'finish',ko:'한 문장',en:'One line'}
+  ];
+}
+function startNew(){
+  editingId=null; idx=0; draft=emptyDraft();
+  renderStep(); show('write');
+}
+function startEdit(id){
+  var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
+  editingId=id; idx=0; draft=draftFromRecord(r);
+  renderStep(); show('write');
+}
+function renderStepsBar(){
+  var meta=stepsMeta(), h='', i;
+  for(i=0;i<meta.length;i++){
+    h+='<div class="step '+(i===idx?'on':'')+(i<idx?' done':'')+'"><b>'+(i===idx?'●':'✓')+'</b>'+esc(isEN()?meta[i].en:meta[i].ko)+'</div>';
+  }
+  var el=document.getElementById('steps'); if(el) el.innerHTML=h;
+}
+function chipHTML(key,label,selected){
+  return '<button type="button" class="chip '+(selected?'selected':'')+'" data-pick="'+esc(key)+'">'+esc(label)+'</button>';
+}
+function renderStep(){
+  var d=draft, body='', title='', hint='';
+  if(idx===0){
+    title=tr('무슨 일이 있었나요?','What happened?');
+    hint=tr('가까운 상황을 고르고, 기억나는 만큼만 적어 주세요. 건너뛰어도 괜찮아요.','Pick the closest situation and write as much as you remember. Skipping is fine.');
+    body='<div class="chips" style="margin-bottom:10px">'+SIT_CATS.map(function(c){ return chipHTML(c.k,isEN()?c.en:c.k,d.situation.category===c.k); }).join('')+'</div>';
+    body+='<textarea class="field" id="sitDesc" maxlength="1000" placeholder="'+esc(tr('예) 팀장님이 회의에서 내 아이디어를 자기 것처럼 말했다. 그 자리에서 아무 말도 못 했다.','e.g. In the meeting my manager said my idea as if it were his. I just smiled and said nothing.'))+'">'+esc(d.situation.description||'')+'</textarea>';
+  }else if(idx===1){
+    title=tr('어떤 감정이 올라왔나요?','What did you feel?');
+    hint=tr('여러 개 골라도 좋아요. 이름을 붙이는 것만으로도 마음이 조금 선명해져요.','More than one is fine. Naming it can make it a little clearer.');
+    body='<div class="chips">'+EMOTIONS.map(function(f){ return chipHTML(f,emotionLabel(f),d.emotions.indexOf(f)>=0); }).join('')+'</div>';
+    body+='<button type="button" class="btn ghost small" style="margin-top:12px" onclick="pickUnsureEmotion()">'+tr('아직 잘 모르겠어요','Not sure yet')+'</button>';
+  }else if(idx===2){
+    title=tr('그때 몸과 마음은 어땠나요?','How did your body and mind react?');
+    hint=tr('몸이 먼저 반응한 것도, 마음이 한 행동도 모두 단서가 돼요.','How your body reacted and what you did are both clues.');
+    body='<div class="tap-group"><div class="tap-h"><b>몸</b>'+tr('몸의 반응','Body')+'</div><div class="chips">'
+      +REACTIONS.filter(function(x){return x.t==='body'}).map(function(x){ return chipHTML(x.k,reactionLabel(x.k),d.reactions.indexOf(x.k)>=0); }).join('')+'</div></div>';
+    body+='<div class="tap-group"><div class="tap-h"><b>마음</b>'+tr('마음과 행동','Mind · action')+'</div><div class="chips">'
+      +REACTIONS.filter(function(x){return x.t==='mind'}).map(function(x){ return chipHTML(x.k,reactionLabel(x.k),d.reactions.indexOf(x.k)>=0); }).join('')+'</div></div>';
+  }else if(idx===3){
+    title=tr('그때 어떤 생각이 맴돌았나요?','What thought stayed with you?');
+    hint=tr('선택이에요. 스스로에게 했던 말을 그대로 적어보세요.','Optional. The words you said to yourself, exactly as they came.');
+    body='<textarea class="field" id="thoughtText" maxlength="1000" placeholder="'+esc(tr('예) 또 참았다. 나는 왜 말을 못 하지.','e.g. I held it in again. Why can’t I speak up.'))+'">'+esc(d.thoughts||'')+'</textarea>';
+  }else if(idx===4){
+    title=tr('그 아래에서 바라던 것은 무엇이었을까요?','What were you wishing for underneath?');
+    hint=tr('선택이에요. 정답이 아니라 가까운 것을 골라보는 거예요.','Optional. Not an answer — just the closest thing.');
+    body='<div class="chips">'+NEED_KEYS.map(function(n){ return chipHTML(n,needLabel(n),d.needs.indexOf(n)>=0); }).join('')+'</div>';
+    var custom=d.needs.filter(function(n){return NEED_KEYS.indexOf(n)<0});
+    if(custom.length) body+='<div class="chips" style="margin-top:9px">'+custom.map(function(n){ return chipHTML(n,n,d.needs.indexOf(n)>=0); }).join('')+'</div>';
+    body+='<div class="row" style="margin-top:11px"><input class="input" id="needCustom" type="text" maxlength="30" placeholder="'+esc(tr('직접 적기','Write your own'))+'"><button class="btn secondary small" style="flex:0 0 auto;width:auto;padding:12px 14px" onclick="addCustomNeed()">'+tr('추가','Add')+'</button></div>';
+    body+='<button type="button" class="btn ghost small" style="margin-top:12px" onclick="pickUnsureNeed()">'+tr('아직 잘 모르겠어요','Not sure yet')+'</button>';
+    body+='<p class="quiet" style="margin-top:9px">'+tr('‘잘 모르겠어요’도 괜찮은 답이에요. 다음 기록에서 다시 보이면 그때 이름을 붙여도 돼요.','“Not sure yet” is a real answer. If it shows up again, you can name it then.')+'</p>';
+  }else{
+    title=tr('오늘의 마음을 한 문장으로','Today’s feeling in one sentence');
+    hint=tr('앱이 적어둔 것을 모아 문장을 만들었어요. 그대로 두어도 되고, 직접 고쳐도 돼요.','The app gathered what you wrote into a sentence. Keep it, or rewrite it.');
+    var guess=d.selfExpression||interpretOf(d);
+    body='<textarea class="field" id="sentenceText" maxlength="240" placeholder="'+esc(tr('오늘의 마음을 한 문장으로 적어보세요','One sentence about today’s feeling'))+'">'+esc(guess)+'</textarea>';
+    body+='<button type="button" class="btn secondary small" style="margin-top:9px" onclick="askSentenceAI()">'+tr('✦ AI 도움 받아 다듬기','✦ Tidy it with AI')+'</button>';
+    body+='<p class="quiet" style="margin-top:9px">'+tr('위 문장은 기록에서 만든 <b>가능한 해석</b>이에요. 정답이 아니라 출발점이에요.','The sentence above is a <b>possible reading</b> built from your entry — a starting point, not an answer.')+'</p>';
+  }
+  var el=document.getElementById('stepCard');
+  if(el) el.innerHTML='<div class="card-title">'+esc(title)+'</div><p class="prompt">'+esc(hint)+'</p>'+body
+    +'<div style="text-align:right;color:#aaa;font-size:11px;margin-top:9px">'+(idx+1)+' / 6</div>'+(editingId?'<div class="quiet" style="margin-top:6px">'+tr('수정 중인 기록이에요','Editing an existing entry')+'</div>':'');
+  renderStepsBar();
+  bindPicks();
+}
+function bindPicks(){
+  var els=document.querySelectorAll('[data-pick]'),i;
+  for(i=0;i<els.length;i++){
+    (function(el){
+      el.addEventListener('click',function(){
+        var k=el.getAttribute('data-pick');
+        if(idx===0){ draft.situation.category=(draft.situation.category===k?'':k); }
+        else if(idx===1){ draft.emotions=draft.emotions.indexOf(k)>=0? draft.emotions.filter(function(x){return x!==k}) : draft.emotions.concat([k]); }
+        else if(idx===2){ draft.reactions=draft.reactions.indexOf(k)>=0? draft.reactions.filter(function(x){return x!==k}) : draft.reactions.concat([k]); }
+        else if(idx===4){ draft.needs=draft.needs.indexOf(k)>=0? draft.needs.filter(function(x){return x!==k}) : draft.needs.concat([k]); draft.needUnsure=false; }
+        renderStep();
+      });
+    })(els[i]);
+  }
+}
+function pickUnsureEmotion(){ draft.emotions=[]; toast(tr('감정은 넘어가도 괜찮아요','It is okay to skip the feeling')); nextStep(); }
+function pickUnsureNeed(){ draft.needs=[]; draft.needUnsure=true; renderStep(); toast(tr('‘아직 모르겠어요’로 표시했어요','Marked as “not sure yet”')); }
+function addCustomNeed(){
+  var el=document.getElementById('needCustom'); if(!el) return;
+  var v=String(el.value||'').replace(/\s+/g,' ').trim(); if(!v) return;
+  if(draft.needs.indexOf(v)<0) draft.needs=draft.needs.concat([v]);
+  draft.needUnsure=false; el.value=''; renderStep();
+}
+function collectCurrent(){
+  if(idx===0){ var a=document.getElementById('sitDesc'); if(a) draft.situation.description=a.value; }
+  if(idx===3){ var b=document.getElementById('thoughtText'); if(b) draft.thoughts=b.value; }
+  if(idx===5){ var c=document.getElementById('sentenceText'); if(c) draft.selfExpression=c.value; }
+}
+function nextStep(){
+  collectCurrent();
+  if(idx<5){ idx++; renderStep(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else saveRecord();
+}
+function prevStep(){
+  collectCurrent();
+  if(idx>0){ idx--; renderStep(); window.scrollTo({top:0,behavior:'smooth'}); } else show('home');
+}
+function skipStep(){
+  collectCurrent();
+  if(idx<5){ idx++; renderStep(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else saveRecord();
+}
+function saveEarly(){ collectCurrent(); saveRecord(); }
+
+/* ---------- 저장 ---------- */
+function draftHasAnything(d){
+  return !!(String(d.situation.description||'').trim()||d.situation.category||d.emotions.length||d.reactions.length||String(d.thoughts||'').trim()||d.needs.length||String(d.selfExpression||'').trim()||d.needUnsure);
+}
+function draftToRecord(d,base){
+  var emo=uniq(d.emotions||[]);
+  var ns=uniq(d.needs||[]);
+  if(d.needUnsure&&!ns.length) ns=['아직 잘 모르겠어요'];
+  var desc=String(d.situation.description||'');
+  var rec=base||{};
+  rec.id=base? base.id : Date.now();
+  rec.date=base? base.date : nowISO();
+  rec.situation=desc;
+  rec.situationCategory=d.situation.category||inferSitCat(desc);
+  rec.emotions=emo; rec.reactions=uniq(d.reactions||[]);
+  rec.thoughts=String(d.thoughts||'');
+  rec.needs=ns;
+  rec.selfExpression=String(d.selfExpression||'');
+  rec.reflection=String(rec.reflection||'');
+  rec.analysis={confirmed:null,userFeedback:'',at:''};
+  rec.schema=3;
+  if(!base) rec.source='step';
+  return normalizeRecord(rec);
+}
+function saveRecord(){
+  var d=draft;
+  if(!draftHasAnything(d)){
+    alert(tr('마음에 관한 내용을 하나 이상 적어주세요.','Please write at least one thing about how you feel.')); return;
+  }
+  var rec;
+  if(editingId){
+    var old=records.filter(function(x){return x.id===editingId})[0]||null;
+    rec=draftToRecord(d,old||null);
+    if(old){ for(var i=0;i<records.length;i++){ if(records[i].id===editingId){ records[i]=rec; break; } } }
+    else records.unshift(rec);
+    if(!rec.selfExpression) rec.selfExpression=interpretOf(draftFromRecord(rec));
+    rec.analysis={confirmed:null,userFeedback:'',at:nowISO()};
+  }else{
+    rec=draftToRecord(d,null);
+    if(!rec.selfExpression) rec.selfExpression=interpretOf(draftFromRecord(rec));
+    records.unshift(rec);
+  }
+  records.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+  persist();
+  if(cloudPushOne) cloudPushOne(rec);
+  editingId=null; detailId=rec.id;
+  aiState={loading:false,error:'',model:''};
+  renderDiscovery(rec.id);
+  show('discovery');
+  if(settings.aiAuto&&askAIFor) setTimeout(function(){ askAIFor(rec.id); },320);
+}
+
+/* =========================================================
+   해석 문장 · 질문 (규칙 기반 '가능한 해석' — 사용자가 고칠 수 있다)
+   ========================================================= */
+function interpretOf(d){
+  var emo=(d.emotions||[])[0]||'';
+  var need=(d.needs||[]).filter(function(n){return !isUnsureNeed(n)})[0]||'';
+  var cat=d.situation? d.situation.category:'';
+  var sit=sitCatLabel(cat);
+  var reaction=(d.reactions||[])[0]||'';
+  if(isEN()){
+    var s='';
+    if(emo&&need) s='Today, '+(cat? 'around '+sit.toLowerCase()+', ':'')+'“'+emotionLabel(emo)+'” came up, and underneath there may have been a wish for “'+needLabel(need)+'”.';
+    else if(emo) s='Today “'+emotionLabel(emo)+'” came up'+(cat? ' around '+sit.toLowerCase():'')+', and the wish underneath has not found its name yet.';
+    else if(need) s='Today there may have been a wish for “'+needLabel(need)+'”, even without a clear feeling name.';
+    else s='Today I wrote down what happened and left the feeling open for now.';
+    if(reaction) s+=' My body and mind answered with “'+reactionLabel(reaction)+'”.';
+    return s;
+  }
+  var k='';
+  if(emo&&need) k='오늘은 '+(cat? '‘'+sit+'’ 상황에서 ':'')+'‘'+emotionLabel(emo)+'’'+josa(emotionLabel(emo),'이','가')+' 올라왔고, 그 아래에는 ‘'+needLabel(need)+'’의 바람이 있었던 것 같아요.';
+  else if(emo) k='오늘은 '+(cat? '‘'+sit+'’ 상황에서 ':'')+'‘'+emotionLabel(emo)+'’'+josa(emotionLabel(emo),'이','가')+' 올라왔어요. 그 아래 바람은 아직 이름을 찾지 못했어요.';
+  else if(need) k='오늘은 뚜렷한 감정 이름 대신 ‘'+needLabel(need)+'’의 바람이 있었던 것 같아요.';
+  else k='오늘은 있었던 일을 적어두고, 감정은 잠시 열어두었어요.';
+  if(reaction) k+=' 몸과 마음은 ‘'+reactionLabel(reaction)+'’으로 반응했어요.';
+  return k;
+}
+function questionOf(r){
+  var emo=emotionsOf(r)[0]||'';
+  var need=needsOf(r).filter(function(n){return !isUnsureNeed(n)})[0]||'';
+  if(emo&&FEEL[emo]&&FEEL[emo].question){
+    var q=(isEN()&&FEEL_EN[emo]&&FEEL_EN[emo].question)? FEEL_EN[emo].question : FEEL[emo].question;
+    return q;
+  }
+  if(isEN()){
+    if(need) return 'If that wish for “'+needLabel(need)+'” were met a little, what would be different tomorrow?';
+    return 'If something similar happens again, what would you like to notice a little earlier?';
+  }
+  if(need) return '그 ‘'+needLabel(need)+'’의 바람이 조금이라도 채워진다면, 내일 무엇이 달라질까요?';
+  return '비슷한 일이 다시 생긴다면, 그때는 무엇을 조금 더 일찍 알아차리고 싶나요?';
+}
+function possibleReadingNote(){
+  return tr('아래 내용은 기록에서 만든 <b>가능한 해석</b>이에요. 사실과 다를 수 있고, 정답이 아니에요. 고치거나 분석에서 빼둘 수 있어요.','What follows is a <b>possible reading</b> built from your entry. It may not be right — not an answer. You can rewrite it or leave it out of the analysis.');
+}
+
+/* ---------- 화면 ③ 오늘의 마음 발견 ---------- */
+function renderDiscovery(id){
+  var el=document.getElementById('discoveryContent'); if(!el) return;
+  var r=records.filter(function(x){return x.id===id})[0];
+  if(!r){ el.innerHTML='<div class="empty">'+tr('기록을 찾을 수 없어요.','That entry could not be found.')+'</div>'; return; }
+  var fb=analysisOf(r).userFeedback;
+  var emo=emotionsOf(r).length? emotionsOf(r).map(function(f){return '<span class="tag">'+esc(emotionLabel(f))+'</span>'}).join('') : '<span class="quiet">'+tr('오늘은 감정을 고르지 않았어요','No feeling picked today')+'</span>';
+  var ns=needsOf(r).filter(function(n){return !isUnsureNeed(n)});
+  var needs=ns.length? ns.map(function(n){return '<span class="tag depth">'+esc(needLabel(n))+'</span>'}).join('') : '<span class="quiet">'+tr('아직 잘 모르겠어요','Not sure yet')+'</span>';
+  var sit=situationString(r);
+  var clue=mainClueFor(r);
+  var html='';
+  html+='<div class="hero"><div class="eyebrow">TODAY’S DISCOVERY ✧</div><h2>'+tr('오늘의 마음 발견','Today’s discovery')+'</h2><p>'+esc(dstr(r.date))+'</p></div>';
+  html+='<div class="card">';
+  html+='<div class="card-title">'+tr('오늘의 감정','Feelings today')+'</div><div class="chips">'+emo+'</div>';
+  html+='<div class="detail-label">'+tr('내가 원했던 것 (욕구)','What I wanted')+'</div><div class="chips">'+needs+'</div>';
+  if(sit) html+='<div class="detail-label">'+tr('적어둔 상황','What I wrote')+'</div><div class="detail-text">'+esc(cut(sit,240))+'</div>';
+  if(reactionsOf(r).length) html+='<div class="detail-label">'+tr('몸과 마음의 반응','Body and mind')+'</div><div class="detail-text">'+esc(reactionsOf(r).map(reactionLabel).join(' · '))+'</div>';
+  html+='</div>';
+  html+='<div class="card"><div class="card-title">'+tr('오늘의 마음 한 문장','Today’s feeling in one sentence')+'</div>';
+  html+='<div class="read-note">'+possibleReadingNote()+'</div>';
+  html+='<textarea class="field" id="discSentence" maxlength="240">'+esc(sentenceOf(r))+'</textarea>';
+  html+='<div class="row" style="margin-top:9px"><button class="btn small" onclick="saveSentence('+r.id+')">'+tr('이 문장으로 저장','Keep this sentence')+'</button><button class="btn secondary small" onclick="askAIFor('+r.id+')">'+(aiState.loading?'…':tr('✦ AI에게 더 묻기','✦ Ask AI'))+'</button></div>';
+  if(r.ai&&r.ai.comment){
+    html+='<div class="ai-box" style="margin-top:11px"><div class="ai-h">AI · '+tr('가능한 해석','possible reading')+'</div><div class="ai-text">'+esc(r.ai.comment)+'</div>'+(r.ai.question?'<div class="ai-q">'+esc(r.ai.question)+'</div>':'')+'</div>';
+  }
+  html+='</div>';
+  html+='<div class="card"><div class="card-title">'+tr('나에게 남기는 질문','A question to keep')+'</div><div class="qbox">'+esc(r.ai&&r.ai.question? r.ai.question : questionOf(r))+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 지금 하지 않아도 괜찮아요. 다음 기록에서 이어질 수 있어요.','You don’t have to answer now. It can carry into your next entry.')+'</p></div>';
+  if(clue){
+    html+='<div class="card clue"><div class="clue-h">✨ '+tr('최근 발견한 마음','Recently found')+' <span class="clue-badge">'+esc(clue.badge)+'</span></div><p class="clue-say">'+clue.sentence+'</p><p class="quiet" style="margin-top:6px">'+esc(clue.evidenceLine||'')+'</p><button class="btn secondary small" style="margin-top:10px" onclick="openPattern(\''+esc(clue.id)+'\')">'+tr('관련 기록 살펴보기','Look at the related entries')+'</button></div>';
+  }
+  html+='<div class="card"><div class="card-title">'+tr('이 해석이 맞나요?','Does this reading fit?')+'</div><p class="prompt">'+tr('틀렸다고 느끼면 분석에서 빼둘 수 있어요. 기록 자체는 그대로 남아요.','If it feels wrong, you can leave it out of the analysis. The entry itself stays.')+'</p>';
+  html+='<div class="row"><button class="btn secondary small" onclick="startEdit('+r.id+')">'+tr('✎ 직접 수정','✎ Edit')+'</button><button class="btn ghost small" onclick="setAnalysisFeedback('+r.id+',\''+(fb==='rejected'?'':'rejected')+'\')">'+(fb==='rejected'? tr('↺ 분석에 다시 포함','↺ Include again') : tr('✕ 틀렸어요 (분석 제외)','✕ Not right (leave out)'))+'</button></div>';
+  if(fb) html+='<p class="okline">'+(fb==='rejected'? tr('이 기록은 패턴 분석에서 제외되어 있어요.','This entry is excluded from pattern analysis.') : (fb==='partial'? tr('‘일부 달라요’로 표시했어요.','Marked as “partly different”.') : tr('‘맞아요’로 표시했어요.','Marked as “fits”.')))+'</p>';
+  html+='<button class="btn secondary small" style="margin-top:9px" onclick="openDeep('+r.id+')">'+tr('🧊 이 기록의 심층 리포트 (방어기제 · AI)','🧊 Deep report for this entry')+'</button>';
+  html+='</div>';
+  html+='<div class="row"><button class="btn" onclick="show(\'home\')">'+tr('홈으로','Home')+'</button><button class="btn secondary" onclick="show(\'report\')">'+tr('리포트 보기','Report')+'</button></div>';
+  el.innerHTML=html;
+}
+function saveSentence(id){
+  var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
+  var el=document.getElementById('discSentence'); if(!el) return;
+  var v=String(el.value||'').replace(/\s+/g,' ').trim();
+  r.selfExpression=v; r.action=v;
+  persist(); if(cloudPushOne) cloudPushOne(r);
+  toast(tr('내 문장으로 저장했어요','Saved as your own sentence'));
+  renderDiscovery(id);
+}
+function setAnalysisFeedback(id,fb){
+  var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
+  r.analysis={confirmed:fb==='confirmed'?true:(fb==='rejected'?false:null),userFeedback:fb||'',at:nowISO()};
+  persist(); if(cloudPushOne) cloudPushOne(r);
+  toast(fb==='rejected'? tr('이 기록은 분석에서 빼두었어요','Left out of the analysis') : tr('다시 분석에 포함했어요','Included in the analysis again'));
+  renderDiscovery(id);
+}
+function toggleExclude(id,exclude){ setAnalysisFeedback(id, exclude?'rejected':''); }
+
+/* ---------- 30초 퀵 기록 ---------- */
+var quickFeels=[], QUICK_MAX=3;
+function startQuick(){ quickFeels=[]; renderQuick(); show('quick'); }
+function renderQuick(){
+  var box=document.getElementById('quickChips'); if(!box) return;
+  box.innerHTML=EMOTIONS.map(function(f){ return '<button type="button" class="chip '+(quickFeels.indexOf(f)>=0?'selected':'')+'" data-qf="'+esc(f)+'">'+esc(emotionLabel(f))+'</button>'; }).join('');
+  var els=box.querySelectorAll('[data-qf]'),i;
+  for(i=0;i<els.length;i++){ (function(el){ el.addEventListener('click',function(){ toggleQuickFeeling(el.getAttribute('data-qf')); }); })(els[i]); }
+  var cnt=document.getElementById('quickCount'); if(cnt) cnt.textContent=quickFeels.length+' / '+QUICK_MAX;
+  var btn=document.getElementById('quickSave');
+  if(btn){ btn.disabled=!quickFeels.length; btn.textContent=quickFeels.length? tr('저장하고 발견 보기','Save and see the discovery') : tr('감정을 하나 골라 주세요','Pick one feeling'); }
+}
+function toggleQuickFeeling(f){
+  if(quickFeels.indexOf(f)>=0) quickFeels=quickFeels.filter(function(x){return x!==f});
+  else if(quickFeels.length<QUICK_MAX) quickFeels=quickFeels.concat([f]);
+  else toast(tr('감정은 '+QUICK_MAX+'개까지 고를 수 있어요','Up to '+QUICK_MAX+' feelings'));
+  renderQuick();
+}
+function saveQuick(){
+  if(!quickFeels.length){ toast(tr('감정을 하나 골라 주세요','Pick one feeling')); return; }
+  var noteEl=document.getElementById('quickNote');
+  var note=noteEl? String(noteEl.value||'').trim() : '';
+  var rec=normalizeRecord({id:Date.now(),date:nowISO(),situation:note,situationCategory:inferSitCat(note),
+    emotions:quickFeels.slice(),reactions:[],thoughts:note,needs:[],selfExpression:'',
+    analysis:{confirmed:null,userFeedback:'',at:''},source:'quick',schema:3});
+  if(!rec.selfExpression) rec.selfExpression=interpretOf(draftFromRecord(rec));
+  records.unshift(rec); records.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+  persist(); if(cloudPushOne) cloudPushOne(rec);
+  quickFeels=[]; if(noteEl) noteEl.value='';
+  detailId=rec.id; renderDiscovery(rec.id); show('discovery');
+}
+
+/* ---------- 3초 원탭 (기존 칩 그대로) ---------- */
+var TAP_SIT=[
+  {k:'직장·업무',en:'work',cat:'일·업무'},
+  {k:'사람과의 일',en:'a problem with someone',cat:'관계'},
+  {k:'가족',en:'family',cat:'가족'},
+  {k:'연인·친구',en:'my partner or a friend',cat:'관계'},
+  {k:'연락·관계',en:'messages and contact',cat:'관계'},
+  {k:'돈·일정',en:'money and plans',cat:'돈·생활'},
+  {k:'내 자신',en:'myself',cat:'기타'},
+  {k:'잠·몸',en:'sleep and my body',cat:'몸·건강'},
+  {k:'그냥 하루',en:'just the day',cat:'기타'}
+];
+var TAP_REACT=[
+  {k:'가슴이 답답해요',en:'my chest feels tight'},
+  {k:'자꾸 생각나요',en:'I keep thinking about it'},
+  {k:'화가 치밀어요',en:'anger rising'},
+  {k:'눈물이 날 것 같아요',en:'close to tears'},
+  {k:'아무것도 못 하겠어요',en:"I can't get anything done"},
+  {k:'멍해져요',en:'I feel numb'},
+  {k:'잠이 안 와요',en:"I can't sleep"},
+  {k:'괜찮은 척했어요',en:'I pretended to be fine'},
+  {k:'몸이 무거워요',en:'my body feels heavy'}
+];
+var tapSit=null, tapFeels=[], tapReacts=[];
+function tapLabel(o){ return isEN()? (o.en||o.k) : o.k; }
+function startTap(){ tapSit=null; tapFeels=[]; tapReacts=[]; renderTap(); show('tap'); }
+function tapReady(){ return tapFeels.length>0 && ((tapSit?1:0)+tapFeels.length+tapReacts.length)>=2; }
+function renderTap(){
+  var box=document.getElementById('tapBody'); if(!box) return;
+  var h='';
+  h+='<div class="tap-group"><div class="tap-h"><b>1</b>'+tr('어떤 일이었나요?','What was it about?')+'<em>'+tr('선택','optional')+'</em></div><div class="tap-chips">'
+    +TAP_SIT.map(function(o){ return '<button type="button" class="chip '+(tapSit===o.k?'selected':'')+'" data-ts="'+esc(o.k)+'">'+esc(tapLabel(o))+'</button>'; }).join('')+'</div></div>';
+  h+='<div class="tap-group"><div class="tap-h"><b>2</b>'+tr('지금 감정은?','How do you feel now?')+'<em>'+tr('1개 이상','at least one')+'</em></div><div class="tap-chips">'
+    +EMOTIONS.map(function(f){ return '<button type="button" class="chip '+(tapFeels.indexOf(f)>=0?'selected':'')+'" data-tf="'+esc(f)+'">'+esc(emotionLabel(f))+'</button>'; }).join('')+'</div></div>';
+  h+='<div class="tap-group"><div class="tap-h"><b>3</b>'+tr('몸과 마음의 반응','Body and mind')+'<em>'+tr('선택','optional')+'</em></div><div class="tap-chips">'
+    +TAP_REACT.map(function(o){ return '<button type="button" class="chip '+(tapReacts.indexOf(o.k)>=0?'selected':'')+'" data-tr="'+esc(o.k)+'">'+esc(tapLabel(o))+'</button>'; }).join('')+'</div></div>';
+  h+='<div class="tap-preview">'+(tapReady()
+      ? '<b>'+tr('이렇게 저장돼요','This is what saves')+'</b><br>'+esc([tapSit,tapFeels.map(emotionLabel).join(' · '),tapReacts.join(' · ')].filter(Boolean).join(' · '))
+      : tr('칩을 두 개만 눌러도 저장할 수 있어요.','Two taps are enough to save.'))+'</div>';
+  h+='<div class="tap-count">'+tr('저장하면 오늘의 마음 발견 화면이 열려요','Saving opens today’s discovery screen')+'</div>';
+  h+='<button class="btn quick" onclick="saveTap()" '+(tapReady()?'':'disabled')+'>'+tr('저장하고 발견 보기','Save and see the discovery')+'</button>';
+  box.innerHTML=h;
+  var a=box.querySelectorAll('[data-ts]'),b=box.querySelectorAll('[data-tf]'),c=box.querySelectorAll('[data-tr]'),i;
+  for(i=0;i<a.length;i++){ (function(el){ el.addEventListener('click',function(){ tapSit=(tapSit===el.getAttribute('data-ts')?null:el.getAttribute('data-ts')); renderTap(); }); })(a[i]); }
+  for(i=0;i<b.length;i++){ (function(el){ el.addEventListener('click',function(){ var k=el.getAttribute('data-tf'); tapFeels=tapFeels.indexOf(k)>=0? tapFeels.filter(function(x){return x!==k}) : tapFeels.concat([k]); renderTap(); }); })(b[i]); }
+  for(i=0;i<c.length;i++){ (function(el){ el.addEventListener('click',function(){ var k=el.getAttribute('data-tr'); tapReacts=tapReacts.indexOf(k)>=0? tapReacts.filter(function(x){return x!==k}) : tapReacts.concat([k]); renderTap(); }); })(c[i]); }
+}
+function saveTap(){
+  if(!tapReady()){ toast(tr('감정을 하나 골라 주세요','Pick one feeling')); return; }
+  var cat=''; TAP_SIT.forEach(function(o){ if(o.k===tapSit) cat=o.cat; });
+  var rec=normalizeRecord({id:Date.now(),date:nowISO(),situation:tapSit||'',situationCategory:cat,
+    emotions:tapFeels.slice(),reactions:tapReacts.slice(),thoughts:'',needs:[],selfExpression:'',
+    analysis:{confirmed:null,userFeedback:'',at:''},source:'tap',schema:3});
+  rec.selfExpression=interpretOf(draftFromRecord(rec));
+  records.unshift(rec); records.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+  persist(); if(cloudPushOne) cloudPushOne(rec);
+  tapSit=null; tapFeels=[]; tapReacts=[];
+  detailId=rec.id; renderDiscovery(rec.id); show('discovery');
+}
+
+
+/* =========================================================
+   규칙 기반 패턴 분석 엔진 (analyzePatterns)
+   패턴 유형: situation / emotion / need / connection(situation_emotion_need)
+
+   신뢰도 규칙
+   · 관련 기록 1개                       → 개별 기록 (반복 패턴이라 부르지 않음)
+   · 같은 항목 2개 (서로 다른 2일 이상)   → 반복 가능성 관찰
+   · 같은 항목 3개 이상 & 서로 다른 날 3일 이상 → 반복 단서
+     → 하루에 몰아 쓴 3건(recordCount 3, distinctDays 1)은 절대 단서가 아니다.
+   · 한 기록에 같은 감정이 중복 입력돼도 1회만, 복수 감정은 각각 1회씩 센다.
+   · 최근 7일과 전체는 각각 따로 계산한다(섞지 않는다).
+   ========================================================= */
+var LS_PAT='maeum-pattern-state';
+function patternStateStore(){
+  try{ var o=JSON.parse(localStorage.getItem(LS_PAT)||'{}'); return (o&&typeof o==='object')?o:{}; }catch(e){ return {}; }
+}
+function savePatternState(o){ try{ localStorage.setItem(LS_PAT,JSON.stringify(o)); }catch(e){} }
+function patternStateOf(id){
+  var s=patternStateStore()[id];
+  return (s&&typeof s==='object'&&s.status)? s : null;
+}
+function setPatternFeedback(id,status,pat){
+  var store=patternStateStore();
+  store[id]={status:status,snapshot:pat?{count:pat.count,distinctDays:pat.distinctDays,evidence:pat.evidenceIds.slice()}:{},at:nowISO()};
+  savePatternState(store);
+  renderPatternUi();
+}
+function renderPatternUi(){
+  if(currentView==='map') renderMap(); else if(currentView==='report') renderReport(); else if(currentView==='layer') renderLayer(); else if(currentView==='home'){ renderHomeTop(); }
+  else if(currentView==='discovery'&&detailId!=null) renderDiscovery(detailId);
+}
+
+/* 최근 7일 / 전체 — 각자 자기 기간만 센다 */
+function scopeRecords(scope){
+  var list=records.filter(function(r){ return !recordRejected(r); });
+  if(scope==='7'){
+    var from=Date.now()-7*86400000;
+    list=list.filter(function(r){ var t=new Date(r.date).getTime(); return t>=from; });
+  }
+  return list;
+}
+/* 단계 구분 — 1~2건 관찰 / 3~6건 초기 단서 / 7건+ 패턴 탐색 / 14건+ 기간 비교 */
+function patternLevel(n){ if(n>=14) return 4; if(n>=7) return 3; if(n>=3) return 2; if(n>=1) return 1; return 0; }
+function levelTitle(lv){ return isEN()? ['No entries yet','Observation','Early clues','Looking for patterns','Comparing periods'][lv] : ['아직 기록 없음','관찰 단계','초기 단서','패턴 탐색','기간별 비교'][lv]; }
+function levelNote(n){
+  var lv=patternLevel(n);
+  if(lv===0) return isEN()? 'Patterns are not made up here. Record once and the first observation begins.' : '없는 패턴은 만들지 않아요. 한 번 기록하면 첫 관찰이 시작돼요.';
+  if(lv===1) return isEN()? n+' entr'+(n===1?'y':'ies')+' so far — too early to call anything a repeat.' : '지금 '+n+'건이라 아직 ‘반복’이라고 부를 수 없어요. 한두 번만 더 쌓이면 단서가 보이기 시작해요.';
+  if(lv===2) return isEN()? 'Clues observed in your recent '+n+' entries · this is not a definitive personality analysis.' : '최근 기록 '+n+'건에서 관찰된 단서 · 확정적인 성격 분석이 아닙니다';
+  if(lv===3) return isEN()? 'In '+n+' entries situations, feelings and wishes begin to link up.' : '기록 '+n+'건에서 상황·감정·욕구의 연결이 보이기 시작했어요.';
+  return isEN()? n+' entries — enough to compare one period with another.' : '기록 '+n+'건 — 기간을 나눠 비교해 볼 수 있는 양이에요.';
+}
+function itemLabel(kind,key){
+  if(kind==='emotion') return emotionLabel(key);
+  if(kind==='situation') return sitCatLabel(key);
+  if(kind==='need') return needLabel(key);
+  if(kind==='reaction') return reactionLabel(key);
+  if(kind==='cross'||kind==='connection') return String(key);
+  return String(key||'');
+}
+function distinctDaysOf(list){
+  return uniq(list.map(function(r){ return dayKey(new Date(r.date)); }));
+}
+function confidenceOf(count,days){
+  if(count>=3&&days>=3) return 'clue';
+  if(count>=2&&days>=2) return 'repeat_possible';
+  return 'record';
+}
+function confidenceLabel(lv){
+  return isEN()? ({record:'single entry',repeat_possible:'possible repetition',clue:'repeating clue'}[lv]||lv)
+               : ({record:'개별 기록',repeat_possible:'반복 가능성 관찰',clue:'반복 단서'}[lv]||lv);
+}
+function patternSentence(type,key,count,days,n,extra){
+  var lab=itemLabel(type,key);
+  if(isEN()){
+    if(type==='situation') return 'In '+count+' of '+n+' entries the situation was '+lab.toLowerCase()+' — on '+days+' different days.';
+    if(type==='emotion') return '“'+lab+'” came up in '+count+' of '+n+' entries, on '+days+' different days.';
+    if(type==='need') return 'A wish for “'+lab+'” was written in '+count+' of '+n+' entries, on '+days+' different days.';
+    if(type==='connection') return 'In '+count+' entries the situation was '+extra.situation.toLowerCase()+', the feeling “'+extra.emotion+'” and a wish for “'+extra.need+'” were written together — on '+days+' different days.';
+    return '';
+  }
+  if(type==='situation') return '최근 기록 '+n+'건 중 '+count+'건이 ‘'+lab+'’ 상황이었어요. 서로 다른 '+days+'일에 걸쳐 있었어요.';
+  if(type==='emotion') return '최근 기록 '+n+'건 중 '+count+'건에서 ‘'+lab+'’'+josa(lab,'이','가')+' 올라왔어요. 서로 다른 '+days+'일의 기록이에요.';
+  if(type==='need') return '최근 기록 '+n+'건 중 '+count+'건에 ‘'+lab+'’의 바람이 적혀 있었어요. 서로 다른 '+days+'일이에요.';
+  if(type==='connection') return '‘'+extra.situation+'’ 상황에서 ‘'+extra.emotion+'’이 올라오고 ‘'+extra.need+'’의 바람이 함께 적힌 기록이 '+count+'건이에요. 서로 다른 '+days+'일의 기록에서 같은 조합이 보였어요.';
+  return '';
+}
+function makePattern(type,key,list,extra){
+  var ev=list;
+  var days=distinctDaysOf(ev);
+  var lv=confidenceOf(ev.length,days.length);
+  return {
+    id:type+'|'+key,
+    type:type, key:key,
+    keys:extra||null,
+    count:ev.length,
+    distinctDays:days.length,
+    days:days,
+    evidenceIds:ev.map(function(r){ return r.id; }),
+    level:lv,
+    label:itemLabel(type,key),
+    sentence:patternSentence(type,key,ev.length,days.length,0,extra||{})
+  };
+}
+function analyzePatterns(scope){
+  scope=(scope==='7')?'7':'all';
+  var list=scopeRecords(scope);
+  var n=list.length;
+  var all=[];
+
+  /* 상황 패턴 — 한 기록에 한 상황이므로 기록 수 = 항목 수 */
+  var sitBy={};
+  list.forEach(function(r){ var c=sitCatOf(r); if(!c) return; (sitBy[c]=sitBy[c]||[]).push(r); });
+  Object.keys(sitBy).forEach(function(k){ all.push(makePattern('situation',k,sitBy[k])); });
+
+  /* 감정 패턴 — 한 기록 안의 중복은 1회, 여러 감정은 각각 1회 */
+  var emoBy={};
+  list.forEach(function(r){ uniq(emotionsOf(r)).forEach(function(f){ (emoBy[f]=emoBy[f]||[]).push(r); }); });
+  Object.keys(emoBy).forEach(function(k){ all.push(makePattern('emotion',k,emoBy[k])); });
+
+  /* 욕구 패턴 — 욕구가 없는 기록은 집계에서 자연히 빠진다 */
+  var needBy={};
+  list.forEach(function(r){ needsOf(r).filter(function(x){return !isUnsureNeed(x)}).forEach(function(nd){ (needBy[nd]=needBy[nd]||[]).push(r); }); });
+  Object.keys(needBy).forEach(function(k){ all.push(makePattern('need',k,needBy[k])); });
+
+  /* 연결 패턴 — 상황·감정·욕구가 '같은 기록'에 실제로 함께 있는 경우만 */
+  var triBy={};
+  list.forEach(function(r){
+    var sit=sitCatOf(r); if(!sit) return;
+    var es=uniq(emotionsOf(r)); var ns=needsOf(r).filter(function(x){return !isUnsureNeed(x)});
+    if(!es.length||!ns.length) return;
+    es.forEach(function(e){ ns.forEach(function(nd){
+      var k=sit+'||'+e+'||'+nd;
+      (triBy[k]=triBy[k]||[]).push(r);
+    }); });
+  });
+  Object.keys(triBy).forEach(function(k){
+    var parts=k.split('||');
+    var ev=triBy[k];
+    /* 같은 기록이 중복으로 들어가지 않도록 id 기준 1회만 */
+    var seen={}, uniqEv=[];
+    ev.forEach(function(r){ if(!seen[r.id]){ seen[r.id]=1; uniqEv.push(r); } });
+    var days=distinctDaysOf(uniqEv);
+    var lv=confidenceOf(uniqEv.length,days.length);
+    var p=makePattern('connection',k,uniqEv,{situation:sitCatLabel(parts[0]),emotion:emotionLabel(parts[1]),need:needLabel(parts[2]),situationKey:parts[0],emotionKey:parts[1],needKey:parts[2]});
+    p.label=sitCatLabel(parts[0])+' · '+emotionLabel(parts[1])+' · '+needLabel(parts[2]);
+    p.level=lv;
+    p.sentence=patternSentence('connection',k,uniqEv.length,days.length,0,p.keys);
+    /* 검증: 세 요소가 정말 같은 기록에 있는지 다시 확인 */
+    p.verified=p.evidenceIds.every(function(id){
+      var r=records.filter(function(x){return x.id===id})[0]; if(!r) return false;
+      return sitCatOf(r)===parts[0] && emotionsOf(r).indexOf(parts[1])>=0 && needsOf(r).indexOf(parts[2])>=0;
+    });
+    all.push(p);
+  });
+
+  /* 인사이트 1 · 서로 다른 상황을 가로지르는 반복 (crossSituationPatterns) */
+  crossSituationPatterns(list).forEach(function(p){ all.push(p); });
+
+  /* 상태(후보/확인/거부) 붙이기 */
+  all.forEach(function(p){
+    var st=patternStateOf(p.id);
+    var visible=true, status='candidate';
+    if(st){
+      if(st.status==='rejected'){
+        var snap=st.snapshot||{};
+        var changed=(p.count>=(snap.count||0)+2)||(p.distinctDays>=(snap.distinctDays||0)+2);
+        visible=changed; status=changed?'candidate':'rejected';
+      }else status=st.status;
+    }
+    p.status=status; p.hidden=!visible; p.state=st;
+  });
+
+  var active=all.filter(function(p){ return !p.hidden && p.level!=='record'; })
+    .sort(function(a,b){
+      var rank={clue:0,repeat_possible:1,record:2};
+      if(rank[a.level]!==rank[b.level]) return rank[a.level]-rank[b.level];
+      if(b.distinctDays!==a.distinctDays) return b.distinctDays-a.distinctDays;
+      return b.count-a.count;
+    });
+  var observations=all.filter(function(p){ return !p.hidden && p.level==='record'; })
+    .sort(function(a,b){ return b.count-a.count; });
+  return {
+    scope:scope, n:n, list:list,
+    lv:patternLevel(n), levelLabel:levelTitle(patternLevel(n)),
+    note:levelNote(n),
+    patterns:all, active:active, observations:observations,
+    connections:active.filter(function(p){return p.type==='connection'&&p.verified;}),
+    crosses:active.filter(function(p){return p.type==='cross';}),
+    mismatches:mismatchInsights(list),
+    blindSpots:blindSpots(list),
+    top:{situation:byType(active,'situation')[0]||null,emotion:byType(active,'emotion')[0]||null,need:byType(active,'need')[0]||null}
+  };
+}
+
+/* =========================================================
+   인사이트 1 · crossSituationPatterns
+   같은 상황이 아니라 '서로 다른 상황'에서 같은 감정→욕구가 반복될 때
+   (distinctSituations >= 2, distinctDays >= 3, 기록 3건 이상)
+   ========================================================= */
+function crossSituationPatterns(list){
+  var out=[];
+  var byPair={};
+  list.forEach(function(r){
+    var sit=sitCatOf(r); if(!sit) return;
+    var es=uniq(emotionsOf(r));
+    var ns=needsOf(r).filter(function(x){return !isUnsureNeed(x)});
+    es.forEach(function(e){
+      if(ns.length) ns.forEach(function(nd){ var k=e+'||'+nd; (byPair[k]=byPair[k]||[]).push(r); });
+      else { var k2=e+'||'; (byPair[k2]=byPair[k2]||[]).push(r); }
+    });
+    if(!es.length) ns.forEach(function(nd){ var k3='||'+nd; (byPair[k3]=byPair[k3]||[]).push(r); });
+  });
+  Object.keys(byPair).forEach(function(k){
+    var parts=k.split('||'), e=parts[0], nd=parts[1];
+    var ev=byPair[k], seen={}, uniqEv=[];
+    ev.forEach(function(r){ if(!seen[r.id]){ seen[r.id]=1; uniqEv.push(r); } });
+    var sits=uniq(uniqEv.map(sitCatOf).filter(Boolean));
+    var days=distinctDaysOf(uniqEv);
+    if(uniqEv.length<3||days.length<3||sits.length<2) return;
+    var label=(e?emotionLabel(e):'')+(e&&nd?' → ':'')+(nd?needLabel(nd):'');
+    var sentence;
+    if(isEN()){
+      var sl=sits.map(sitCatLabel).join(', ');
+      sentence='The situations were different — '+sl+' — but '+(e?'“'+emotionLabel(e)+'” ':'')+(nd?'and a wish for “'+needLabel(nd)+'” ':'')+'kept coming back together ('+uniqEv.length+' entries over '+days.length+' days).';
+    }else{
+      var slk=sits.map(sitCatLabel).join(' · ');
+      sentence='상황은 ‘'+slk+'’처럼 서로 달랐지만, '+(e?'‘'+emotionLabel(e)+'’'+(nd?'과 ':''):'')+(nd?'‘'+needLabel(nd)+'’의 바람이 ':'')+'함께 '+uniqEv.length+'건에서 반복됐어요 (서로 다른 '+days.length+'일).';
+    }
+    out.push({id:'cross|'+k,type:'cross',key:k,emotion:e,need:nd,count:uniqEv.length,distinctDays:days.length,
+      distinctSituations:sits.length,situations:sits,evidenceIds:uniqEv.map(idOf),level:'clue',label:label,sentence:sentence});
+  });
+  return out;
+}
+
+/* =========================================================
+   인사이트 2 · mismatchInsights
+   욕구는 연결·표현 쪽인데 같은 기록의 반응이 억제·회피 쪽일 때 — 단정 대신 질문으로
+   ========================================================= */
+var CONNECT_NEEDS=['인정','이해','관심','존중','표현','함께함'];
+var SUPPRESS_REACTS=['괜찮은 척했어요','아무것도 못 했다','말을 못 하고 삼켰다','자리를 피했다','웃으며 넘겼다','다른 일로 바빴다','멍해져요','괜찮은 척'];    
+function mismatchInsights(list){
+  var ev=list.filter(function(r){
+    var ns=needsOf(r);
+    var rs=reactionsOf(r);
+    var hasNeed=ns.some(function(x){ return CONNECT_NEEDS.indexOf(x)>=0; });
+    var hasSup=rs.some(function(x){ return SUPPRESS_REACTS.indexOf(x)>=0; });
+    return hasNeed&&hasSup;
+  });
+  if(!ev.length) return [];
+  var days=distinctDaysOf(ev);
+  if(ev.length<3||days.length<3) return [];
+  var needC={}, reaC={};
+  ev.forEach(function(r){
+    needsOf(r).filter(function(x){return CONNECT_NEEDS.indexOf(x)>=0}).forEach(function(x){ needC[x]=(needC[x]||0)+1; });
+    reactionsOf(r).filter(function(x){return SUPPRESS_REACTS.indexOf(x)>=0}).forEach(function(x){ reaC[x]=(reaC[x]||0)+1; });
+  });
+  var needTop=Object.keys(needC).sort(function(a,b){return needC[b]-needC[a]})[0]||'';
+  var reaTop=Object.keys(reaC).sort(function(a,b){return reaC[b]-reaC[a]})[0]||'';
+  var q=isEN()
+    ? 'In '+ev.length+' entries (over '+days.length+' days) the wish was for “'+needLabel(needTop)+'”, while the reaction written down was “'+reactionLabel(reaTop)+'”. Might what you wish for and how it comes out be moving in different directions?'
+    : '원하는 마음은 ‘'+needLabel(needTop)+'’인데, 실제 반응은 ‘'+reactionLabel(reaTop)+'’으로 이어진 기록이 '+ev.length+'건(서로 다른 '+days.length+'일) 있어요. 바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않나요?';
+  return [{id:'mismatch|'+needTop+'|'+reaTop,type:'mismatch',need:needTop,reaction:reaTop,count:ev.length,distinctDays:days.length,evidenceIds:ev.map(idOf),sentence:q}];
+}
+
+/* =========================================================
+   인사이트 3 · blindSpots
+   기록이 충분히 쌓였을 때(7건 이상·서로 다른 3일 이상) 한 번도 고르지 않은 영역 1개만 부드럽게
+   ========================================================= */
+function blindSpots(list){
+  if(list.length<7) return [];
+  if(distinctDaysOf(list).length<3) return [];
+  var usedEmo=uniq([].concat.apply([],list.map(function(r){return emotionsOf(r)})));
+  var usedNeed=uniq([].concat.apply([],list.map(function(r){return needsOf(r).filter(function(x){return !isUnsureNeed(x)})})));
+  var unEmo=EMOTIONS.filter(function(e){ return usedEmo.indexOf(e)<0; });
+  var unNeed=NEED_KEYS.filter(function(n){ return usedNeed.indexOf(n)<0; });
+  if(unEmo.length){
+    var e=unEmo[0];
+    return [{id:'blind|emotion|'+e,type:'blind',kind:'emotion',key:e,
+      sentence:isEN()
+        ? '“'+emotionLabel(e)+'” has not been picked in any entry so far. It may simply not be part of your days — or it may be one that is hard to name. Was there a moment like that recently?'
+        : '지금까지 ‘'+emotionLabel(e)+'’은 한 번도 고르지 않았어요. 그 감정이 없어서일 수도 있고, 잘 올라오지 않는 것일 수도 있어요. 요즘 그런 마음이 스쳤던 순간이 있었는지 한 번 떠올려 볼까요?'}];
+  }
+  if(unNeed.length){
+    var n=unNeed[0];
+    return [{id:'blind|need|'+n,type:'blind',kind:'need',key:n,
+      sentence:isEN()
+        ? 'The wish for “'+needLabel(n)+'” has not appeared yet. No need has to appear — but if it did, where might it show up in your days?'
+        : '‘'+needLabel(n)+'’의 바람은 아직 한 번도 나오지 않았어요. 꼭 있어야 하는 건 아니지만, 있다면 요즘 어디쯤에서 보일까요?'}];
+  }
+  return [];
+}
+function byType(active,type){ return active.filter(function(p){return p.type===type;}); }
+function patternById(id){
+  var list=[analyzePatterns('all').patterns,analyzePatterns('7').patterns],i,j;
+  for(i=0;i<list.length;i++){ for(j=0;j<list[i].length;j++){ if(list[i][j].id===id) return list[i][j]; } }
+  return null;
+}
+function evidenceOfPattern(p){
+  if(!p) return [];
+  var ids=p.evidenceIds||[];
+  return ids.map(function(id){ return records.filter(function(x){return x.id===id})[0]; }).filter(Boolean);
+}
+function evidenceLine(p){
+  if(!p) return '';
+  return tr('근거 기록 '+p.count+'건 · 서로 다른 '+p.distinctDays+'일','based on '+p.count+' entries over '+p.distinctDays+' days');
+}
+/* 한 기록에서 발견되는 단서 — 자기 자신을 뺀 근거가 2건 이상일 때만 */
+function mainClueFor(r){
+  var a=analyzePatterns('all');
+  var mine=null;
+  a.active.forEach(function(p){
+    if(mine) return;
+    if(p.evidenceIds.indexOf(r.id)<0) return;
+    var others=p.evidenceIds.filter(function(id){return id!==r.id;});
+    if(others.length>=2&&p.level!=='record'){ p.evidenceLine=evidenceLine(p); mine=p; }
+  });
+  return mine;
+}
+
+
+/* =========================================================
+   화면 ① 홈 · ④ 빙하 지도 · 층/패턴 근거 · ⑤ 리포트
+   ========================================================= */
+var layerKind='', layerFocus='', layerPatternId='';
+var patternScope='all';   /* '7' | 'all' — 섞지 않는다 */
+
+function scopeToggle(){
+  return '<div class="seg"><button class="'+(patternScope==='7'?'on':'')+'" onclick="setScope(\'7\')">'+tr('최근 7일','Last 7 days')+'</button><button class="'+(patternScope==='all'?'on':'')+'" onclick="setScope(\'all\')">'+tr('전체','All')+'</button></div>';
+}
+function setScope(s){ patternScope=(s==='7')?'7':'all'; if(currentView==='report') renderReport(); else if(currentView==='map') renderMap(); else refreshView(); }
+function scopeLine(a){
+  if(!a.list.length) return tr('이 기간에는 기록이 없어요','No entries in this period');
+  var first=new Date(a.list[a.list.length-1].date), last=new Date(a.list[0].date);
+  return (a.scope==='7'? tr('최근 7일','last 7 days') : tr('전체 기록','all entries'))+' · '+esc(dshort(first))+' ~ '+esc(dshort(last));
+}
+function feedbackRow(p){
+  return '<div class="pat-fb">'
+    +'<button class="'+(p.status==='confirmed'?'on':'')+'" onclick="feedbackPattern(\''+esc(p.id)+'\',\'confirmed\')">'+tr('맞아요','Fits')+'</button>'
+    +'<button class="'+(p.status==='partial'?'on':'')+'" onclick="feedbackPattern(\''+esc(p.id)+'\',\'partial\')">'+tr('일부 달라요','Partly')+'</button>'
+    +'<button class="'+(p.status==='rejected'?'on':'')+'" onclick="feedbackPattern(\''+esc(p.id)+'\',\'rejected\')">'+tr('내 마음과 달라요','Not like me')+'</button>'
+    +'</div>';
+}
+function feedbackPattern(id,status){
+  var p=patternById(id);
+  setPatternFeedback(id,status,p);
+  toast(status==='rejected'? tr('이 단서는 다시 띄우지 않을게요','I will not show this clue again') : (status==='confirmed'? tr('확인한 패턴으로 표시했어요','Marked as confirmed') : tr('‘일부 달라요’로 표시했어요','Marked as partly different')));
+}
+function patternCard(p,opts){
+  opts=opts||{};
+  var statusBadge = p.status==='confirmed'? ' · '+tr('확인함','confirmed') : (p.status==='partial'? ' · '+tr('일부 다름','partly') : '');
+  return '<div class="pat-card">'
+    +'<div class="pat-h"><span class="pat-badge">'+esc(confidenceLabel(p.level))+statusBadge+'</span>'
+    +(p.type==='cross'?'<span class="pat-type">'+tr('상황을 가로지르는 반복','across situations')+'</span>':'')
+    +(p.type==='connection'?'<span class="pat-type">'+tr('연결 패턴','connection')+'</span>':'')
+    +'</div>'
+    +'<p class="pat-say">'+p.sentence+'</p>'
+    +'<p class="quiet" style="margin:4px 0 0">'+esc(evidenceLine(p))+'</p>'
+    +(opts.hideFb?'':feedbackRow(p))
+    +'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록 보기','See the entries')+'</button>'
+    +'</div>';
+}
+function insightCard(icon,title,body,ids){
+  return '<div class="pat-card insight"><div class="pat-h"><span class="pat-badge">'+esc(title)+'</span></div><p class="pat-say">'+body+'</p>'
+    +(ids&&ids.length?'<button class="btn secondary small" style="margin-top:8px" onclick="openIds(\''+ids.join(',')+'\')">'+tr('근거 기록 보기','See the entries')+'</button>':'')
+    +'</div>';
+}
+
+/* ---------- 홈 ---------- */
+function renderHomeTop(){
+  var a=analyzePatterns('all');
+  var el=document.getElementById('foundHome');
+  if(el){
+    var main=a.active[0]||null;
+    if(main){
+      el.innerHTML='<div class="card clue"><div class="clue-h">✨ '+tr('최근 발견한 마음 (단서)','Recently found (a clue)')+' <span class="clue-badge">'+esc(confidenceLabel(main.level))+'</span></div>'
+        +'<p class="clue-say">'+main.sentence+'</p>'
+        +'<p class="quiet" style="margin-top:6px">'+esc(evidenceLine(main))+'</p>'
+        +'<button class="btn secondary small" style="margin-top:10px" onclick="openPattern(\''+esc(main.id)+'\')">'+tr('관련 기록 살펴보기','Look at the related entries')+'</button></div>';
+    }else if(a.n>0){
+      el.innerHTML='<div class="card"><div class="card-title">🌱 '+tr('관찰을 시작했어요','Observation has begun')+' <span class="clue-badge">'+esc(confidenceLabel('record'))+'</span></div>'
+        +'<p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+tr('첫 기록을 남겼어요. 한두 건으로는 반복이라고 부르지 않아요.','Your first entry is in. One or two entries are not called a repeat here.')+'</p>'
+        +'<p class="quiet" style="margin-top:7px">'+esc(a.note)+'</p>'
+        +'<button class="btn" style="margin-top:10px" onclick="startNew()">'+tr('☁️ 한 번 더 기록하기','☁️ Record once more')+'</button></div>';
+    }else{
+      el.innerHTML='<div class="card"><div class="card-title">🌱 '+tr('첫 기록에서 시작돼요','It starts with one entry')+'</div>'
+        +'<p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+tr('오늘 있었던 일 하나에 감정 이름만 붙여도 충분해요. 세 번쯤 쌓이고 서로 다른 날에 나타나면 그때 처음으로 단서를 조심스럽게 보여드릴게요.','Naming one feeling for one thing that happened is enough. After about three entries on different days, the first clue appears — carefully.')+'</p>'
+        +'<button class="btn" style="margin-top:10px" onclick="startNew()">'+tr('☁️ 첫 마음 기록하기','☁️ Write the first entry')+'</button></div>';
+    }
+  }
+  var ch=document.getElementById('chalHome');
+  if(ch) ch.innerHTML=chalHTML();
+}
+function chalHTML(){
+  var hasDay={}, i;
+  for(i=0;i<records.length;i++){ var k=dayKey(new Date(records[i].date)); hasDay[k]=(hasDay[k]||0)+1; }
+  var now=new Date(), days=[], done=0;
+  for(i=6;i>=0;i--){
+    var dt=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
+    var key=dayKey(dt);
+    days.push({key:key,count:hasDay[key]||0,done:!!hasDay[key],today:i===0,w:dt.getDay()});
+    if(hasDay[key]) done++;
+  }
+  var streak=0, cur=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(!hasDay[dayKey(cur)]) cur=new Date(cur.getFullYear(),cur.getMonth(),cur.getDate()-1);
+  var guard=0;
+  while(hasDay[dayKey(cur)]&&guard<400){ streak++; guard++; cur=new Date(cur.getFullYear(),cur.getMonth(),cur.getDate()-1); }
+  var wd=isEN()?['S','M','T','W','T','F','S']:['일','월','화','수','목','금','토'];
+  var dots=days.map(function(x,i){
+    return '<div class="d'+(x.done?' on':'')+(x.today?' today':'')+'" title="'+esc(x.key)+'"><i>'+(x.done?'✓':(i+1))+'</i><span>'+wd[x.w]+'</span></div>';
+  }).join('');
+  var sub;
+  if(done===7) sub=tr('<b>7일 완주!</b> 이번 주 마음이 일곱 조각 쌓였어요.','<b>Seven days complete!</b> Seven pieces of this week are gathered.');
+  else if(streak>1) sub=tr('<b>'+streak+'일 연속</b> 기록 중이에요. 오늘 한 번이면 '+streak+'일째가 돼요.','<b>'+streak+' days in a row.</b> One entry today keeps it going.');
+  else if(done) sub=tr('오늘 기록했어요. 내일 한 번 더 이어가면 연속 2일!','You logged today. Once more tomorrow makes two in a row!');
+  else if(records.length) sub=tr('오늘 감정 하나만 남겨도 오늘의 스탬프가 찍혀요.','One feeling today stamps today.');
+  else sub=tr('첫 기록 하나로 탐험이 시작돼요.','Your first entry starts the trek.');
+  return '<div class="chal" role="button" tabindex="0" onclick="show(\'map\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();show(\'map\');}">'
+    +'<div class="chal-top"><b>🧊 '+tr('7일 마음 탐험','7-day mind trek')+'</b>'+(done===7?'<span class="chal-badge">🏅 '+tr('완주','complete')+'</span>':'')+'<span class="cb">'+done+' / 7</span></div>'
+    +'<div class="chal-dots">'+dots+'</div><div class="chal-sub">'+sub+'</div></div>';
+}
+
+/* ---------- 빙하 지도 ---------- */
+function topItems(kind,list){
+  var c={};
+  list.forEach(function(r){
+    if(kind==='situation'){ var s=sitCatOf(r); if(s) c[s]=(c[s]||0)+1; }
+    if(kind==='emotion'){ uniq(emotionsOf(r)).forEach(function(e){ c[e]=(c[e]||0)+1; }); }
+    if(kind==='need'){ needsOf(r).filter(function(x){return !isUnsureNeed(x)}).forEach(function(n){ c[n]=(c[n]||0)+1; }); }
+  });
+  return Object.keys(c).map(function(k){ return {key:k,count:c[k]}; }).sort(function(a,b){ return b.count-a.count; });
+}
+function renderMap(){
+  var el=document.getElementById('mapContent'); if(!el) return;
+  var a=analyzePatterns(patternScope);
+  var tops={situation:topItems('situation',a.list),emotion:topItems('emotion',a.list),need:topItems('need',a.list)};
+  function chips(kind){
+    var arr=tops[kind].slice(0,3);
+    if(!arr.length) return '<span class="quiet">'+tr('아직 없어요','nothing yet')+'</span>';
+    return arr.map(function(x){ return '<span class="tag '+(kind==='need'?'depth':(kind==='situation'?'surface':''))+'">'+esc(itemLabel(kind,x.key))+' <b style="opacity:.6;font-weight:800">'+x.count+'</b></span>'; }).join('');
+  }
+  var html='';
+  html+=scopeToggle();
+  html+='<div class="card"><div class="card-title">'+tr('지금 지도 상태','Where the map is now')+' <span class="clue-badge" style="margin-left:auto">'+esc(a.levelLabel)+'</span></div>';
+  html+='<div class="bignum">'+a.n+'<span>'+tr('개 기록','entries')+'</span></div>';
+  html+='<p class="quiet" style="margin:6px 0 0">'+esc(scopeLine(a))+'</p>';
+  html+='<p class="quiet" style="margin:6px 0 0">'+esc(a.note)+'</p>';
+  html+='<div class="unlock" style="margin-top:12px"><div class="track"><i style="width:'+Math.min(100,Math.round(a.n/7*100))+'%"></i><u style="left:42.8%"></u></div><div class="marks"><span>0</span><span>'+tr('3 · 단서','3 · clue')+'</span><span>'+tr('7 · 패턴','7 · pattern')+'</span><span>'+tr('14 · 비교','14 · compare')+'</span></div></div></div>';
+  html+='<div class="card"><div class="card-title">🗺 '+tr('내 빙하 지도','My glacier map')+'</div>';
+  html+='<p class="prompt">'+tr('층을 누르면 그 층을 만든 기록을 바로 볼 수 있어요. 수면 위에서 심해로 갈수록, 겉으로 드러나지 않았던 마음이에요.','Tap a layer to see the entries behind it. The deeper the layer, the less it was visible on the outside.')+'</p>';
+  html+='<button class="layer-band surface" onclick="openLayer(\'situation\')"><span class="lb-k">'+tr('수면 위','Above')+'</span><span class="lb-t"><b>'+tr('반복되는 상황','Repeating situations')+'</b><span class="lb-chips">'+chips('situation')+'</span></span><span class="lb-a">›</span></button>';
+  html+='<button class="layer-band mid" onclick="openLayer(\'emotion\')"><span class="lb-k">'+tr('중간층','Middle')+'</span><span class="lb-t"><b>'+tr('반복되는 감정과 생각','Repeating feelings and thoughts')+'</b><span class="lb-chips">'+chips('emotion')+'</span></span><span class="lb-a">›</span></button>';
+  html+='<button class="layer-band deep" onclick="openLayer(\'need\')"><span class="lb-k">'+tr('심해','Deep')+'</span><span class="lb-t"><b>'+tr('반복되는 욕구','Repeating wishes')+'</b><span class="lb-chips">'+chips('need')+'</span></span><span class="lb-a">›</span></button>';
+  html+='<p class="quiet" style="margin-top:11px">'+tr('이 지도는 기록을 세어 그린 그림이에요. 진단이나 성격 평가가 아니고, 기록을 고치거나 지우면 지도도 바로 다시 그려져요.','This map counts your entries and draws them. It is not a diagnosis or a personality assessment, and it redraws as soon as entries change.')+'</p></div>';
+  var cards=[];
+  a.active.slice(0,4).forEach(function(p){ cards.push(patternCard(p)); });
+  a.crosses.slice(0,2).forEach(function(p){ if(cards.length<6) cards.push(patternCard(p)); });
+  a.mismatches.forEach(function(m){ cards.push(insightCard('❓',tr('바라는 것과 반응','wish and reaction'),m.sentence,m.evidenceIds)); });
+  a.blindSpots.forEach(function(b){ cards.push(insightCard('🫧',tr('아직 비어 있는 자리','a space not yet named'),b.sentence,null)); });
+  if(cards.length){
+    html+='<div class="card"><div class="card-title">✨ '+tr('관찰된 단서와 연결','Clues and links')+'</div>'+cards.join('')+'</div>';
+  }else{
+    html+='<div class="card"><div class="empty">'+tr('아직 지도에 그릴 단서가 없어요 🧊<br>서로 다른 날에 기록이 세 개쯤 모이면 첫 단서를 보여드릴게요.','No clues to draw yet 🧊<br>Around three entries on different days and the first clue appears.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
+  }
+  html+='<div class="row"><button class="btn" onclick="startNew()">'+tr('☁️ 오늘 마음 기록하기','☁️ Log today’s feeling')+'</button><button class="btn secondary" onclick="show(\'report\')">'+tr('리포트 보기','See report')+'</button></div>';
+  el.innerHTML=html;
+}
+
+/* ---------- 층 / 패턴 근거 ---------- */
+function openLayer(kind){ layerKind=kind; layerFocus=''; layerPatternId=''; renderLayer(); show('layer'); }
+function openEvidence(kind,key){ layerKind=(kind==='link'||kind==='cross')?'emotion':kind; layerFocus=key||''; layerPatternId=''; renderLayer(); show('layer'); }
+function openPattern(id){ layerPatternId=id; layerKind=''; layerFocus=''; renderLayer(); show('layer'); }
+function openIds(csv){ layerPatternId=''; layerKind='ids'; layerFocus=csv; renderLayer(); show('layer'); }
+function layerInfo(kind){
+  if(kind==='situation') return {icon:'🌊',title:tr('수면 위 · 반복되는 상황','Above the surface · repeating situations'),desc:tr('겉으로 드러난 장면들이에요. 같은 종류의 일이 자주 돌아온다면, 그 상황이 나에게 무엇을 건드리는지 살펴볼 수 있어요.','These are the scenes that showed on the outside. If the same kind of thing keeps coming back, it is worth looking at what it touches in you.')};
+  if(kind==='emotion') return {icon:'💧',title:tr('중간층 · 반복되는 감정과 생각','Middle · repeating feelings and thoughts'),desc:tr('그 상황에서 올라온 감정과, 머리에 남은 생각들이에요. 같은 감정이 서로 다른 날 여러 번 보이면 그 감정이 알려주는 것이 있을 수 있어요.','The feelings that came up and the thoughts that stayed. When a feeling appears on several different days, it may be pointing at something.')};
+  return {icon:'🌑',title:tr('심해 · 반복되는 욕구','Deep · repeating wishes'),desc:tr('감정 아래에서 자주 바라던 것들이에요. 욕구는 좋고 나쁨이 없고, 알아차리는 것만으로도 조금 덜 막막해져요.','The wishes that kept appearing under the feelings. No wish is good or bad; noticing one can make things a little less stuck.')};
+}
+function renderLayer(){
+  var el=document.getElementById('layerContent'); if(!el) return;
+  var html='<button class="btn ghost" onclick="show(\'map\')">'+tr('← 빙하 지도','← Glacier map')+'</button>';
+  if(layerPatternId){
+    var p=patternById(layerPatternId);
+    if(!p){ el.innerHTML=html+'<div class="card"><div class="empty">'+tr('이 단서를 찾지 못했어요.','That clue could not be found.')+'</div></div>'; return; }
+    html+='<div class="hero"><div class="eyebrow">EVIDENCE ✧</div><h2>'+tr('이 단서가 나온 기록','The entries behind this clue')+'</h2><p>'+esc(evidenceLine(p))+'</p></div>';
+    html+='<div class="card">'+patternCard(p,{hideFb:false})+'</div>';
+    html+='<div class="card"><div class="card-title">'+tr('근거 기록 '+p.count+'건','Entries behind it · '+p.count)+'</div>'+recordRows(evidenceOfPattern(p),p)+'</div>';
+    el.innerHTML=html; bindRecordRows(); return;
+  }
+  if(layerKind==='ids'){
+    var ids=String(layerFocus||'').split(',').filter(Boolean).map(Number);
+    var arr=ids.map(function(id){ return records.filter(function(x){return x.id===id})[0]; }).filter(Boolean);
+    html+='<div class="hero"><div class="eyebrow">EVIDENCE ✧</div><h2>'+tr('근거 기록','The entries behind it')+'</h2><p>'+tr('아래 기록들에서 같은 요소가 함께 나타났어요.','The same element appears together in these entries.')+'</p></div>';
+    html+='<div class="card">'+recordRows(arr)+'</div>';
+    el.innerHTML=html; bindRecordRows(); return;
+  }
+  var info=layerInfo(layerKind||'emotion');
+  var a=analyzePatterns(patternScope);
+  var list=a.list;
+  var tops=topItems(layerKind||'emotion',list);
+  html+='<div class="hero"><div class="eyebrow">LAYER ✧</div><h2>'+esc(info.title)+'</h2><p>'+esc(info.desc)+'</p></div>';
+  html+=scopeToggle();
+  if(!tops.length){
+    html+='<div class="card"><div class="empty">'+tr('이 층에 아직 기록이 없어요.','No entries in this layer yet.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
+    el.innerHTML=html; return;
+  }
+  var focusKey=layerFocus||tops[0].key;
+  var pats=a.patterns.filter(function(p){
+    if(p.type!==layerKind) return false;
+    if(layerKind==='situation') return p.key===focusKey;
+    if(layerKind==='emotion') return p.key===focusKey;
+    return p.key===focusKey;
+  });
+  var pat=pats[0]||null;
+  html+='<div class="card"><div class="card-title">'+esc(tr('이 층의 항목','Items in this layer'))+'</div><div class="chips">'
+    +tops.slice(0,8).map(function(x){ return '<button class="chip '+(x.key===focusKey?'selected':'')+'" onclick="layerFocus=\''+esc(x.key)+'\';renderLayer()">'+esc(itemLabel(layerKind,x.key))+' <b style="opacity:.55">'+x.count+'</b></button>'; }).join('')+'</div>';
+  if(pat) html+='<div style="margin-top:12px">'+patternCard(pat,{hideFb:false})+'</div>';
+  else html+='<p class="quiet" style="margin-top:12px">'+tr('이 항목은 아직 ‘개별 기록’ 단계예요. 서로 다른 날에 세 번 이상 겹치면 반복 단서로 보여드릴게요.','This item is still at the “single entry” stage. When it repeats three or more times on different days, it appears as a clue.')+'</p>';
+  var ev=pat? evidenceOfPattern(pat) : records.filter(function(r){
+    if(layerKind==='situation') return sitCatOf(r)===focusKey;
+    if(layerKind==='emotion') return emotionsOf(r).indexOf(focusKey)>=0;
+    return needsOf(r).indexOf(focusKey)>=0;
+  });
+  html+='<p class="quiet" style="margin-top:10px">'+tr('근거 기록 '+ev.length+'건','entries: '+ev.length)+'</p>';
+  html+=recordRows(ev,pat);
+  html+='</div>';
+  el.innerHTML=html; bindRecordRows();
+}
+function recordRows(arr,pat){
+  if(!arr||!arr.length) return '<div class="empty">'+tr('아직 관련 기록이 없어요.','No related entries yet.')+'</div>';
+  var h='<div style="margin-top:10px">';
+  arr.slice(0,40).forEach(function(r){
+    var emo=emotionsOf(r).map(emotionLabel).join(' · ');
+    var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ');
+    var sit=situationString(r);
+    h+='<div class="entry" role="button" tabindex="0" data-open="'+r.id+'"><div class="entry-top"><span>'+esc(dstr(r.date))+'</span><span>'+tr('열어보기 ›','Open ›')+'</span></div>'
+      +'<h3>'+(emo? esc(emo) : esc(tr('감정을 적지 않은 날','a day without a named feeling')))+'</h3>'
+      +'<p>'+esc(cut(sit||nd||tr('나의 마음','my mind'),90))+'</p>'
+      +((nd||reactionsOf(r).length)?'<div class="entry-sub">'+(nd?'💧 '+esc(nd):'')+(reactionsOf(r).length? (nd?' · ':'')+'🫧 '+esc(reactionsOf(r).slice(0,2).map(reactionLabel).join(' · ')):'')+'</div>':'')
+      +'</div>';
+  });
+  return h+'</div>';
+}
+function bindRecordRows(){
+  var els=document.querySelectorAll('[data-open]'),i;
+  for(i=0;i<els.length;i++){
+    (function(el){
+      var go=function(){ openDetail(Number(el.getAttribute('data-open'))); };
+      el.addEventListener('click',go);
+      el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+    })(els[i]);
+  }
+}
+
+/* ---------- 화면 ⑤ 리포트 ---------- */
+function renderReport(){
+  var el=document.getElementById('reportContent'); if(!el) return;
+  var a=analyzePatterns(patternScope);
+  var n=a.n;
+  var html='';
+  html+=scopeToggle();
+  html+='<div class="range">'+scopeLine(a)+'</div>';
+  if(!n){
+    html+='<div class="card"><div class="empty">'+tr('이 기간에는 기록이 없어요 🌷<br>리포트는 기록이 있어야 만들어져요. 없는 패턴은 지어내지 않아요.','No entries in this period 🌷<br>A report needs entries. Patterns are never invented.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
+    html+=backupCardHTML();
+    el.innerHTML=html; return;
+  }
+  /* 감정 TOP 3 — 분모는 이 기간 전체 기록 수 */
+  var emo=topItems('emotion',a.list).slice(0,3);
+  var emoRows=emo.map(function(x){
+    return '<div class="bar-row"><div class="bar-top"><span>'+esc(emotionLabel(x.key))+'</span><b>'+pctOf(x.count,n)+'% · '+tr(x.count+'건',''+x.count+'×')+'</b></div><div class="bar"><i style="width:'+Math.max(6,pctOf(x.count,n))+'%"></i></div></div>';
+  }).join('');
+  html+='<div class="card"><div class="card-title">🌊 '+tr('감정 TOP 3','Top 3 feelings')+'</div>'
+    +(emo.length? emoRows : '<div class="empty" style="padding:14px 6px">'+tr('이 기간에는 아직 감정 기록이 없어요.','No feelings recorded in this period yet.')+'</div>')
+    +'<p class="quiet" style="margin-top:8px">'+tr('비율은 이 기간 기록 '+n+'건을 분모로 계산했어요. 한 기록에서 감정을 여러 개 고를 수 있어서 합계가 100%를 넘을 수 있어요.','Each share uses the '+n+' entries in this period as the denominator. Several feelings can be picked in one entry, so the total can pass 100%.')+'</p></div>';
+  /* 반복 상황 */
+  var sitPats=a.active.filter(function(p){return p.type==='situation';}).slice(0,3);
+  html+='<div class="card"><div class="card-title">🗺 '+tr('반복되는 상황','Repeating situations')+'</div>';
+  if(sitPats.length) html+=sitPats.map(function(p){ return '<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence+'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button></div>'; }).join('');
+  else if(a.observations.filter(function(p){return p.type==='situation';}).length){
+    var o=a.observations.filter(function(p){return p.type==='situation';})[0];
+    html+='<p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+tr('아직 반복이라고 부를 수 있는 상황은 없어요. 가장 자주 적힌 상황은 ‘'+esc(o.label)+'’ 1건이에요.','No situation can be called repeating yet. The most frequent is “'+esc(o.label)+'”, a single entry.')+'</p>';
+  }else html+='<p class="quiet" style="margin:0">'+tr('이 기간에는 상황을 적은 기록이 없어요.','No situations were written in this period.')+'</p>';
+  html+='</div>';
+  /* 자주 표현된 욕구 */
+  var needPats=a.active.filter(function(p){return p.type==='need';}).slice(0,3);
+  html+='<div class="card"><div class="card-title">💧 '+tr('자주 표현된 욕구','Wishes that kept appearing')+'</div>';
+  if(needPats.length) html+=needPats.map(function(p){ return '<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence+'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button></div>'; }).join('');
+  else html+='<p class="quiet" style="margin:0">'+tr('욕구를 적은 기록이 아직 적어요. 다음 기록에서 감정 아래의 바람을 한두 개 골라보면 여기에 쌓여요.','Not many entries name a wish yet. Picking one or two under the feeling will gather here.')+'</p>';
+  html+='</div>';
+  /* 연결 패턴 · 인사이트 */
+  var links=a.connections.slice(0,2);
+  var cross=a.crosses.filter(function(p){ return !links.some(function(q){return q.id===p.id}); }).slice(0,1);
+  var insightCards=[];
+  links.forEach(function(p){ insightCards.push(patternCard(p)); });
+  cross.forEach(function(p){ insightCards.push(patternCard(p)); });
+  a.mismatches.forEach(function(m){ insightCards.push(insightCard('❓',tr('바라는 것과 반응','wish and reaction'),m.sentence,m.evidenceIds)); });
+  a.blindSpots.forEach(function(b){ insightCards.push(insightCard('🫧',tr('아직 비어 있는 자리','a space not yet named'),b.sentence,null)); });
+  if(insightCards.length){
+    html+='<div class="card"><div class="card-title">✧ '+tr('연결해서 본 단서','Links between entries')+'</div><p class="prompt">'+tr('한 기록 안의 사실만으로 만든 관찰이에요. 진단이 아니고, 맞지 않으면 알려주세요.','These are observations built only from what is in the entries. Not a diagnosis — tell me if they do not fit.')+'</p>'+insightCards.join('')+'</div>';
+  }
+  /* 변화 흐름 — 전체 범위에서만 */
+  if(patternScope==='all'){
+    html+=changeFlowHTML();
+  }else{
+    html+='<div class="card"><div class="card-title">🌊 '+tr('나의 변화 흐름','How I am shifting')+' <span class="bubble" style="margin-left:auto">'+tr('전체에서 볼 수 있어요','in All')+'</span></div><p class="quiet" style="margin:0">'+tr('변화 흐름은 기간을 나눠 비교하기 때문에 ‘전체’ 보기에서 보여드려요.','The change flow compares periods, so it appears in the “All” view.')+'</p><button class="btn secondary small" style="margin-top:9px" onclick="setScope(\'all\')">'+tr('전체 보기로','Switch to All')+'</button></div>';
+  }
+  /* 다음 달 질문 */
+  var topEmo=emo[0]?emo[0].key:'';
+  var topNeed=needPats[0]?needPats[0].key:'';
+  var q;
+  if(isEN()){
+    q = topEmo? ('Next month, when “'+emotionLabel(topEmo)+'” comes up, could you pause and ask what wish sits under it'+(topNeed?' — maybe “'+needLabel(topNeed)+'”':'')+'?')
+              : 'Next month, could you write one sentence about what you wanted, even on an ordinary day?';
+  }else{
+    q = topEmo? ('다음 달에 ‘'+emotionLabel(topEmo)+'’'+josa(emotionLabel(topEmo),'이','가')+' 올라오면, 그 아래에 어떤 바람이 있는지 한 번만 물어봐 줄래요'+(topNeed?' — ‘'+needLabel(topNeed)+'’일 수도 있어요':'')+'?')
+              : '다음 달에는 평범한 날에도 ‘내가 원했던 것’을 한 문장으로 남겨볼까요?';
+  }
+  html+='<div class="card"><div class="card-title">✦ '+tr('다음 달 질문','A question for next month')+'</div><div class="qbox">'+esc(q)+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 정해두지 않아도 돼요. 기록하다 보면 자연스럽게 답이 보여요.','You don’t have to answer it now. It tends to answer itself as you write.')+'</p></div>';
+  html+='<p class="quiet" style="padding:0 4px">'+tr('이 리포트는 기록을 세고 정리한 것이에요. 진단이나 심리 평가가 아니고, 기록이 바뀌면 숫자도 바로 바뀌어요.','This report counts and arranges your entries. It is not a diagnosis or an assessment, and the numbers change as soon as entries do.')+'</p>';
+  html+=backupCardHTML();
+  el.innerHTML=html;
+}
+function backupCardHTML(){
+  return '<div class="card"><div class="card-title">📦 '+tr('기록 백업','Backup')+'</div><p class="prompt">'+tr('기록은 이 기기 브라우저에만 저장돼요. JSON으로 내려받아 두면 기기를 바꾸거나 브라우저 데이터를 지워도 다시 불러올 수 있어요. 예전 버전에서 내보낸 파일도 그대로 불러와요.','Entries live only in this browser. A JSON copy brings them back after changing devices or clearing data, and files exported by earlier versions still import.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('내보내기','Export')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('가져오기','Import')+'</button></div></div>';
+}
+
+/* ---------- 기록 목록 · 상세 ---------- */
+function cardHTML(r){
+  var emo=emotionsOf(r).map(emotionLabel).join(' · ');
+  var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ');
+  var sit=situationString(r);
+  var rej=recordRejected(r)? ' · '+tr('분석 제외','excluded') : '';
+  return '<div class="entry" role="button" tabindex="0" data-open="'+r.id+'"><div class="entry-top"><span>'+esc(dstr(r.date))+rej+'</span><span>'+tr('열어보기 ›','Open ›')+'</span></div>'
+    +'<h3>'+esc(emo||sit||tr('오늘의 마음 기록','Today’s entry'))+'</h3>'
+    +'<p>'+esc(cut(sit||nd||tr('나의 마음','my mind'),90))+'</p></div>';
+}
+function openDetail(id){
+  var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
+  detailId=id;
+  var rows=[
+    [tr('상황','Situation'),situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):'')],
+    [tr('감정','Feelings'),emotionsOf(r).map(emotionLabel).join(' · ')],
+    [tr('몸과 마음의 반응','Body and mind'),reactionsOf(r).map(reactionLabel).join(' · ')],
+    [tr('떠오른 생각','Thought'),thoughtsOf(r)],
+    [tr('내가 원했던 것 (욕구)','What I wanted'),needsOf(r).map(needLabel).join(' · ')],
+    [tr('한 문장','One sentence'),sentenceOf(r)]
+  ];
+  var fb=analysisOf(r).userFeedback;
+  document.getElementById('detailContent').innerHTML='<div class="hero"><div class="eyebrow">'+esc(dstr(r.date))+'</div><h2>'+tr('오늘의 마음 기록 ♡','Today’s entry ♡')+'</h2></div>'
+    +'<div class="card">'+rows.map(function(pair){
+      return '<div class="detail-label">'+pair[0]+'</div><div class="detail-text">'+esc(pair[1]||tr('아직 적지 않았어요.','Not written yet.'))+'</div>';
+    }).join('')
+    +(fb?'<div class="detail-label">'+tr('해석 피드백','Reading feedback')+'</div><div class="detail-text">'+esc(fb==='rejected'?tr('내 마음과 달라요 · 패턴 분석에서 제외','Not like me · excluded from patterns'):(fb==='partial'?tr('일부 달라요','partly different'):tr('맞아요','fits')))+'</div>':'')
+    +'</div>'
+    +'<button class="btn" onclick="openDeep('+r.id+')">'+tr('🧊 이 기록의 심층 리포트','🧊 The deep report for this entry')+'</button>'
+    +'<div class="row" style="margin-top:9px"><button class="btn secondary small" onclick="detailId='+r.id+';show(\'discovery\')">'+tr('오늘의 발견 보기','See today’s discovery')+'</button><button class="btn secondary small" onclick="startEdit('+r.id+')">'+tr('수정','Edit')+'</button><button class="btn secondary small" onclick="deleteRecord('+r.id+')">'+tr('삭제','Delete')+'</button></div>';
+  show('detail');
+}
+
+/* ---------- AI 분석 카드 상단 (오늘 + 과거 연결 + 질문) ---------- */
+function patternTopHTML(r){
+  var emo=emotionsOf(r).map(emotionLabel).join(' · ')||tr('감정 없음','no feeling');
+  var sit=situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):'')||tr('상황 없음','no situation');
+  var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ')||tr('아직 모름','not sure yet');
+  var a=analyzePatterns('all');
+  var mine=null;
+  a.active.forEach(function(p){
+    if(mine) return;
+    if(p.type!=='connection'&&p.type!=='emotion'&&p.type!=='cross'&&p.type!=='need') return;
+    if(p.evidenceIds.indexOf(r.id)<0) return;
+    if(p.evidenceIds.filter(function(id){return id!==r.id}).length>=2) mine=p;
+  });
+  var h='<div class="prio"><div class="prio-h">'+tr('오늘의 감정 · 상황 · 욕구','Today · feeling, situation, wish')+'</div>'
+    +'<div class="chips"><span class="ai-chip"><b>'+tr('감정','Feeling')+'</b> '+esc(cut(emo,30))+'</span><span class="ai-chip"><b>'+tr('상황','Situation')+'</b> '+esc(cut(sit,30))+'</span><span class="ai-chip"><b>'+tr('욕구','Wish')+'</b> '+esc(cut(nd,30))+'</span></div>';
+  h+='<div class="prio-h" style="margin-top:12px">'+tr('과거 기록과 이어보기','Connecting with earlier entries')+'</div>';
+  if(mine){
+    h+='<p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+mine.sentence+'</p>'
+      +'<p class="quiet" style="margin:4px 0 0">'+esc(evidenceLine(mine))+'</p>'
+      +'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(mine.id)+'\')">'+tr('근거 기록 '+mine.count+'건 보기','See the '+mine.count+' entries')+'</button>';
+  }else{
+    h+='<p class="quiet" style="margin:0">'+tr('아직 이 기록과 이어지는 과거 단서가 없어요. 서로 다른 날에 비슷한 조합이 세 번 이상 쌓이면 여기에 보여드려요.','No earlier clue connects to this entry yet. When a similar combination appears three or more times on different days, it shows here.')+'</p>';
+  }
+  h+='<div class="prio-h" style="margin-top:12px">'+tr('나에게 던지는 질문','A question to hold')+'</div>'
+    +'<div class="qbox" style="font-size:13.5px">'+esc(r.ai&&r.ai.question? r.ai.question : questionOf(r))+'</div>'
+    +'<p class="quiet" style="margin-top:7px">'+tr('해결책을 정하는 곳이 아니라, 한 번 더 들여다보는 자리예요.','This is not where a solution is decided — it is a place to look once more.')+'</p></div>';
+  return h;
+}
+function aiHTML(r){ return patternTopHTML(r)+aiHTMLBase(r); }
+
+
+/* =========================================================
+   AI — 자기 탐구 안내자 (기존 Worker 계약 유지 + 2.0 필드)
+   · 요청할 때만 전송, 서버 저장 없음. 실패해도 기록·조회는 정상.
+   ========================================================= */
+function aiPayloadFor(r){
+  return {
+    situation: situationString(r),
+    feelings: emotionsOf(r).map(emotionLabel).join(', '),
+    needs: needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(', '),
+    perspective: thoughtsOf(r),
+    action: sentenceOf(r),
+    reactions: reactionsOf(r).map(reactionLabel).join(', '),
+    lang: LANG,
+    history: (typeof aiHistoryOf==='function')? aiHistoryOf(r) : []
+  };
+}
+function postWorker(body,ms){
+  var url=AI_WORKER;
+  var opt={method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
+  var f=(typeof fetchTimeout==='function')? fetchTimeout(url,opt,ms||11000) : fetch(url,opt);
+  return f.then(function(res){
+    if(!res||!res.ok) throw new Error('http_'+(res?res.status:'0'));
+    return res.json();
+  });
+}
+function askAIFor(id){
+  var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
+  aiState.loading=true; aiState.error='';
+  if(currentView==='discovery') renderDiscovery(id);
+  else if(currentView==='deep'&&deepId===id) refreshAI();
+  postWorker(aiPayloadFor(r),13000).then(function(d){
+    if(!d||(!d.comment&&!d.question)) throw new Error('empty');
+    r.ai={comment:String(d.comment||''),question:String(d.question||''),connection:String(d.connection||''),sentence:'',lang:String(d.lang||LANG),at:nowISO(),model:String(d.model||'server')};
+    aiState.loading=false;
+    persist(); if(cloudPushOne) cloudPushOne(r);
+    if(currentView==='discovery'&&detailId===id) renderDiscovery(id);
+    else if(currentView==='deep') refreshAI();
+    toast(tr('AI 해석을 받았어요','AI reading received'));
+  }).catch(function(e){
+    aiState.loading=false;
+    r.ai={comment:localGuideComment(r),question:questionOf(r),connection:'',sentence:'',lang:LANG,at:nowISO(),model:'local'};
+    aiState.loading=false; aiState.localText={comment:r.ai.comment,question:r.ai.question,connection:''};
+    persist();
+    if(currentView==='discovery'&&detailId===id) renderDiscovery(id);
+    else if(currentView==='deep') refreshAI();
+    toast(tr('AI 서버에 닿지 않아 기기 안 해석으로 보여드려요','AI server unreachable — showing the on-device reading'));
+  });
+}
+function localGuideComment(r){
+  var emo=emotionsOf(r)[0]||'';
+  var need=needsOf(r).filter(function(x){return !isUnsureNeed(x)})[0]||'';
+  var rea=reactionsOf(r)[0]||'';
+  if(isEN()){
+    var s='Today you wrote about '+(emo? '“'+emotionLabel(emo)+'”':'what happened');
+    if(need) s+=', and underneath there may have been a wish for “'+needLabel(need)+'”';
+    s+='. ';
+    if(rea) s+='Your body and mind answered with “'+reactionLabel(rea)+'”. ';
+    s+='This is only one possible reading of your entry — you know the day better than this app does.';
+    return s;
+  }
+  var k='오늘 적어주신 기록에서 '+(emo? '‘'+emotionLabel(emo)+'’이 보였어요':'있었던 일이 보였어요');
+  if(need) k+=', 그 아래에는 ‘'+needLabel(need)+'’의 바람이 있었던 것 같아요';
+  k+='. ';
+  if(rea) k+='몸과 마음은 ‘'+reactionLabel(rea)+'’으로 반응했고요. ';
+  k+='이건 기록에서 읽어본 가능한 해석 중 하나예요. 그날을 가장 잘 아는 건 앱이 아니라 나예요.';
+  return k;
+}
+function askSentenceAI(){
+  var btn=document.getElementById('aiSentenceBtn');
+  var ta=document.getElementById('sentenceText');
+  if(btn){ btn.disabled=true; btn.textContent=tr('AI가 문장을 다듬는 중…','AI is tidying the sentence…'); }
+  var d=draft||emptyDraft();
+  collectCurrent();
+  d=draft||emptyDraft();
+  postWorker({
+    mode:'sentence',
+    situation:String(d.situation.description||''),
+    feelings:(d.emotions||[]).map(emotionLabel).join(', '),
+    needs:(d.needs||[]).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(', '),
+    reactions:(d.reactions||[]).map(reactionLabel).join(', '),
+    lang:LANG
+  },12000).then(function(res){
+    var s=res&&(res.sentence||res.comment);
+    if(!s) throw new Error('empty');
+    if(ta) ta.value=String(s).replace(/\s+/g,' ').trim();
+    toast(tr('AI가 다듬은 문장이에요 · 직접 고쳐도 돼요','AI’s version — edit it however you like'));
+  }).catch(function(){
+    if(ta&&!ta.value.trim()) ta.value=interpretOf(d);
+    toast(tr('AI에 닿지 않아 기기에서 만든 문장을 넣었어요','AI unreachable — used the sentence made on this device'));
+  }).then(function(){
+    if(btn){ btn.disabled=false; btn.textContent=tr('✦ AI 도움 받아 다듬기','✦ Tidy it with AI'); }
+  });
+}
+
+/* ---------- 초기화 ---------- */
+(function(){
+  try{ loadAll(); }catch(e){}
+  try{ syncLangUI2(); }catch(e){}
+  try{ renderHomeTop(); renderRecent(); }catch(e){}
+  try{ var el=document.getElementById('layerInfo'); if(el) el.setAttribute('data-ready','1'); }catch(e){}
+})();
+
 </script>
 </body></html>
