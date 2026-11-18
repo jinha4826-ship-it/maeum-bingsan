@@ -1424,7 +1424,7 @@ function changeFlowHTML(){
   }
   var needLine='';
   if(A.topNeed&&B.topNeed&&A.topNeed[0]!==B.topNeed[0]){
-    needLine=isEN()? ('The need underneath moved from <b>“'+esc(nLabel(A.topNeed[0]))+'”</b> to <b>“'+esc(nLabel(B.topNeed[0]))+'”</b>.') : ('그 아래 욕구는 <b>‘'+esc(nLabel(A.topNeed[0]))+'’</b>에서 <b>‘'+esc(nLabel(B.topNeed[0]))+'’</b>로 옮겨갔어요.');
+    needLine=isEN()? ('The need underneath moved from <b>“'+esc(nLabel(A.topNeed[0]))+'”</b> to <b>“'+esc(nLabel(B.topNeed[0]))+'”</b>.') : ('그 아래 욕구는 <b>‘'+esc(nLabel(A.topNeed[0]))+'’</b>에서 <b>‘'+esc(nLabel(B.topNeed[0]))+'’</b>'+josa(nLabel(B.topNeed[0]),'으로','로')+' 옮겨갔어요.');
   }else if(B.topNeed){
     needLine=isEN()? ('The need underneath is still <b>“'+esc(nLabel(B.topNeed[0]))+'”</b>.') : ('그 아래 욕구는 여전히 <b>‘'+esc(nLabel(B.topNeed[0]))+'’</b>이에요.');
   }
