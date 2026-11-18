@@ -3938,7 +3938,7 @@ function patternSentence(type,key,count,days,n,extra){
   if(type==='connection') return '‘'+extra.situation+'’ 상황에서 ‘'+extra.emotion+'’이 올라오고 ‘'+extra.need+'’의 바람이 함께 적힌 기록이 '+count+'건이에요. 서로 다른 '+days+'일의 기록에서 같은 조합이 보였어요.';
   return '';
 }
-function makePattern(type,key,list,extra){
+function makePattern(type,key,list,extra,n){
   var ev=list;
   var days=distinctDaysOf(ev);
   var lv=confidenceOf(ev.length,days.length);
@@ -3952,7 +3952,7 @@ function makePattern(type,key,list,extra){
     evidenceIds:ev.map(function(r){ return r.id; }),
     level:lv,
     label:itemLabel(type,key),
-    sentence:patternSentence(type,key,ev.length,days.length,0,extra||{})
+    sentence:patternSentence(type,key,ev.length,days.length,n||ev.length,extra||{})
   };
 }
 function analyzePatterns(scope){
@@ -3964,17 +3964,17 @@ function analyzePatterns(scope){
   /* 상황 패턴 — 한 기록에 한 상황이므로 기록 수 = 항목 수 */
   var sitBy={};
   list.forEach(function(r){ var c=sitCatOf(r); if(!c) return; (sitBy[c]=sitBy[c]||[]).push(r); });
-  Object.keys(sitBy).forEach(function(k){ all.push(makePattern('situation',k,sitBy[k])); });
+  Object.keys(sitBy).forEach(function(k){ all.push(makePattern('situation',k,sitBy[k],null,n)); });
 
   /* 감정 패턴 — 한 기록 안의 중복은 1회, 여러 감정은 각각 1회 */
   var emoBy={};
   list.forEach(function(r){ uniq(emotionsOf(r)).forEach(function(f){ (emoBy[f]=emoBy[f]||[]).push(r); }); });
-  Object.keys(emoBy).forEach(function(k){ all.push(makePattern('emotion',k,emoBy[k])); });
+  Object.keys(emoBy).forEach(function(k){ all.push(makePattern('emotion',k,emoBy[k],null,n)); });
 
   /* 욕구 패턴 — 욕구가 없는 기록은 집계에서 자연히 빠진다 */
   var needBy={};
   list.forEach(function(r){ needsOf(r).filter(function(x){return !isUnsureNeed(x)}).forEach(function(nd){ (needBy[nd]=needBy[nd]||[]).push(r); }); });
-  Object.keys(needBy).forEach(function(k){ all.push(makePattern('need',k,needBy[k])); });
+  Object.keys(needBy).forEach(function(k){ all.push(makePattern('need',k,needBy[k],null,n)); });
 
   /* 연결 패턴 — 상황·감정·욕구가 '같은 기록'에 실제로 함께 있는 경우만 */
   var triBy={};
@@ -3995,10 +3995,10 @@ function analyzePatterns(scope){
     ev.forEach(function(r){ if(!seen[r.id]){ seen[r.id]=1; uniqEv.push(r); } });
     var days=distinctDaysOf(uniqEv);
     var lv=confidenceOf(uniqEv.length,days.length);
-    var p=makePattern('connection',k,uniqEv,{situation:sitCatLabel(parts[0]),emotion:emotionLabel(parts[1]),need:needLabel(parts[2]),situationKey:parts[0],emotionKey:parts[1],needKey:parts[2]});
+    var p=makePattern('connection',k,uniqEv,{situation:sitCatLabel(parts[0]),emotion:emotionLabel(parts[1]),need:needLabel(parts[2]),situationKey:parts[0],emotionKey:parts[1],needKey:parts[2]},n);
     p.label=sitCatLabel(parts[0])+' · '+emotionLabel(parts[1])+' · '+needLabel(parts[2]);
     p.level=lv;
-    p.sentence=patternSentence('connection',k,uniqEv.length,days.length,0,p.keys);
+    p.sentence=patternSentence('connection',k,uniqEv.length,days.length,n,p.keys);
     /* 검증: 세 요소가 정말 같은 기록에 있는지 다시 확인 */
     p.verified=p.evidenceIds.every(function(id){
       var r=records.filter(function(x){return x.id===id})[0]; if(!r) return false;
