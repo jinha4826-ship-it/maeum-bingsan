@@ -106,7 +106,7 @@ function pinView(p){
     if(p.evidenceEn) o.evidence=p.evidenceEn;
     if(p.kind==='pattern'){
       var pat=patternById(p.refId);
-      if(pat){ o.sentence=pat.sentence; o.evidence=evidenceLine(pat); }
+      if(pat){ o.title=titleEN(pat)+' · '+itemLabel(pat.type,pat.key); o.sentence=pat.sentence; o.evidence=evidenceLine(pat); }
     }
   }
   return o;
