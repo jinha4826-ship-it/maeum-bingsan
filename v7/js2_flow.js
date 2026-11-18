@@ -44,7 +44,7 @@ function renderStepsBar(){
   var el=document.getElementById('steps'); if(el) el.innerHTML=h;
 }
 function chipHTML(key,label,selected){
-  return '<button type="button" class="chip '+(selected?'selected':'')+'" data-pick="'+esc(key)+'">'+esc(label)+'</button>';
+  return '<button type="button" class="chip '+(selected?'selected':'')+'" aria-pressed="'+(selected?'true':'false')+'" data-pick="'+esc(key)+'">'+esc(label)+'</button>';
 }
 function renderStep(){
   var d=draft, body='', title='', hint='';
@@ -213,7 +213,7 @@ function interpretOf(d){
   else if(emo) k='오늘은 '+(cat? '‘'+sit+'’ 상황에서 ':'')+'‘'+emotionLabel(emo)+'’'+josa(emotionLabel(emo),'이','가')+' 올라왔어요. 그 아래 바람은 아직 이름을 찾지 못했어요.';
   else if(need) k='오늘은 뚜렷한 감정 이름 대신 ‘'+needLabel(need)+'’의 바람이 있었던 것 같아요.';
   else k='오늘은 있었던 일을 적어두고, 감정은 잠시 열어두었어요.';
-  if(reaction) k+=' 몸과 마음은 ‘'+reactionLabel(reaction)+'’으로 반응했어요.';
+  if(reaction) k+=' 몸과 마음은 ‘'+reactionLabel(reaction)+'’는 반응으로 이어졌어요.';
   return k;
 }
 function questionOf(r){

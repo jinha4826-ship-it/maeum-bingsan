@@ -126,7 +126,8 @@ function normalizeRecord(r){
   var ns=needsOf(o);
   rec.needs=ns; rec.need=ns.map(legacyNeedOf);
   rec.reactions=reactionsOf(o);
-  rec.thoughts=thoughtsOf(o); rec.other=rec.thoughts;
+  rec.thoughts=String(o.thoughts!=null? o.thoughts : '');
+  rec.other=String(o.other!=null? o.other : '');
   rec.selfExpression=sentenceOf(o); rec.action=rec.selfExpression;
   var a=analysisOf(o);
   rec.analysis={confirmed:(a.confirmed===true||a.userFeedback==='confirmed')?true:((a.confirmed===false||a.userFeedback==='rejected')?false:null),
