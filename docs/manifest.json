@@ -1,0 +1,21 @@
+{
+  "id": "/maeum-bingsan/",
+  "name": "마음의 빙산 · Mind's Iceberg",
+  "short_name": "마음의 빙산",
+  "description": "30초 기록으로 지금의 감정, 그 아래의 욕구와 방어기제를 천천히 살펴보는 자기 성찰 앱.",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "/maeum-bingsan/",
+  "scope": "/maeum-bingsan/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "background_color": "#fbf7f3",
+  "theme_color": "#fbf7f3",
+  "categories": ["lifestyle", "health", "wellness"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

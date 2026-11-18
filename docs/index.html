@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fbf7f3"><title>마음의 빙산</title>
+<meta name="description" content="30초 기록으로 지금의 감정과 그 아래의 욕구, 방어기제를 천천히 살펴보는 자기 성찰 앱.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="application-name" content="마음의 빙산">
+<meta name="apple-mobile-web-app-title" content="마음의 빙산">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{--bg:#fbf7f3;--paper:#fffefa;--ink:#40364a;--muted:#94899b;--lav:#b9a4d0;--lavdeep:#8871a4;--lavp:#f0e9f7;--pink:#f8e8ec;--mint:#e8f1eb;--line:#eee5ed;--shadow:0 9px 26px #59466b12}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-tap-highlight-color:transparent}
@@ -2871,4 +2881,15 @@ loadReminder();
 startRemindLoop();
 cloudLoad();
 if(cloudOn()) cloudSync(true).catch(function(){});
-</script></body></html>
+</script><script>
+/* PWA: 설치형 앱(홈 화면 추가·Play 스토어 패키지) 지원 — 기존 앱 코드는 건드리지 않습니다. */
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      if(reg && reg.update) { try { reg.update(); } catch(e){} }
+    }).catch(function(){ /* 오프라인 캐시는 없어도 앱은 그대로 동작합니다 */ });
+  });
+})();
+</script>
+</body></html>
