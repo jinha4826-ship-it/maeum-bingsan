@@ -23,18 +23,20 @@
 
 <section id="records" class="view"><div class="hero"><div class="eyebrow">YOUR JOURNAL ♡</div><h2><span class="ko">나의 기록</span><span class="en">My entries</span></h2><p><span class="ko">작은 마음들이 모여 나를 이해하는 단서가 돼요.</span><span class="en">Small feelings gather into clues about who I am.</span></p></div><div id="allRecords"></div></section>
 
-<section id="map" class="view"><div class="hero"><div class="eyebrow">MY GLACIER MAP ✧</div><h2><span class="ko">내 마음의<br>빙하 지도</span><span class="en">My mind’s<br>glacier map</span></h2><p><span class="ko">수면 위의 반복되는 상황, 중간층의 감정과 생각, 심해의 욕구를 기록이 쌓이는 만큼 그려요.</span><span class="en">Repeating situations above the surface, feelings and thoughts in the middle, wishes deep below — drawn as entries gather.</span></p></div><div id="mapContent"></div></section>
+<section id="map" class="view"><div class="hero"><div class="eyebrow">MY GLACIER MAP ✧</div><h2><span class="ko">내 마음의<br>빙하 지도</span><span class="en">My mind’s<br>glacier map</span></h2><p><span class="ko">수면 위 상황부터 심해의 욕구까지 그려요.</span><span class="en">From surface situations to deep wishes.</span></p></div><div id="mapContent"></div></section>
 
 <section id="layer" class="view"><div id="layerContent"></div></section>
 
-<section id="report" class="view"><div class="hero"><div class="eyebrow">A GENTLE LOOK BACK ✧</div><h2><span class="ko">월간 마음 패턴<br>리포트</span><span class="en">Monthly mind<br>pattern report</span></h2><p><span class="ko">이번 달 기록에서 보이는 감정과 상황, 그 아래의 바람을 모아봐요.</span><span class="en">The feelings, situations and wishes that show in this month’s entries.</span></p></div><div id="reportContent"></div></section>
+<section id="report" class="view"><div class="hero"><div class="eyebrow">A GENTLE LOOK BACK ✧</div><h2><span class="ko">월간 마음 패턴<br>리포트</span><span class="en">Monthly mind<br>pattern report</span></h2><p><span class="ko">이번 달 감정·상황·바람을 네 가지로 정리해요.</span><span class="en">This month’s feelings, situations and wishes in four parts.</span></p></div><div id="reportContent"></div></section>
 
+<section id="archive" class="view"><div id="archiveContent"></div></section>
 <section id="deep" class="view"><div id="deepContent"></div></section>
 
 <section id="detail" class="view"><button class="btn ghost" onclick="show('records')"><span class="ko">← 기록 목록</span><span class="en">← All entries</span></button><div id="detailContent"></div></section>
 
 <section id="settings" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">SETTINGS ⚙︎</div><h2><span class="ko">설정</span><span class="en">Settings</span></h2><p><span class="ko">매일 체크인 알림, AI, 백업과 클라우드 동기화를 여기서 관리해요.</span><span class="en">Check-in reminders, AI, backup and cloud sync live here.</span></p></div><div class="card" id="settingsContent"></div></section>
 </main>
+<div id="printReport" aria-hidden="true"></div>
 <nav class="nav"><button class="navbtn active" data-view="home" onclick="show('home')"><span class="ico">⌂</span><span class="ko">홈</span><span class="en">Home</span></button><button class="navbtn" data-view="records" onclick="show('records')"><span class="ico">♡</span><span class="ko">기록</span><span class="en">Entries</span></button><button class="navbtn" data-view="map" onclick="show('map')"><span class="ico">🗺</span><span class="ko">빙하 지도</span><span class="en">Map</span></button><button class="navbtn" data-view="report" onclick="show('report')"><span class="ico">✿</span><span class="ko">리포트</span><span class="en">Report</span></button></nav>
 <div class="toast" id="toast"></div>
 <input type="file" id="importFile" accept=".json,application/json" style="display:none">

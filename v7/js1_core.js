@@ -59,7 +59,42 @@ var REACTIONS=[
   {k:'다른 일로 바빴다',t:'mind',en:'I buried myself in other things'},
   {k:'누군가에게 털어놨다',t:'mind',en:'I told someone'}
 ];
-function reactionLabel(k){ var r=REACTIONS.filter(function(x){return x.k===k})[0]; if(!r) return String(k||''); return isEN()? r.en : r.k; }
+/* v8 · 3초 원탭·퀵 기록이 저장한 한국어 키도 EN에서는 영어로 보여준다 (한국어 분석 키는 그대로) */
+var SIT_TEXT_EN={
+  '직장·업무':'work','사람과의 일':'a problem with someone','가족':'family','연인·친구':'my partner or a friend',
+  '연락·관계':'messages and contact','돈·일정':'money and plans','내 자신':'myself','잠·몸':'sleep and my body','그냥 하루':'just the day'
+};
+var REACTION_EN_EXTRA={
+  '가슴이 답답해요':'my chest feels tight','자꾸 생각나요':'I keep thinking about it','화가 치밀어요':'anger rising',
+  '눈물이 날 것 같아요':'close to tears','아무것도 못 하겠어요':'I can’t get anything done','멍해져요':'I feel numb',
+  '잠이 안 와요':'I can’t sleep','괜찮은 척했어요':'I pretended to be fine','몸이 무거워요':'my body feels heavy',
+  '괜찮은 척':'I pretended to be fine'
+};
+function sitTextEN(s){
+  var raw=String(s==null?'':s).trim();
+  if(!raw) return '';
+  if(SIT_TEXT_EN[raw]) return SIT_TEXT_EN[raw];
+  var out=raw;
+  Object.keys(SIT_TEXT_EN).forEach(function(k){ if(out.indexOf(k)>=0) out=out.split(k).join(SIT_TEXT_EN[k]); });
+  return out;
+}
+function situationDisplay(r){
+  var t=situationString(r);
+  if(!t){ var c=sitCatOf(r); return c? sitCatLabel(c) : ''; }
+  return isEN()? sitTextEN(t) : t;
+}
+function sitFlat(s){
+  var out=String(s||'').replace(/(누구|어디서·언제|무슨 일·말|맴돈 생각|Who|Where·when|What happened|Thought that stayed)\s*:\s*/g,' · ');
+  out=out.replace(/\s*·\s*(?=·)/g,' ').replace(/·\s*\n/g,'· ').replace(/\s+/g,' ').trim();
+  out=out.replace(/^·\s*/,'').replace(/·\s*$/,'').trim();
+  return isEN()? sitTextEN(out) : out;
+}
+function reactionLabel(k){
+  var r=REACTIONS.filter(function(x){return x.k===k})[0];
+  if(r) return isEN()? r.en : r.k;
+  if(isEN()&&REACTION_EN_EXTRA[k]) return REACTION_EN_EXTRA[k];
+  return String(k||'');
+}
 
 /* ---------- 상황 분류 ---------- */
 var SIT_CATS=[
@@ -144,11 +179,12 @@ function show2(id){
   for(i=0;i<views.length;i++) views[i].classList.remove('active');
   var el=document.getElementById(id); if(el) el.classList.add('active');
   var btns=document.querySelectorAll('.navbtn');
-  var navId=(id==='layer'||id==='deep')?'map':id;
+  var navId=(id==='layer'||id==='deep')?'map':(id==='archive'?'report':id);
   for(i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.view===navId);
   if(id==='records') renderRecords();
   if(id==='home'){ renderHomeTop(); renderRecent(); }
   if(id==='report') renderReport();
+  if(id==='archive') renderArchive();
   if(id==='map') renderMap();
   if(id==='layer') renderLayer();
   if(id==='quick') renderQuick();

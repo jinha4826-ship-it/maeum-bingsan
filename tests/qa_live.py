@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""마음의 빙산 2.0 (v7) · Playwright 회귀 테스트
+"""마음의 빙산 2.0 (v8) · Playwright 회귀 테스트
 
 실행:
     pip install playwright && python3 -m playwright install chromium
@@ -9,13 +9,13 @@
     python3 -m http.server 8901 -d docs
     BASE_URL=http://127.0.0.1:8901/ python3 tests/qa_live.py
 
-이 파일은 13개 시나리오를 실행하고 PASS/FAIL 을 출력합니다.
+이 파일은 v7 회귀 16시나리오 + v8 신규 11시나리오를 실행하고 PASS/FAIL 을 출력합니다.
 """
 import json, os, sys, time
 from playwright.sync_api import sync_playwright
 
 BASE = os.environ.get('BASE_URL', 'https://jinha4826-ship-it.github.io/maeum-bingsan/')
-URL = BASE.rstrip('/') + '/?v=7&qa=playwright&t=' + str(int(time.time()))
+URL = BASE.rstrip('/') + '/?v=8&qa=playwright&t=' + str(int(time.time()))
 
 # 서울 기준 날짜(days_ago) 헬퍼 — distinctDays 검증용
 def iso(days_ago, hour=12):
@@ -62,6 +62,16 @@ SEED_SAME_DAY = [
     rec(23, iso(0, 20), ['서운함'], [], '저녁 전화', '가족'),
 ]
 
+SEED_V8 = [
+    rec(101, iso(45), ['화남'], ['인정'], '회의에서 다퉜다', '일·업무', ['다른 일로 바빴다']),
+    rec(102, iso(46), ['화남'], ['인정'], '보고가 밀렸다', '일·업무', ['다른 일로 바빴다']),
+    rec(103, iso(47), ['지침'], [], '야근이 이어졌다', '일·업무'),
+    rec(111, iso(1), ['서운함'], ['이해'], '회의에서 무시당함', '일·업무', ['괜찮은 척했어요']),
+    rec(112, iso(2), ['서운함'], ['이해'], '친구가 연락을 씹음', '관계', ['말을 못 하고 삼켰다']),
+    rec(113, iso(3), ['서운함'], ['이해'], '엄마가 내 얘기를 안 들음', '가족', ['괜찮은 척했어요']),
+    rec(114, iso(4), ['답답함'], ['이해'], '할 일이 맴돌았다', '공부·시험', ['괜찮은 척했어요']),
+]
+
 RESULTS = []
 def check(name, ok, detail=''):
     RESULTS.append((name, ok, detail))
@@ -103,7 +113,7 @@ def main():
         ctx, page = new_page([v1(1, iso(1), ['서운함'], [], '그냥 하루'), v1(2, iso(2), ['화남'], [], '또 실수')])
         page.click(".navbtn[data-view='report']"); page.wait_for_timeout(300)
         txt = page.inner_text('#reportContent')
-        check('2. 욕구 없는 기록 리포트 오류 없음', '감정 TOP 3' in txt and len(page.evaluate('window.__maeumErrors||[]')) == 0)
+        check('2. 욕구 없는 기록 리포트 오류 없음', ('반복되는 감정' in txt and '지난달과 달라진 점' in txt) and len(page.evaluate('window.__maeumErrors||[]')) == 0)
         ctx.close()
 
         # 3) 서로 다른 3일 같은 감정 → 반복 단서
@@ -230,6 +240,86 @@ def main():
         errs = page.evaluate('window.__maeumErrors||[]')
         check('16. KO/EN 전환 정상', en_ok and ko_ok, (en_ok, ko_ok))
         check('16b. 전 과정 JS 오류 0', len(errs) == 0, errs[:3])
+        ctx.close()
+
+
+        # ================= v8 =================
+        # 17) 월간 리포트 4개 핵심 섹션 + 4단 구분
+        ctx, page = new_page(SEED_V8)
+        page.click(".navbtn[data-view='report']"); page.wait_for_timeout(500)
+        txt = page.inner_text('#reportContent')
+        check('17. 리포트 01~04 네 섹션', all(k in txt for k in ['01', '02', '03', '04']) and
+              all(k in txt for k in ['반복되는 감정', '서로 다른 상황의 연결', '욕구와 반응의 차이', '지난달과 달라진 점']),
+              [k for k in ['01','02','03','04','반복되는 감정','서로 다른 상황의 연결','욕구와 반응의 차이','지난달과 달라진 점'] if k not in txt])
+        check('17b. 각 섹션 4단 구분(사실·패턴·추론·확인)', all(k in txt for k in ['관찰된 사실','반복 패턴','추론 가능성','확인이 필요해요'])
+              and page.locator('#reportContent .tiers').count() >= 4
+              and page.locator('#reportContent .tier').count() == page.locator('#reportContent .tiers').count() * 4,
+              (page.locator('#reportContent .tiers').count(), page.locator('#reportContent .tier').count()))
+
+        # 18) 01 · 분모와 복수 선택 100% 초과 안내
+        check('18. 01 감정 분모·100% 초과 안내', '100%를 넘을 수 있어요' in txt and '분모로 계산' in txt)
+
+        # 19) 02 · crossSituationPatterns 연동
+        check('19. 02 서로 다른 상황 연결 표시', '서로 달랐던' in txt and '일·업무' in txt and '가족' in txt, txt[txt.find('02'):txt.find('02')+120])
+
+        # 20) 03 · mismatchInsights 연동
+        sec3 = page.locator('#reportContent .rep-sec').nth(2).inner_text()
+        check('20. 03 욕구와 반응의 차이 표시', ('억제하는 반응' in sec3) and ('괜찮은 척했어요' in sec3 or '말을 못 하고 삼켰다' in sec3), sec3[:160])
+
+        # 21) 04 · 지난달과 달라진 점 (30일 비교)
+        sec4 = page.locator('#reportContent .rep-sec').nth(3).inner_text()
+        check('21. 04 지난달 대비 변화(30일 창)', ('30일' in sec4) and page.locator('#reportContent .rep-sec').nth(3).locator('.delta-row').count() >= 1, sec4[:160])
+
+        # 22) ④ 확인(맞아요) 저장 + PDF 반영
+        page.locator('#reportContent .tier.cf .tier-fb button').first.click(); page.wait_for_timeout(400)
+        n_state = page.evaluate("Object.keys(JSON.parse(localStorage.getItem('maeum-pattern-state')||'{}')).length")
+        check('22. ④ 맞아요 저장', n_state >= 1, n_state)
+        page.evaluate("buildPrintReport()")
+        phtml = page.eval_on_selector('#printReport', 'el=>el.innerHTML')
+        check('22b. 확인한 발견이 PDF에 포함', '사용자가 확인한 발견' in phtml and '맞아요' in phtml)
+
+        # 23) 핀 저장 → 보관소 표시 → 빼기
+        page.locator('#reportContent .rep-sec .pin-btn').first.click(); page.wait_for_timeout(400)
+        n_pin = page.evaluate("JSON.parse(localStorage.getItem('maeum-archive-pins')||'[]').length")
+        check('23. 📌 변화 보관소에 저장', n_pin == 1, n_pin)
+        page.click("text=보관소 열기"); page.wait_for_timeout(500)
+        check('23b. 보관소에 저장한 발견 표시', page.locator('#archiveContent .pin-item').count() == 1)
+        page.locator('#archiveContent .pin-item button:has-text("빼기")').first.click(); page.wait_for_timeout(400)
+        check('23c. 보관소에서 빼기', page.evaluate("JSON.parse(localStorage.getItem('maeum-archive-pins')||'[]').length") == 0)
+
+        # 24) 보관소 — 30일 전의 나 vs 지금 · 과거 고민/새 반응
+        atxt = page.inner_text('#archiveContent')
+        check('24. 보관소 30일 비교 표', ('30일 전의 나와 지금의 나' in atxt) and page.locator('#archiveContent .cmp2-r').count() >= 1)
+        check('24b. 과거 고민 · 최근 새 반응', ('과거에 자주 등장했던 고민' in atxt) and ('최근 새롭게 나타난 반응' in atxt))
+        check('24c. 보관소 저장 항목 없음 안내', '아직 저장한 발견이 없어요' in atxt)
+
+        # 25) 인쇄용 DOM + @media print + 버튼 동작
+        page.click("text=← 월간 리포트"); page.wait_for_timeout(400)
+        page.evaluate("window.print=function(){window.__printed=(window.__printed||0)+1;}")
+        page.evaluate("buildPrintReport()")
+        phtml = page.eval_on_selector('#printReport', 'el=>el.innerHTML')
+        check('25. 인쇄용 리포트 4섹션·확인 발견·근거 요약',
+              all(k in phtml for k in ['01', '02', '03', '04', '사용자가 확인한 발견', '근거 기록 요약']))
+        css_txt = page.evaluate("Array.prototype.map.call(document.querySelectorAll('style'),function(s){return s.textContent}).join('\n')")
+        check('25b. @media print / @page A4 스타일 존재', ('@media print' in css_txt) and ('size:A4' in css_txt))
+        page.emulate_media(media='print')
+        vis = page.is_visible('#printReport'); appvis = page.is_visible('.app')
+        check('25c. 인쇄 모드: 앱 숨김 · 리포트만 표시', vis and not appvis, (vis, appvis))
+        page.emulate_media(media='screen')
+        page.click("text=상담·보관용 리포트 PDF 저장/인쇄"); page.wait_for_timeout(300)
+        check('25d. 버튼이 window.print 호출', page.evaluate("(window.__printed||0)") >= 1)
+
+        # 26) KO/EN — 4섹션 문구 전환
+        page.click('#langEn'); page.wait_for_timeout(500)
+        etxt = page.inner_text('#reportContent')
+        check('26. EN 리포트 4섹션', all(k in etxt for k in ['Feelings that repeat', 'Links across different situations', 'The gap between wish and reaction', 'What changed from last month']))
+        page.click("text=Change archive"); page.wait_for_timeout(500)
+        check('26b. EN 보관소', 'Me 30 days ago and me now' in page.inner_text('#archiveContent'))
+        page.click('#langKo'); page.wait_for_timeout(500)
+
+        # 27) 전 과정 JS 오류 0
+        errs = page.evaluate('window.__maeumErrors||[]')
+        check('27. v8 전 과정 JS 오류 0', len(errs) == 0 and len(errors) == 0, (errs[:3], errors[:3]))
         ctx.close()
 
         browser.close()

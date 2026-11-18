@@ -268,6 +268,84 @@ body.ko .en{display:none!important}body.en .ko{display:none!important}
 .layer-band.mid .lb-chips .tag{border-color:#e2d7ec;color:#5f4c78}
 .layer-band.deep .lb-chips .tag{border-color:#c9b8dd;background:#f8f3fd;color:#4f3f66}
 
+/* ---- v8 · 월간 4섹션 · 4단 구분 ---- */
+.report-tools{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 12px}
+.report-tools .btn{flex:1 1 46%}
+.rep-sec{margin-top:10px}
+.sec-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px}
+.sec-num{flex:0 0 auto;min-width:30px;height:30px;border-radius:10px;background:#efe7f8;border:1px solid #dccdec;color:#5b4374;font-size:12.5px;font-weight:900;display:flex;align-items:center;justify-content:center;letter-spacing:.3px}
+.sec-tt b{display:block;font-size:14.5px;letter-spacing:-.3px;color:#453853}
+.sec-sub{display:block;font-size:11px;color:#9a8ba8;margin-top:2px;line-height:1.5}
+.tiers{border:1px solid #e6ddef;border-radius:15px;overflow:hidden;background:#fffdfa}
+.tier{display:flex;gap:9px;padding:9px 11px;border-top:1px solid #efe8f5}
+.tier:first-child{border-top:0}
+.tier .tk{flex:0 0 88px;font-size:10px;font-weight:850;color:#7b688f;line-height:1.6;padding-top:1px}
+.tier .tv{flex:1;min-width:0;font-size:12.5px;line-height:1.72;color:#4f4260}
+.tier.fact{background:#fffdfa}
+.tier.pat{background:#fbf8fd}
+.tier.inf{background:#f7f5fb}
+.tier.cf{background:#f4f8f6}
+.tier .lv{display:inline-block;font-size:9.5px;font-weight:850;color:#6b5583;background:#f2ecfa;border-radius:999px;padding:2px 7px;margin-right:4px}
+.tier-fb{display:flex;gap:5px;flex-wrap:wrap;margin:2px 0 6px}
+.tier-fb button{flex:1 1 28%;border:1px solid var(--line);background:#fffdfa;color:#7c6b92;font:inherit;font-size:11px;font-weight:800;border-radius:999px;padding:7px 6px;cursor:pointer;touch-action:manipulation;min-height:34px}
+.tier-fb button.on{background:#efe7f8;border-color:#c9b3e2;color:#5b4374}
+.tier-note{margin:0;font-size:11px;line-height:1.65;color:#8a7c93}
+.bars{margin:2px 0 8px}
+.sub-h{font-size:10.5px;font-weight:850;letter-spacing:.4px;color:#9a7fb8;margin:12px 0 6px}
+.delta-list{margin:0 0 9px}
+.delta-row{display:grid;grid-template-columns:44px 1fr auto 58px;gap:6px;align-items:center;font-size:12px;color:#514661;padding:5px 0;border-bottom:1px dashed #eee5f3}
+.delta-row:last-child{border-bottom:0}
+.delta-row .dk{font-size:9.5px;font-weight:850;color:#9a8aa8;background:#f7f3fa;border-radius:999px;padding:2px 6px;text-align:center}
+.delta-row .dl2{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.delta-row .dv{font-size:11px;color:#8a7c93}
+.delta-row .dd{font-size:11px;font-weight:850;text-align:right}
+.dd.up{color:#b06a4a}.dd.down{color:#4f7d74}
+.cmp2{border:1px solid #ece3f3;border-radius:13px;overflow:hidden}
+.cmp2-h,.cmp2-r{display:grid;grid-template-columns:1fr 74px 74px 52px;gap:4px;padding:7px 9px;font-size:11px;align-items:center}
+.cmp2-h{background:#f7f2fb;color:#8a7c93;font-weight:850;font-size:9.5px;letter-spacing:.2px}
+.cmp2-r{border-top:1px solid #f1eaf7;color:#514661;font-size:11.5px}
+.cmp2-r .c1{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp2-h .c1{font-weight:850}
+.pin-item{border:1px solid #ece3f3;border-radius:14px;background:#fffdfa;padding:11px;margin:9px 0}
+.pin-h{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.pin-t{font-size:11.5px;font-weight:850;color:#5b4a6e;letter-spacing:-.1px}
+.pin-d{margin-left:auto;font-size:10px;color:#a498ad}
+.btn.pin-btn{width:100%;margin-top:8px;font-size:11.5px}
+.btn.pin-btn.on{border-color:#c9b3e2;background:#f4eefc;color:#5b4374}
+
+/* ---- v8 · 인쇄(상담·보관용 리포트) ---- */
+#printReport{display:none}
+@media print{
+  @page{size:A4;margin:14mm}
+  html,body{background:#fff!important;margin:0!important;padding:0!important;color:#1e1826!important}
+  header,.app,.nav,.toast,.overlay,#importFile,.hero,.card{display:none!important}
+  #printReport{display:block!important;padding:0!important;margin:0!important}
+  #printReport *{box-shadow:none!important;text-shadow:none!important}
+  .pr{font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:9.6pt;line-height:1.55;color:#241d2b;width:100%}
+  .pr-brand{font-size:8.8pt;letter-spacing:.05em;color:#6f5f84;font-weight:800}
+  .pr h1{font-size:15pt;margin:2pt 0 3pt;letter-spacing:-.3pt}
+  .pr-meta{font-size:8.4pt;color:#5f5569;margin-bottom:3pt}
+  .pr-disc{font-size:8pt;color:#665c72;margin:3pt 0 0;padding-bottom:6pt;border-bottom:.6pt solid #bfb2cd}
+  .pr-sec{break-inside:avoid;page-break-inside:avoid;margin:0 0 8pt}
+  .pr-sec h2{font-size:10.4pt;margin:9pt 0 4pt;padding-left:6pt;border-left:2.4pt solid #8d78a8;color:#3b2f4c;letter-spacing:-.2pt}
+  .pr-tbl{width:100%;border-collapse:collapse;font-size:8.4pt;margin:2pt 0 4pt}
+  .pr-tbl th,.pr-tbl td{border:.5pt solid #cfc4da;padding:2.2pt 4pt;text-align:left}
+  .pr-tbl th{background:#f3eefa;font-weight:800;color:#4a3d5c}
+  .pr-line{margin:1.6pt 0;font-size:8.8pt;line-height:1.5}
+  .pr-line b{color:#4a3d5c}
+  .pr-note{font-size:7.9pt;color:#665c72;margin:1pt 0 3pt}
+  .pr-dim{color:#5c5266}
+  .pr-foot{margin-top:7pt;padding-top:5pt;border-top:.5pt solid #cfc4da;font-size:7.8pt;color:#6a6076}
+}
+
+/* ---- v8 · 이전(1.0) 참고 접기 ---- */
+details.legacy-ref{margin:14px 0 4px;border:1px solid #e6ddef;border-radius:14px;background:#faf7fd;padding:0 12px}
+details.legacy-ref>summary{cursor:pointer;list-style:none;padding:11px 2px;font-size:11.5px;font-weight:850;color:#7d6c90;letter-spacing:-.1px}
+details.legacy-ref>summary::-webkit-details-marker{display:none}
+details.legacy-ref>summary:before{content:'▸';margin-right:6px;color:#a894bd}
+details.legacy-ref[open]>summary:before{content:'▾'}
+details.legacy-ref .card{margin:6px 0 12px;background:#fffdfa}
+
 </style></head><body class="ko"><main class="app">
 <header><div class="logo">🧊</div><h1><span class="ko">마음의 빙산</span><span class="en">Mind’s Iceberg</span></h1><div class="header-right"><div class="langtog" role="group" aria-label="Language"><button type="button" id="langKo" onclick="setLang('ko')">KO</button><button type="button" id="langEn" onclick="setLang('en')">EN</button></div><button class="gearbtn" id="gearBtn" aria-label="설정" onclick="show('settings')">✦</button></div></header>
 
@@ -294,18 +372,20 @@ body.ko .en{display:none!important}body.en .ko{display:none!important}
 
 <section id="records" class="view"><div class="hero"><div class="eyebrow">YOUR JOURNAL ♡</div><h2><span class="ko">나의 기록</span><span class="en">My entries</span></h2><p><span class="ko">작은 마음들이 모여 나를 이해하는 단서가 돼요.</span><span class="en">Small feelings gather into clues about who I am.</span></p></div><div id="allRecords"></div></section>
 
-<section id="map" class="view"><div class="hero"><div class="eyebrow">MY GLACIER MAP ✧</div><h2><span class="ko">내 마음의<br>빙하 지도</span><span class="en">My mind’s<br>glacier map</span></h2><p><span class="ko">수면 위의 반복되는 상황, 중간층의 감정과 생각, 심해의 욕구를 기록이 쌓이는 만큼 그려요.</span><span class="en">Repeating situations above the surface, feelings and thoughts in the middle, wishes deep below — drawn as entries gather.</span></p></div><div id="mapContent"></div></section>
+<section id="map" class="view"><div class="hero"><div class="eyebrow">MY GLACIER MAP ✧</div><h2><span class="ko">내 마음의<br>빙하 지도</span><span class="en">My mind’s<br>glacier map</span></h2><p><span class="ko">수면 위 상황부터 심해의 욕구까지 그려요.</span><span class="en">From surface situations to deep wishes.</span></p></div><div id="mapContent"></div></section>
 
 <section id="layer" class="view"><div id="layerContent"></div></section>
 
-<section id="report" class="view"><div class="hero"><div class="eyebrow">A GENTLE LOOK BACK ✧</div><h2><span class="ko">월간 마음 패턴<br>리포트</span><span class="en">Monthly mind<br>pattern report</span></h2><p><span class="ko">이번 달 기록에서 보이는 감정과 상황, 그 아래의 바람을 모아봐요.</span><span class="en">The feelings, situations and wishes that show in this month’s entries.</span></p></div><div id="reportContent"></div></section>
+<section id="report" class="view"><div class="hero"><div class="eyebrow">A GENTLE LOOK BACK ✧</div><h2><span class="ko">월간 마음 패턴<br>리포트</span><span class="en">Monthly mind<br>pattern report</span></h2><p><span class="ko">이번 달 감정·상황·바람을 네 가지로 정리해요.</span><span class="en">This month’s feelings, situations and wishes in four parts.</span></p></div><div id="reportContent"></div></section>
 
+<section id="archive" class="view"><div id="archiveContent"></div></section>
 <section id="deep" class="view"><div id="deepContent"></div></section>
 
 <section id="detail" class="view"><button class="btn ghost" onclick="show('records')"><span class="ko">← 기록 목록</span><span class="en">← All entries</span></button><div id="detailContent"></div></section>
 
 <section id="settings" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">SETTINGS ⚙︎</div><h2><span class="ko">설정</span><span class="en">Settings</span></h2><p><span class="ko">매일 체크인 알림, AI, 백업과 클라우드 동기화를 여기서 관리해요.</span><span class="en">Check-in reminders, AI, backup and cloud sync live here.</span></p></div><div class="card" id="settingsContent"></div></section>
 </main>
+<div id="printReport" aria-hidden="true"></div>
 <nav class="nav"><button class="navbtn active" data-view="home" onclick="show('home')"><span class="ico">⌂</span><span class="ko">홈</span><span class="en">Home</span></button><button class="navbtn" data-view="records" onclick="show('records')"><span class="ico">♡</span><span class="ko">기록</span><span class="en">Entries</span></button><button class="navbtn" data-view="map" onclick="show('map')"><span class="ico">🗺</span><span class="ko">빙하 지도</span><span class="en">Map</span></button><button class="navbtn" data-view="report" onclick="show('report')"><span class="ico">✿</span><span class="ko">리포트</span><span class="en">Report</span></button></nav>
 <div class="toast" id="toast"></div>
 <input type="file" id="importFile" accept=".json,application/json" style="display:none">
@@ -980,14 +1060,15 @@ function renderDeep(){
   var sec=0;
   function nextSec(){ sec++; return sec+' · '; }
   var html='';
-  html+='<div class="hero"><div class="eyebrow">DEEP REPORT ✧ '+esc(dstr(r.date))+'</div><h2>'+tr('빙산 아래를<br>조금 더 들여다봤어요.','A little deeper<br>beneath the iceberg.')+'</h2><p>'+tr('표면에 보인 감정과 그 아래의 욕구·믿음을 비폭력대화(NVC)와 인지행동치료(CBT)의 관점으로 이어봤어요. 진단이 아니라, 나를 이해하기 위한 해석이에요.','I followed the feeling on the surface and the needs and beliefs beneath it through NVC and CBT. This is an interpretation for understanding, not a diagnosis.')+'</p></div>';
+  html+='<div class="hero"><div class="eyebrow">DEEP REPORT ✧ '+esc(dstr(r.date))+'</div><h2>'+tr('빙산 아래를<br>조금 더 들여다봤어요.','A little deeper<br>beneath the iceberg.')+'</h2><p>'+tr('감정 아래의 욕구와 믿음을 NVC·CBT로 이어봤어요. 진단이 아니에요.','I followed the feeling on the surface and the needs and beliefs beneath it through NVC and CBT. This is an interpretation for understanding, not a diagnosis.')+'</p></div>';
 
-  /* 한눈에 보기 · 방어기제 → AI 솔루션 */
-  html+='<div class="card" style="background:linear-gradient(140deg,#f8f3fb,#eef4f2);border-color:#e4d9ef">';
-  html+='<div class="card-title">'+tr('한눈에 보기 · 방어기제 → AI 솔루션','At a glance · defence → AI solution')+'</div>';
-  html+='<div class="ai-flow"><span class="ai-chip">🛡 '+esc(defNow.main.name)+'</span><span class="ai-arrow">→</span><span class="ai-chip">✦ '+tr('심리학 기반 솔루션 3','3 psychology-based steps')+'</span></div>';
-  html+='<p class="prompt" style="margin:0 0 9px">'+esc(defNow.main.core)+'</p>';
-  html+='<div id="aiSummary">'+aiSummaryHTML(r)+'</div></div>';
+  /* v8: 1.0 방어기제 블록은 맨 아래 접힌 ‘이전 참고 보기’로 내린다 */
+  var legacyHTML='';
+  legacyHTML+='<div class="card" style="background:linear-gradient(140deg,#f8f3fb,#eef4f2);border-color:#e4d9ef">';
+  legacyHTML+='<div class="card-title">'+tr('한눈에 보기 · 방어기제 → AI 솔루션','At a glance · defence → AI solution')+'</div>';
+  legacyHTML+='<div class="ai-flow"><span class="ai-chip">🛡 '+esc(defNow.main.name)+'</span><span class="ai-arrow">→</span><span class="ai-chip">✦ '+tr('심리학 기반 솔루션 3','3 psychology-based steps')+'</span></div>';
+  legacyHTML+='<p class="prompt" style="margin:0 0 9px">'+esc(defNow.main.core)+'</p>';
+  legacyHTML+='<div id="aiSummary">'+aiSummaryHTML(r)+'</div></div>';
 
   /* 빙산 시각화 */
   html+='<div class="card"><div class="card-title">'+tr('수면 위와 아래','Above and below the surface')+'</div><div class="deep-ice">';
@@ -1030,26 +1111,26 @@ function renderDeep(){
   html+='</div></div>';
 
   /* 방어기제 */
-  html+='<div class="card"><div class="sec"><div class="sec-h">'+nextSec()+tr('가면 감정과 무의식 방어기제','The mask and the unconscious defence')+'</div>'+defReportHTML(r,d)+'</div></div>';
+  legacyHTML+='<div class="card"><div class="sec"><div class="sec-h">'+tr('가면 감정과 무의식 방어기제','The mask and the unconscious defence')+'</div>'+defReportHTML(r,d)+'</div></div>';
 
   /* AI */
-  html+='<div class="card"><div class="sec"><div class="sec-h">'+nextSec()+tr('✦ AI 심리 솔루션','✦ AI psychology solution')+'</div><div id="aiArea">'+aiHTML(r)+'</div></div></div>';
+  legacyHTML+='<div class="card"><div class="sec"><div class="sec-h">'+tr('✦ AI에게 한 겹 더 묻기','✦ Ask AI for one more layer')+'</div><div id="aiArea">'+aiHTML(r)+'</div></div></div>';
 
   /* 해결 방안 3 */
   var defMain=defAnalyze([r]).main;
   var calmTxt=calmOf(d.usedFeel[0]);
   var selfLine=nvcLine(r,d,'self'), otherLine=nvcLine(r,d,'other');
   var bx=(isEN()?DEF_BX_EN:DEF_BX)[defMain.key]||defMain.tip;
-  html+='<div class="card" id="solutions"><div class="sec"><div class="sec-h">'+nextSec()+tr('심리학 기반 실전 해결 방안 3가지','Three psychology-based steps you can use today')+'</div>';
-  html+='<p>'+tr('분석은 여기까지예요. 이제 오늘 실제로 움직일 수 있는 크기로 줄여볼게요.','The analysis ends here. Now let’s shrink it to something you can actually do today.')+'</p>';
-  html+='<div class="sol"><div class="sh"><b>1</b>'+tr('지금 5분 안에 · 몸부터 진정','In the next 5 minutes · settle the body first')+'</div><div class="st">'+esc(calmTxt)+'</div><div class="sx">'+tr('감정을 지우는 게 아니라 5분만 신호를 낮추는 행동이에요. 5분이 지나도 괜찮아요.','This is not erasing the feeling — just lowering the signal for five minutes. It is fine if it goes past five.')+'</div></div>';
-  html+='<div class="sol"><div class="sh"><b>2</b>'+tr('오늘 건넬 NVC 한 마디','One NVC sentence to offer today')+'</div>';
-  html+='<div class="sm"><b>'+tr('나에게','To myself')+'</b>“'+esc(selfLine)+'”</div><button class="copybtn" data-copy="'+esc(selfLine)+'">'+tr('문장 복사','Copy')+'</button>';
-  html+='<div class="sm" style="margin-top:9px"><b>'+tr('상대에게','To them')+'</b>“'+esc(otherLine)+'”</div><button class="copybtn" data-copy="'+esc(otherLine)+'">'+tr('문장 복사','Copy')+'</button>';
-  html+='<div class="sx">'+tr('그대로 읽지 않아도 돼요. 오늘 말할 수 있는 한 문장만 상황에 맞게 바꿔보세요.','You don’t have to read it as written. Change one sentence to fit the moment, if you say anything today.')+'</div></div>';
-  html+='<div class="sol"><div class="sh"><b>3</b>'+tr('방어기제 패턴을 깨는 작은 실험','A small experiment to interrupt the pattern')+'</div><div class="st">'+esc(bx)+'</div><div class="sx">'+tr('‘'+esc(defMain.name)+'’ 패턴에 맞춘 실험이에요. 하루 1회, 5분을 넘기지 않기.','An experiment fitted to the “'+esc(defMain.name)+'” pattern. Once a day, no more than five minutes.')+'</div></div>';
-  if((r.action||'').trim()) html+='<p class="quiet" style="margin-top:10px">'+tr('이미 다음 행동을 적어두셨어요 — ‘'+esc(cut(r.action,70))+'’. 위 3가지 중 하나와 같이 하면 더 잘 이어져요.','You already wrote a next step — “'+esc(cut(r.action,70))+'”. Pair it with one of these three and it carries further.')+'</p>';
-  html+='</div></div>';
+  legacyHTML+='<div class="card" id="solutions"><div class="sec"><div class="sec-h">'+tr('심리학 기반 실전 해결 방안 3가지','Three psychology-based steps you can use today')+'</div>';
+  legacyHTML+='<p>'+tr('분석은 여기까지예요. 이제 오늘 실제로 움직일 수 있는 크기로 줄여볼게요.','The analysis ends here. Now let’s shrink it to something you can actually do today.')+'</p>';
+  legacyHTML+='<div class="sol"><div class="sh"><b>1</b>'+tr('지금 5분 안에 · 몸부터 진정','In the next 5 minutes · settle the body first')+'</div><div class="st">'+esc(calmTxt)+'</div><div class="sx">'+tr('감정을 지우는 게 아니라 5분만 신호를 낮추는 행동이에요. 5분이 지나도 괜찮아요.','This is not erasing the feeling — just lowering the signal for five minutes. It is fine if it goes past five.')+'</div></div>';
+  legacyHTML+='<div class="sol"><div class="sh"><b>2</b>'+tr('오늘 건넬 NVC 한 마디','One NVC sentence to offer today')+'</div>';
+  legacyHTML+='<div class="sm"><b>'+tr('나에게','To myself')+'</b>“'+esc(selfLine)+'”</div><button class="copybtn" data-copy="'+esc(selfLine)+'">'+tr('문장 복사','Copy')+'</button>';
+  legacyHTML+='<div class="sm" style="margin-top:9px"><b>'+tr('상대에게','To them')+'</b>“'+esc(otherLine)+'”</div><button class="copybtn" data-copy="'+esc(otherLine)+'">'+tr('문장 복사','Copy')+'</button>';
+  legacyHTML+='<div class="sx">'+tr('그대로 읽지 않아도 돼요. 오늘 말할 수 있는 한 문장만 상황에 맞게 바꿔보세요.','You don’t have to read it as written. Change one sentence to fit the moment, if you say anything today.')+'</div></div>';
+  legacyHTML+='<div class="sol"><div class="sh"><b>3</b>'+tr('방어기제 패턴을 깨는 작은 실험','A small experiment to interrupt the pattern')+'</div><div class="st">'+esc(bx)+'</div><div class="sx">'+tr('‘'+esc(defMain.name)+'’ 패턴에 맞춘 실험이에요. 하루 1회, 5분을 넘기지 않기.','An experiment fitted to the “'+esc(defMain.name)+'” pattern. Once a day, no more than five minutes.')+'</div></div>';
+  if((r.action||'').trim()) legacyHTML+='<p class="quiet" style="margin-top:10px">'+tr('이미 다음 행동을 적어두셨어요 — ‘'+esc(cut(r.action,70))+'’. 위 3가지 중 하나와 같이 하면 더 잘 이어져요.','You already wrote a next step — “'+esc(cut(r.action,70))+'”. Pair it with one of these three and it carries further.')+'</p>';
+  legacyHTML+='</div></div>';
 
   /* 다독임 */
   html+='<div class="card"><div class="sec"><div class="sec-h">'+nextSec()+tr('오늘의 다독임','A gentle word for today')+'</div>';
@@ -1067,6 +1148,7 @@ function renderDeep(){
     html+='<p class="quiet">'+tr('생각해 볼 것 — 그 사람은 그때 무엇을 지키고 싶었을까요?','A thought to hold — what might they have been trying to protect then?')+'</p></div></div>';
   }
 
+  if(legacyHTML) html+='<details class="legacy-ref"><summary>🕰 '+tr('이전 참고 보기 · 방어기제 분석과 해결 방안','Earlier reference · defence read and steps')+'</summary>'+legacyHTML+'</details>';
   html+='<p class="quiet" style="padding:0 4px">'+tr('이 리포트는 비폭력대화(NVC)와 인지행동치료(CBT)의 관점을 참고한 자기 성찰용 해석이에요. 의학적 진단이나 심리 평가가 아니며, 힘든 마음이 오래 이어지면 전문가와 이야기해 보세요.','This report is an interpretation for self-reflection drawing on NVC and CBT. It is not a medical diagnosis or psychological assessment. If hard feelings last, please talk with a professional.')+'</p>';
   html+='<div class="row" style="margin-top:12px"><button class="btn secondary" onclick="openDetail('+r.id+')">'+tr('기록 보기','View entry')+'</button><button class="btn" onclick="show(\'home\')">'+tr('홈으로','Home')+'</button></div>';
   html+='<div style="height:8px"></div>';
@@ -2947,6 +3029,8 @@ function renderSettings(){
   html+='<div class="remrow"><div class="rl"><b>'+tr('매일 체크인 알림','Daily check-in')+'</b>'+(rem.on? tr('켜짐 · 매일 '+esc(rem.time),'on · daily at '+esc(rem.time)) : tr('꺼짐 · 켜면 알려드려요','off · turn it on and I will remind you'))+'</div><button class="switch '+(rem.on?'on':'')+'" id="remSwitch" aria-pressed="'+(rem.on?'true':'false')+'" aria-label="'+tr('매일 체크인 알림 켜기/끄기','turn daily check-in on or off')+'" onclick="toggleReminder()"><i></i></button></div>';
   if(rem.on) html+='<div class="remrow"><div class="rl"><b>'+tr('알림 시간','Reminder time')+'</b>'+tr('지금 설정: ','now: ')+esc(rem.time)+'</div><input class="timeinput" id="remTime" type="time" value="'+esc(rem.time)+'" aria-label="'+tr('알림 시간','reminder time')+'" onchange="setRemindTime(this.value)"></div>';
   html+='<div class="row" style="margin-top:10px"><button class="btn secondary small" onclick="askNotifPermission()">'+tr('브라우저 알림 허용','Allow browser notifications')+'</button><button class="btn secondary small" onclick="testNotif()">'+tr('알림 테스트','Test notification')+'</button></div>';
+  html+='<div class="row" style="margin-top:8px"><button class="btn small" onclick="downloadReminderICS()">📅 '+tr('매일 밤 9시 캘린더 알림 추가(.ics)','📅 Add a 9 PM daily calendar reminder (.ics)')+'</button></div>';
+  html+='<p class="quiet" style="margin-top:8px">'+tr('앱을 닫아도 울리는 알림은 위 .ics를 캘린더에 추가하면 돼요(매일 반복).','For a reminder that rings with the app closed, add the .ics above to your calendar — it repeats daily.')+'</p>';
   html+='<div class="badgeline">🔔 '+esc(permLabel(perm))+'</div>';
   html+='<div class="note">'+tr('알림은 <b>이 앱이 열려 있을 때</b> 브라우저 알림으로 오고, 그 밖에는 앱을 열면 홈 상단 배너로 알려드려요. 브라우저를 완전히 닫은 상태의 푸시는 정식 버전(서버 푸시·앱 설치)에서 지원할 예정이에요.<br>알림 시간과 설정은 이 기기에만 저장돼요.','Notifications arrive as browser notifications <b>while the app is open</b>; otherwise the banner at the top of home shows them when you return. Push with the browser fully closed is planned for the full version (server push / installed app).<br>The time and settings stay on this device.')+'</div>';
   html+='</div>';
@@ -3287,7 +3371,7 @@ if(cloudOn()) cloudSync(true).catch(function(){});
 })();
 </script>
 <script>
-/* ====== v7 · 마음의 빙산 2.0 Phase 1 ====== */
+/* ====== v8 · 마음의 빙산 2.0 (월간 4섹션 · 보관소 · PDF) ====== */
 /* =========================================================
    마음의 빙산 2.0 · Phase 1 (v7)
    기록 → 발견 → 축적 → 반복되는 상황·감정·욕구 패턴 발견
@@ -3349,7 +3433,42 @@ var REACTIONS=[
   {k:'다른 일로 바빴다',t:'mind',en:'I buried myself in other things'},
   {k:'누군가에게 털어놨다',t:'mind',en:'I told someone'}
 ];
-function reactionLabel(k){ var r=REACTIONS.filter(function(x){return x.k===k})[0]; if(!r) return String(k||''); return isEN()? r.en : r.k; }
+/* v8 · 3초 원탭·퀵 기록이 저장한 한국어 키도 EN에서는 영어로 보여준다 (한국어 분석 키는 그대로) */
+var SIT_TEXT_EN={
+  '직장·업무':'work','사람과의 일':'a problem with someone','가족':'family','연인·친구':'my partner or a friend',
+  '연락·관계':'messages and contact','돈·일정':'money and plans','내 자신':'myself','잠·몸':'sleep and my body','그냥 하루':'just the day'
+};
+var REACTION_EN_EXTRA={
+  '가슴이 답답해요':'my chest feels tight','자꾸 생각나요':'I keep thinking about it','화가 치밀어요':'anger rising',
+  '눈물이 날 것 같아요':'close to tears','아무것도 못 하겠어요':'I can’t get anything done','멍해져요':'I feel numb',
+  '잠이 안 와요':'I can’t sleep','괜찮은 척했어요':'I pretended to be fine','몸이 무거워요':'my body feels heavy',
+  '괜찮은 척':'I pretended to be fine'
+};
+function sitTextEN(s){
+  var raw=String(s==null?'':s).trim();
+  if(!raw) return '';
+  if(SIT_TEXT_EN[raw]) return SIT_TEXT_EN[raw];
+  var out=raw;
+  Object.keys(SIT_TEXT_EN).forEach(function(k){ if(out.indexOf(k)>=0) out=out.split(k).join(SIT_TEXT_EN[k]); });
+  return out;
+}
+function situationDisplay(r){
+  var t=situationString(r);
+  if(!t){ var c=sitCatOf(r); return c? sitCatLabel(c) : ''; }
+  return isEN()? sitTextEN(t) : t;
+}
+function sitFlat(s){
+  var out=String(s||'').replace(/(누구|어디서·언제|무슨 일·말|맴돈 생각|Who|Where·when|What happened|Thought that stayed)\s*:\s*/g,' · ');
+  out=out.replace(/\s*·\s*(?=·)/g,' ').replace(/·\s*\n/g,'· ').replace(/\s+/g,' ').trim();
+  out=out.replace(/^·\s*/,'').replace(/·\s*$/,'').trim();
+  return isEN()? sitTextEN(out) : out;
+}
+function reactionLabel(k){
+  var r=REACTIONS.filter(function(x){return x.k===k})[0];
+  if(r) return isEN()? r.en : r.k;
+  if(isEN()&&REACTION_EN_EXTRA[k]) return REACTION_EN_EXTRA[k];
+  return String(k||'');
+}
 
 /* ---------- 상황 분류 ---------- */
 var SIT_CATS=[
@@ -3434,11 +3553,12 @@ function show2(id){
   for(i=0;i<views.length;i++) views[i].classList.remove('active');
   var el=document.getElementById(id); if(el) el.classList.add('active');
   var btns=document.querySelectorAll('.navbtn');
-  var navId=(id==='layer'||id==='deep')?'map':id;
+  var navId=(id==='layer'||id==='deep')?'map':(id==='archive'?'report':id);
   for(i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.view===navId);
   if(id==='records') renderRecords();
   if(id==='home'){ renderHomeTop(); renderRecent(); }
   if(id==='report') renderReport();
+  if(id==='archive') renderArchive();
   if(id==='map') renderMap();
   if(id==='layer') renderLayer();
   if(id==='quick') renderQuick();
@@ -3705,7 +3825,7 @@ function questionOf(r){
   return '비슷한 일이 다시 생긴다면, 그때는 무엇을 조금 더 일찍 알아차리고 싶나요?';
 }
 function possibleReadingNote(){
-  return tr('아래 내용은 기록에서 만든 <b>가능한 해석</b>이에요. 사실과 다를 수 있고, 정답이 아니에요. 고치거나 분석에서 빼둘 수 있어요.','What follows is a <b>possible reading</b> built from your entry. It may not be right — not an answer. You can rewrite it or leave it out of the analysis.');
+  return tr('기록에서 만든 <b>가능한 해석</b>이에요. 고치거나 빼둘 수 있어요.','A <b>possible reading</b> from your entry — edit it or leave it out.');
 }
 
 /* ---------- 화면 ③ 오늘의 마음 발견 ---------- */
@@ -3717,7 +3837,7 @@ function renderDiscovery(id){
   var emo=emotionsOf(r).length? emotionsOf(r).map(function(f){return '<span class="tag">'+esc(emotionLabel(f))+'</span>'}).join('') : '<span class="quiet">'+tr('오늘은 감정을 고르지 않았어요','No feeling picked today')+'</span>';
   var ns=needsOf(r).filter(function(n){return !isUnsureNeed(n)});
   var needs=ns.length? ns.map(function(n){return '<span class="tag depth">'+esc(needLabel(n))+'</span>'}).join('') : '<span class="quiet">'+tr('아직 잘 모르겠어요','Not sure yet')+'</span>';
-  var sit=situationString(r);
+  var sit=situationDisplay(r);
   var clue=mainClueFor(r);
   var html='';
   html+='<div class="hero"><div class="eyebrow">TODAY’S DISCOVERY ✧</div><h2>'+tr('오늘의 마음 발견','Today’s discovery')+'</h2><p>'+esc(dstr(r.date))+'</p></div>';
@@ -3731,15 +3851,16 @@ function renderDiscovery(id){
   html+='<div class="read-note">'+possibleReadingNote()+'</div>';
   html+='<textarea class="field" id="discSentence" maxlength="240">'+esc(sentenceOf(r))+'</textarea>';
   html+='<div class="row" style="margin-top:9px"><button class="btn small" onclick="saveSentence('+r.id+')">'+tr('이 문장으로 저장','Keep this sentence')+'</button><button class="btn secondary small" onclick="askAIFor('+r.id+')">'+(aiState.loading?'…':tr('✦ AI에게 더 묻기','✦ Ask AI'))+'</button></div>';
+  html+='<div class="row" style="margin-top:6px">'+pinBtnRecord(r.id)+'</div>';
   if(r.ai&&r.ai.comment){
     html+='<div class="ai-box" style="margin-top:11px"><div class="ai-h">AI · '+tr('가능한 해석','possible reading')+'</div><div class="ai-text">'+esc(r.ai.comment)+'</div>'+(r.ai.question?'<div class="ai-q">'+esc(r.ai.question)+'</div>':'')+'</div>';
   }
   html+='</div>';
-  html+='<div class="card"><div class="card-title">'+tr('나에게 남기는 질문','A question to keep')+'</div><div class="qbox">'+esc(r.ai&&r.ai.question? r.ai.question : questionOf(r))+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 지금 하지 않아도 괜찮아요. 다음 기록에서 이어질 수 있어요.','You don’t have to answer now. It can carry into your next entry.')+'</p></div>';
+  html+='<div class="card"><div class="card-title">'+tr('나에게 남기는 질문','A question to keep')+'</div><div class="qbox">'+esc(r.ai&&r.ai.question? r.ai.question : questionOf(r))+'</div><p class="quiet" style="margin-top:9px">'+tr('지금 답하지 않아도 괜찮아요.','No need to answer now.')+'</p></div>';
   if(clue){
-    html+='<div class="card clue"><div class="clue-h">✨ '+tr('최근 발견한 마음','Recently found')+' <span class="clue-badge">'+esc(clue.badge)+'</span></div><p class="clue-say">'+clue.sentence+'</p><p class="quiet" style="margin-top:6px">'+esc(clue.evidenceLine||'')+'</p><button class="btn secondary small" style="margin-top:10px" onclick="openPattern(\''+esc(clue.id)+'\')">'+tr('관련 기록 살펴보기','Look at the related entries')+'</button></div>';
+    html+='<div class="card clue"><div class="clue-h">✨ '+tr('최근 발견한 마음','Recently found')+' <span class="clue-badge">'+esc(clue.badge)+'</span></div><p class="clue-say">'+clue.sentence+'</p><p class="quiet" style="margin-top:6px">'+esc(clue.evidenceLine||'')+'</p><button class="btn secondary small" style="margin-top:10px" onclick="openPattern(\''+esc(clue.id)+'\')">'+tr('관련 기록 살펴보기','Look at the related entries')+'</button>'+pinBtnPattern(clue)+'</div>';
   }
-  html+='<div class="card"><div class="card-title">'+tr('이 해석이 맞나요?','Does this reading fit?')+'</div><p class="prompt">'+tr('틀렸다고 느끼면 분석에서 빼둘 수 있어요. 기록 자체는 그대로 남아요.','If it feels wrong, you can leave it out of the analysis. The entry itself stays.')+'</p>';
+  html+='<div class="card"><div class="card-title">'+tr('이 해석이 맞나요?','Does this reading fit?')+'</div><p class="prompt">'+tr('분석에서 빼도 기록은 그대로 남아요.','Leaving it out keeps the entry itself.')+'</p>';
   html+='<div class="row"><button class="btn secondary small" onclick="startEdit('+r.id+')">'+tr('✎ 직접 수정','✎ Edit')+'</button><button class="btn ghost small" onclick="setAnalysisFeedback('+r.id+',\''+(fb==='rejected'?'':'rejected')+'\')">'+(fb==='rejected'? tr('↺ 분석에 다시 포함','↺ Include again') : tr('✕ 틀렸어요 (분석 제외)','✕ Not right (leave out)'))+'</button></div>';
   if(fb) html+='<p class="okline">'+(fb==='rejected'? tr('이 기록은 패턴 분석에서 제외되어 있어요.','This entry is excluded from pattern analysis.') : (fb==='partial'? tr('‘일부 달라요’로 표시했어요.','Marked as “partly different”.') : tr('‘맞아요’로 표시했어요.','Marked as “fits”.')))+'</p>';
   html+='<button class="btn secondary small" style="margin-top:9px" onclick="openDeep('+r.id+')">'+tr('🧊 이 기록의 심층 리포트 (방어기제 · AI)','🧊 Deep report for this entry')+'</button>';
@@ -3888,6 +4009,7 @@ function setPatternFeedback(id,status,pat){
 function renderPatternUi(){
   if(currentView==='map') renderMap(); else if(currentView==='report') renderReport(); else if(currentView==='layer') renderLayer(); else if(currentView==='home'){ renderHomeTop(); }
   else if(currentView==='discovery'&&detailId!=null) renderDiscovery(detailId);
+  else if(currentView==='archive') renderArchive();
 }
 
 /* 최근 7일 / 전체 — 각자 자기 기간만 센다 */
@@ -4178,6 +4300,280 @@ function mainClueFor(r){
   return mine;
 }
 
+/* =========================================================
+   v8 · 기간 비교 (최근 30일 vs 그 이전 30일)
+   · 30일 창에 기록이 모자라면 날짜 순서로 절반씩 나눠 비교한다.
+   · 전체 2건 미만이면 비교하지 않고 정직하게 안내한다(mode:'none').
+   · 비율의 분모는 각 기간의 기록 수이고, 한 기록에 감정·욕구를 여러 개
+     고를 수 있어서 합계는 100%를 넘을 수 있다.
+   ========================================================= */
+var DAY_MS = 86400000;
+function recTimeOf(r){ var t=new Date(r&&r.date).getTime(); return isFinite(t)? t : 0; }
+function cleanRecordList(){
+  return records.filter(function(r){ return !recordRejected(r); })
+    .slice().sort(function(a,b){ return recTimeOf(b)-recTimeOf(a); });
+}
+function countMapArr(obj){
+  return Object.keys(obj).map(function(k){ return {key:k,count:obj[k]}; })
+    .sort(function(a,b){ return b.count-a.count || String(a.key).localeCompare(String(b.key)); });
+}
+function aggPeriod(list){
+  var emo={}, need={}, sit={}, rea={};
+  list.forEach(function(r){
+    uniq(emotionsOf(r)).forEach(function(k){ emo[k]=(emo[k]||0)+1; });
+    needsOf(r).filter(function(x){ return !isUnsureNeed(x); }).forEach(function(k){ need[k]=(need[k]||0)+1; });
+    var s=sitCatOf(r); if(s) sit[s]=(sit[s]||0)+1;
+    uniq(reactionsOf(r)).forEach(function(k){ rea[k]=(rea[k]||0)+1; });
+  });
+  return {n:list.length, days:distinctDaysOf(list).length, list:list,
+    emotions:countMapArr(emo), needs:countMapArr(need),
+    situations:countMapArr(sit), reactions:countMapArr(rea)};
+}
+function sharePct(c,n){ return n? Math.round(c/n*100) : 0; }
+function compareItemLists(kind,aList,bList,an,bn){
+  var keys={},out=[];
+  aList.forEach(function(x){ keys[x.key]=1; });
+  bList.forEach(function(x){ keys[x.key]=1; });
+  Object.keys(keys).forEach(function(k){
+    var a=aList.filter(function(x){return x.key===k;})[0];
+    var b=bList.filter(function(x){return x.key===k;})[0];
+    var ac=a?a.count:0, bc=b?b.count:0;
+    var ap=sharePct(ac,an), bp=sharePct(bc,bn);
+    out.push({kind:kind,key:k,label:itemLabel(kind,k),aCount:ac,bCount:bc,ap:ap,bp:bp,dp:bp-ap});
+  });
+  out.sort(function(p,q){ return Math.abs(q.dp)-Math.abs(p.dp) || (q.bCount-p.bCount); });
+  return out;
+}
+function periodComparison(){
+  var list=cleanRecordList(), now=Date.now();
+  var recent=list.filter(function(r){ var t=recTimeOf(r); return t>=now-30*DAY_MS; });
+  var earlier=list.filter(function(r){ var t=recTimeOf(r); return t>=now-60*DAY_MS && t<now-30*DAY_MS; });
+  var mode='m30', note='', labelNow='', labelBefore='';
+
+  if(recent.length<2||earlier.length<2){
+    if(list.length>=2){
+      var cut=Math.ceil(list.length/2);
+      recent=list.slice(0,cut); earlier=list.slice(cut);
+      mode='half';
+      note = isEN()
+        ? 'Too few entries to fill two 30-day windows, so the entries were split in half by date (newest '+recent.length+' vs the ' + earlier.length + ' before them).'
+        : '30일 창을 채우기에는 기록이 적어, 전체 기록을 날짜 순서로 절반씩 나눠 비교했어요 (최근 '+recent.length+'건 vs 그 이전 '+earlier.length+'건).';
+    }else{
+      mode='none';
+      note = isEN()
+        ? 'A comparison needs at least two entries from different times. There '+(list.length===1?'is 1 entry':'are '+list.length+' entries')+' so far.'
+        : '시기를 나눠 비교하려면 서로 다른 때의 기록이 2건 이상 필요해요. 지금은 '+list.length+'건이에요.';
+    }
+  }
+  var A=aggPeriod(earlier), B=aggPeriod(recent);
+  if(mode==='m30'){
+    labelNow = isEN()? 'last 30 days' : '최근 30일';
+    labelBefore = isEN()? 'the 30 days before' : '그 이전 30일';
+  }else if(mode==='half'){
+    labelNow = isEN()? 'recent half' : '최근 절반';
+    labelBefore = isEN()? 'earlier half' : '이전 절반';
+  }else{
+    labelNow = isEN()? 'now' : '지금'; labelBefore = isEN()? 'before' : '이전';
+  }
+  var diffs = {
+    emotions: compareItemLists('emotion', A.emotions, B.emotions, A.n, B.n),
+    needs: compareItemLists('need', A.needs, B.needs, A.n, B.n),
+    situations: compareItemLists('situation', A.situations, B.situations, A.n, B.n),
+    reactions: compareItemLists('reaction', A.reactions, B.reactions, A.n, B.n)
+  };
+  var topDiffs = diffs.emotions.concat(diffs.needs).concat(diffs.situations)
+    .filter(function(x){ return x.aCount||x.bCount; })
+    .sort(function(p,q){ return Math.abs(q.dp)-Math.abs(p.dp) || (q.bCount-p.bCount); });
+  /* 이전 기간에는 없었는데 최근에 새로 나타난 것 (2건 이상) */
+  var newcomers = diffs.emotions.concat(diffs.needs).concat(diffs.reactions)
+    .filter(function(x){ return x.aCount===0 && x.bCount>=2; })
+    .sort(function(p,q){ return q.bCount-p.bCount; });
+  return {
+    mode:mode, ok:mode!=='none', note:note,
+    labelNow:labelNow, labelBefore:labelBefore,
+    now:B, before:A, diffs:diffs, topDiffs:topDiffs, newcomers:newcomers,
+    days30:{recent:recent.length, earlier:earlier.length, total:list.length}
+  };
+}
+/* ④ ‘지난달과 달라진 점’ 문장 — 화면·보관소·PDF가 같은 문장을 쓴다 */
+function periodFactSentence(cmp){
+  if(!cmp||cmp.mode==='none') return cmp? cmp.note : '';
+  if(isEN()){
+    var s='The '+cmp.labelNow+' holds '+cmp.now.n+' entr'+(cmp.now.n===1?'y':'ies')+' over '+cmp.now.days+' day'+(cmp.now.days===1?'':'s')
+      +', the '+cmp.labelBefore+' '+cmp.before.n+' over '+cmp.before.days+'.';
+    if(cmp.mode==='half') s+=' '+cmp.note;
+    return s;
+  }
+  var k='‘'+cmp.labelNow+'’ 기록은 '+cmp.now.n+'건(서로 다른 '+cmp.now.days+'일), ‘'+cmp.labelBefore+'’은 '+cmp.before.n+'건(서로 다른 '+cmp.before.days+'일)이에요.';
+  if(cmp.mode==='half') k+=' '+cmp.note;
+  return k;
+}
+function deltaSentence(x){
+  if(!x) return '';
+  var sign=x.dp>0?'+':'';
+  if(isEN()){
+    return '“'+x.label+'” '+x.ap+'% → '+x.bp+'% ('+sign+x.dp+'%p)';
+  }
+  return '‘'+x.label+'’ '+x.ap+'% → '+x.bp+'% ('+sign+x.dp+'%p)';
+}
+/* =========================================================
+   v8 · 보관소 인사이트
+   · 과거에 자주 등장했던 고민(상황·감정) vs 최근 새롭게 나타난 반응·변화
+   ========================================================= */
+function archiveShift(cmp){
+  cmp=cmp||periodComparison();
+  var out={oldConcerns:[],newSignals:[],moved:null,ok:false};
+  if(!cmp.ok) return out;
+  out.ok=true;
+  cmp.diffs.situations.concat(cmp.diffs.emotions).forEach(function(x){
+    /* 과거 2건 이상이면서 비중이 10%p 이상 줄었거나 최근에 자취를 감춘 항목 */
+    if(x.aCount>=2 && (x.dp<=-10 || x.bCount===0)) out.oldConcerns.push(x);
+  });
+  out.oldConcerns.sort(function(p,q){ return q.dp-p.dp; });
+  out.oldConcerns=out.oldConcerns.slice(0,4);
+  /* 최근 새로 나타난 반응을 먼저, 그다음 감정·욕구 */
+  cmp.diffs.reactions.forEach(function(x){ if(x.aCount===0&&x.bCount>=2) out.newSignals.push(x); });
+  cmp.diffs.emotions.concat(cmp.diffs.needs).forEach(function(x){
+    if(x.aCount===0&&x.bCount>=2) out.newSignals.push(x);
+  });
+  out.newSignals.sort(function(p,q){ return q.bCount-p.aCount; });
+  out.newSignals=out.newSignals.slice(0,4);
+  out.moved=cmp.topDiffs.filter(function(x){ return Math.abs(x.dp)>=10; })[0]||null;
+  return out;
+}
+/* 특정 감정과 함께 적힌 욕구 — ③ 추론의 근거 */
+function needsBehindEmotion(list,emoKey){
+  var ev=(list||[]).filter(function(r){ return emotionsOf(r).indexOf(emoKey)>=0; });
+  var c={};
+  ev.forEach(function(r){
+    needsOf(r).filter(function(x){ return !isUnsureNeed(x); }).forEach(function(k){ c[k]=(c[k]||0)+1; });
+  });
+  var arr=countMapArr(c);
+  return {total:ev.length, top:arr[0]||null, all:arr};
+}
+/* 연결 욕구 + 억제 반응이 같은 기록에 있던 통계 — 03 섹션의 사실·부족 안내 */
+function gapStats(list){
+  var ev=(list||[]).filter(function(r){
+    var hasNeed=needsOf(r).some(function(x){ return CONNECT_NEEDS.indexOf(x)>=0; });
+    var hasSup=reactionsOf(r).some(function(x){ return SUPPRESS_REACTS.indexOf(x)>=0; });
+    return hasNeed&&hasSup;
+  });
+  var needC={}, reaC={};
+  ev.forEach(function(r){
+    needsOf(r).filter(function(x){ return CONNECT_NEEDS.indexOf(x)>=0; }).forEach(function(x){ needC[x]=(needC[x]||0)+1; });
+    reactionsOf(r).filter(function(x){ return SUPPRESS_REACTS.indexOf(x)>=0; }).forEach(function(x){ reaC[x]=(reaC[x]||0)+1; });
+  });
+  var na=countMapArr(needC), ra=countMapArr(reaC);
+  return {count:ev.length, days:distinctDaysOf(ev).length,
+    needTop:na[0]||null, reactionTop:ra[0]||null, evidenceIds:ev.map(idOf)};
+}
+/* =========================================================
+   v8 · 변화 보관소 핀 (기기 저장 + 백업 호환)
+   ========================================================= */
+var LS_PINS='maeum-archive-pins';
+var PIN_MAX=80;
+function pinStore(){
+  try{ var a=JSON.parse(localStorage.getItem(LS_PINS)||'[]'); return Array.isArray(a)? a : []; }catch(e){ return []; }
+}
+function savePinStore(a){ try{ localStorage.setItem(LS_PINS, JSON.stringify((a||[]).slice(0,PIN_MAX))); }catch(e){} }
+function pinKey(kind,refId){ return kind+'::'+refId; }
+function recDateLabel(d){ var x=new Date(d); if(isNaN(x.getTime())) return ''; return x.getFullYear()+'.'+(x.getMonth()+1)+'.'+x.getDate(); }
+function isPinned(kind,refId){
+  var k=pinKey(kind,refId);
+  return pinStore().some(function(p){ return p && p.pid===k; });
+}
+function pinFind(pid){
+  return pinStore().filter(function(p){ return p && p.pid===pid; })[0]||null;
+}
+function addPin(o){
+  if(!o||!o.pid) return null;
+  var a=pinStore().filter(function(p){ return p && p.pid!==o.pid; });
+  a.unshift(o);
+  savePinStore(a);
+  return o;
+}
+function removePin(pid){
+  var a=pinStore().filter(function(p){ return p && p.pid!==pid; });
+  savePinStore(a);
+}
+function snapOfRecord(r){
+  return {emotions:emotionsOf(r).map(emotionLabel), needs:needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel),
+    situations:[sitCatOf(r)].filter(Boolean).map(sitCatLabel)};
+}
+function pinPatternData(p){
+  if(!p) return null;
+  var title=(p.type==='cross'? (isEN()?'Across situations':'상황을 가로지르는 반복') :
+             p.type==='connection'? (isEN()?'Connection':'연결 패턴') :
+             p.type==='emotion'? (isEN()?'Repeating feeling':'반복되는 감정') :
+             p.type==='need'? (isEN()?'Repeating wish':'반복되는 욕구') :
+             p.type==='situation'? (isEN()?'Repeating situation':'반복되는 상황') :
+             (isEN()?'Finding':'발견'));
+  return {pid:pinKey('pattern',p.id), kind:'pattern', refId:p.id, at:nowISO(),
+    title:title+' · '+itemLabel(p.type,p.key),
+    sentence:plainText(p.sentence),
+    evidence:plainText(evidenceLine(p))+(p.count?' · '+p.count+(isEN()?' entries':'건'):''),
+    meta:{type:p.type,key:p.key,count:p.count,distinctDays:p.distinctDays,level:p.level}};
+}
+function pinRecordData(r,sentence){
+  if(!r) return null;
+  var sn=snapOfRecord(r);
+  return {pid:pinKey('record',r.id), kind:'record', refId:r.id, at:nowISO(),
+    title:(isEN()?'Today’s discovery':'오늘의 마음 발견')+' · '+recDateLabel(r.date),
+    sentence:plainText(sentence||sentenceOf(r)||''),
+    evidence:[sn.emotions.join(' · '),sn.needs.join(' · ')].filter(Boolean).join(' / '),
+    meta:{date:r.date,emotions:sn.emotions,needs:sn.needs,situations:sn.situations}};
+}
+function pinManualData(key,title,sentence,evidence){
+  return {pid:pinKey('manual',key), kind:'manual', refId:key, at:nowISO(),
+    title:title|| (isEN()?'Finding I kept':'내가 고른 발견'),
+    sentence:plainText(sentence||''), evidence:plainText(evidence||''), meta:{}};
+}
+function plainText(s){ return String(s==null?'':s).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); }
+function togglePinPattern(p){
+  if(!p) return '';
+  var pid=pinKey('pattern',p.id);
+  if(pinFind(pid)){ removePin(pid); return 'removed'; }
+  addPin(pinPatternData(p)); return 'added';
+}
+function togglePinRecord(r){
+  if(!r) return '';
+  var pid=pinKey('record',r.id);
+  if(pinFind(pid)){ removePin(pid); return 'removed'; }
+  addPin(pinRecordData(r)); return 'added';
+}
+function togglePinManual(key,title,sentence,evidence){
+  var pid=pinKey('manual',key);
+  if(pinFind(pid)){ removePin(pid); return 'removed'; }
+  addPin(pinManualData(key,title,sentence,evidence)); return 'added';
+}
+function pinList(){
+  return pinStore().filter(function(p){ return p&&p.pid; })
+    .sort(function(a,b){ return new Date(b.at||0)-new Date(a.at||0); });
+}
+function mergePins(arr){
+  if(!Array.isArray(arr)||!arr.length) return 0;
+  var cur=pinStore(), byId={}, added=0;
+  cur.forEach(function(p){ if(p&&p.pid) byId[p.pid]=p; });
+  arr.forEach(function(p){
+    if(!p||!p.pid) return;
+    var old=byId[p.pid];
+    if(!old){ byId[p.pid]=p; added++; }
+    else if(new Date(p.at||0)>new Date(old.at||0)) byId[p.pid]=p;
+  });
+  savePinStore(Object.keys(byId).map(function(k){ return byId[k]; }));
+  return added;
+}
+/* 섹션 단위 확인 상태 — 패턴이 아닌 발견(④ 변화 등)도 같은 저장소에 남긴다 */
+function stateOfId(id){
+  var s=patternStateStore()[id];
+  return (s&&s.status)? s : null;
+}
+function setStateId(id,status){
+  var st=patternStateStore();
+  st[id]={status:status,snapshot:{},at:nowISO()};
+  savePatternState(st);
+}
+
 
 /* =========================================================
    화면 ① 홈 · ④ 빙하 지도 · 층/패턴 근거 · ⑤ 리포트
@@ -4218,6 +4614,7 @@ function patternCard(p,opts){
     +'<p class="quiet" style="margin:4px 0 0">'+esc(evidenceLine(p))+'</p>'
     +(opts.hideFb?'':feedbackRow(p))
     +'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록 보기','See the entries')+'</button>'
+    +pinBtnPattern(p)
     +'</div>';
 }
 function insightCard(icon,title,body,ids){
@@ -4307,11 +4704,11 @@ function renderMap(){
   html+='<p class="quiet" style="margin:6px 0 0">'+esc(a.note)+'</p>';
   html+='<div class="unlock" style="margin-top:12px"><div class="track"><i style="width:'+Math.min(100,Math.round(a.n/7*100))+'%"></i><u style="left:42.8%"></u></div><div class="marks"><span>0</span><span>'+tr('3 · 단서','3 · clue')+'</span><span>'+tr('7 · 패턴','7 · pattern')+'</span><span>'+tr('14 · 비교','14 · compare')+'</span></div></div></div>';
   html+='<div class="card"><div class="card-title">🗺 '+tr('내 빙하 지도','My glacier map')+'</div>';
-  html+='<p class="prompt">'+tr('층을 누르면 그 층을 만든 기록을 바로 볼 수 있어요. 수면 위에서 심해로 갈수록, 겉으로 드러나지 않았던 마음이에요.','Tap a layer to see the entries behind it. The deeper the layer, the less it was visible on the outside.')+'</p>';
+  html+='<p class="prompt">'+tr('층을 누르면 그 기록을 바로 볼 수 있어요.','Tap a layer to see the entries behind it.')+'</p>';
   html+='<button class="layer-band surface" onclick="openLayer(\'situation\')"><span class="lb-k">'+tr('수면 위','Above')+'</span><span class="lb-t"><b>'+tr('반복되는 상황','Repeating situations')+'</b><span class="lb-chips">'+chips('situation')+'</span></span><span class="lb-a">›</span></button>';
   html+='<button class="layer-band mid" onclick="openLayer(\'emotion\')"><span class="lb-k">'+tr('중간층','Middle')+'</span><span class="lb-t"><b>'+tr('반복되는 감정과 생각','Repeating feelings and thoughts')+'</b><span class="lb-chips">'+chips('emotion')+'</span></span><span class="lb-a">›</span></button>';
   html+='<button class="layer-band deep" onclick="openLayer(\'need\')"><span class="lb-k">'+tr('심해','Deep')+'</span><span class="lb-t"><b>'+tr('반복되는 욕구','Repeating wishes')+'</b><span class="lb-chips">'+chips('need')+'</span></span><span class="lb-a">›</span></button>';
-  html+='<p class="quiet" style="margin-top:11px">'+tr('이 지도는 기록을 세어 그린 그림이에요. 진단이나 성격 평가가 아니고, 기록을 고치거나 지우면 지도도 바로 다시 그려져요.','This map counts your entries and draws them. It is not a diagnosis or a personality assessment, and it redraws as soon as entries change.')+'</p></div>';
+  html+='<p class="quiet" style="margin-top:11px">'+tr('진단이 아니에요. 기록을 고치면 지도도 다시 그려져요.','Not a diagnosis. The map redraws when entries change.')+'</p></div>';
   var cards=[];
   a.active.slice(0,4).forEach(function(p){ cards.push(patternCard(p)); });
   a.crosses.slice(0,2).forEach(function(p){ if(cards.length<6) cards.push(patternCard(p)); });
@@ -4395,7 +4792,7 @@ function recordRows(arr,pat){
   arr.slice(0,40).forEach(function(r){
     var emo=emotionsOf(r).map(emotionLabel).join(' · ');
     var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ');
-    var sit=situationString(r);
+    var sit=situationDisplay(r);
     h+='<div class="entry" role="button" tabindex="0" data-open="'+r.id+'"><div class="entry-top"><span>'+esc(dstr(r.date))+'</span><span>'+tr('열어보기 ›','Open ›')+'</span></div>'
       +'<h3>'+(emo? esc(emo) : esc(tr('감정을 적지 않은 날','a day without a named feeling')))+'</h3>'
       +'<p>'+esc(cut(sit||nd||tr('나의 마음','my mind'),90))+'</p>'
@@ -4415,7 +4812,209 @@ function bindRecordRows(){
   }
 }
 
-/* ---------- 화면 ⑤ 리포트 ---------- */
+/* ---------- 화면 ⑤ 리포트 (v8 · 월간 4섹션 · 4단 구분) ---------- */
+var TIER_PINS={};
+function reportTools(){
+  return '<div class="report-tools">'
+    +'<button class="btn small" onclick="printReport()">📄 '+tr('상담·보관용 리포트 PDF 저장/인쇄','Save or print a PDF for counselling')+'</button>'
+    +'<button class="btn secondary small" onclick="show(\'archive\')">📚 '+tr('변화 기록 보관소','Change archive')+'</button></div>';
+}
+function secHead(num,title,sub){
+  return '<div class="sec-head"><span class="sec-num">'+num+'</span><div class="sec-tt"><b>'+esc(title)+'</b>'+(sub?'<span class="sec-sub">'+esc(sub)+'</span>':'')+'</div></div>';
+}
+function tierHTML(o){
+  o=o||{};
+  var st=o.id? stateOfId(o.id) : null;
+  var status=st? String(st.status||'') : '';
+  var h='<div class="tiers">';
+  h+='<div class="tier fact"><span class="tk">'+tr('① 관찰된 사실','① What the entries show')+'</span><div class="tv">'+(o.fact||'—')+'</div></div>';
+  h+='<div class="tier pat"><span class="tk">'+tr('② 반복 패턴','② Repeating pattern')+'</span><div class="tv">'+(o.pattern||'—')+'</div></div>';
+  h+='<div class="tier inf"><span class="tk">'+tr('③ 추론 가능성','③ A possible inference')+'</span><div class="tv">'+(o.inference||'—')+'</div></div>';
+  h+='<div class="tier cf"><span class="tk">'+tr('④ 확인이 필요해요','④ Needs your confirmation')+'</span><div class="tv">';
+  if(o.confirmable&&o.id){
+    h+='<div class="tier-fb">'
+      +'<button class="'+(status==='confirmed'?'on':'')+'" onclick="tierConfirm(\''+esc(o.id)+'\',\'confirmed\')">'+tr('맞아요','Fits')+'</button>'
+      +'<button class="'+(status==='partial'?'on':'')+'" onclick="tierConfirm(\''+esc(o.id)+'\',\'partial\')">'+tr('수정','Partly')+'</button>'
+      +'<button class="'+(status==='rejected'?'on':'')+'" onclick="tierConfirm(\''+esc(o.id)+'\',\'rejected\')">'+tr('제외','Leave out')+'</button>'
+      +'</div><p class="tier-note">'
+      +(status==='confirmed'? tr('확인했어요. 이 발견은 보관소와 PDF의 ‘확인한 발견’에 들어가요.','Confirmed — it goes into the archive and the PDF as a confirmed finding.')
+        : status==='partial'? tr('‘수정’으로 표시했어요. 내 문장으로 고쳐 보관소에 저장할 수 있어요.','Marked as partly. You can keep your own wording in the archive.')
+        : status==='rejected'? tr('제외했어요. 이 단서는 다시 띄우지 않고 PDF에도 넣지 않아요.','Left out — it will not be shown again or printed.')
+        : tr('맞는지 알려주면 확인한 발견으로 보관소와 PDF에 담아요.','Tell me whether it fits and it becomes a confirmed finding.')
+      )+'</p>';
+  }else{
+    h+='<p class="tier-note">'+(o.needNote||tr('이 단서는 아직 확인을 요청할 만큼 쌓이지 않았어요.','This clue has not gathered enough to ask you to confirm it.'))+'</p>';
+  }
+  if(o.pinKey) h+='<button class="btn ghost small pin-btn'+(isPinned('manual',o.pinKey)?' on':'')+'" onclick="pinTier(\''+esc(o.pinKey)+'\')">'+(isPinned('manual',o.pinKey)? '📌 '+tr('보관소에 저장됨 · 빼기','Kept · remove') : '📌 '+tr('변화 보관소에 저장','Save to the change archive'))+'</button>';
+  h+='</div></div></div>';
+  return h;
+}
+function tierConfirm(id,status){
+  var p=patternById(id);
+  if(p){ setPatternFeedback(id,status,p); }
+  else { setStateId(id,status); renderPatternUi(); }
+  toast(status==='rejected'? tr('이 단서는 다시 띄우지 않을게요','I will not show this clue again')
+    : status==='confirmed'? tr('확인한 발견으로 표시했어요','Marked as a confirmed finding')
+    : tr('‘수정’으로 표시했어요','Marked as partly'));
+}
+function pinTier(key){
+  var o=TIER_PINS[key]; if(!o) return;
+  var r=togglePinManual(key,o.title,o.sentence,o.evidence);
+  toast(r==='added'? tr('변화 보관소에 저장했어요','Saved to the change archive') : tr('보관소에서 뺐어요','Removed from the archive'));
+  renderPatternUi();
+}
+
+/* 01 · 반복되는 감정 */
+function section01HTML(a){
+  var n=a.n, list=a.list;
+  var emo=topItems('emotion',list).slice(0,3);
+  var bars=emo.map(function(x){
+    return '<div class="bar-row"><div class="bar-top"><span>'+esc(emotionLabel(x.key))+'</span><b>'+pctOf(x.count,n)+'% · '+tr(x.count+'건',''+x.count+'×')+'</b></div><div class="bar"><i style="width:'+Math.max(6,pctOf(x.count,n))+'%"></i></div></div>';
+  }).join('');
+  var top=emo[0]||null;
+  var rawPat=top? (a.patterns.filter(function(p){ return p.type==='emotion'&&p.key===top.key; })[0]||null) : null;
+  var pat=(rawPat&&!rawPat.hidden)? rawPat : null;
+  var nb=top? needsBehindEmotion(list,top.key) : null;
+  var fact, patternTxt, inferTxt, label=top? emotionLabel(top.key):'';
+  if(top){
+    fact=tr('이 기간 기록 '+n+'건 중 '+top.count+'건('+pctOf(top.count,n)+'%)에 ‘'+label+'’'+josa(label,'이','가')+' 적혔어요.'+(pat?' 서로 다른 '+pat.distinctDays+'일의 기록이에요.':''),
+            'Out of '+n+' entries, “'+label+'” appears in '+top.count+' ('+pctOf(top.count,n)+'%)'+(pat?' on '+pat.distinctDays+' different days':'')+'.');
+    patternTxt=(rawPat&&rawPat.hidden)
+      ? tr('이 단서는 ‘제외’로 표시되어 있어요. 아래 ④에서 다시 포함할 수 있어요.','This clue is marked as left out; you can include it again in ④ below.')
+      : ((pat&&pat.level!=='record')
+        ? '<span class="lv">'+esc(confidenceLabel(pat.level))+'</span> '+pat.sentence
+        : tr('아직 ‘반복’이라고 부를 만큼 쌓이지 않았어요. 같은 감정이 서로 다른 날 3건 이상 모이면 반복 단서로 보여드려요.','Not enough to call it a repeat yet. Three or more entries on different days and it becomes a clue.'));
+    inferTxt=(nb&&nb.top&&nb.top.count>=2)
+      ? tr('‘'+label+'’'+josa(label,'이','가')+' 적힌 '+nb.total+'건 중 '+nb.top.count+'건에 ‘'+needLabel(nb.top.key)+'’의 바람이 함께 있었어요. 이 감정이 올라올 때 그 바람도 같이 올라오는 것일 수 있어요. 다만 기록에 적힌 것만으로 만든 짐작이에요.','In '+nb.top.count+' of the '+nb.total+' entries with “'+label+'”, a wish for “'+needLabel(nb.top.key)+'” was written too. The two may rise together — a guess made only from what was written.')
+      : tr('지금 기록만으로는 이 감정 아래의 바람을 짐작하지 않았어요. 다음 기록에서 감정과 욕구를 함께 적으면 연결이 보여요.','No inference about the wish underneath is made yet. Writing a feeling and a wish together will show the link.');
+  }else{
+    fact=tr('이 기간에는 아직 감정을 적은 기록이 없어요.','No feelings were written in this period yet.');
+    patternTxt=tr('셀 것이 없으면 문장도 만들지 않아요.','Nothing to count, so nothing is claimed.');
+    inferTxt=tr('추론도 만들지 않았어요. 감정을 하나만 골라도 이 자리가 채워져요.','No inference either. Picking one feeling fills this space.');
+  }
+  if(top){
+    TIER_PINS['r01']={title:tr('반복되는 감정 · ','Repeating feeling · ')+label,
+      sentence:tr('이 기간 기록 '+n+'건 중 '+top.count+'건에 ‘'+label+'’'+josa(label,'이','가')+' 적혔어요.','Out of '+n+' entries, “'+label+'” appears in '+top.count+'.'),
+      evidence:(pat? plainText(evidenceLine(pat)) : '')};
+  }
+  return '<div class="card rep-sec">'+secHead('01',tr('반복되는 감정','Feelings that repeat'),tr('이 기간에 자주 올라온 감정','The feelings that came up most in this period'))
+    +(bars? '<div class="bars">'+bars+'</div>' : '')
+    +'<p class="quiet" style="margin:2px 0 9px">'+tr('비율은 이 기간 기록 '+n+'건을 분모로 계산했어요. 한 기록에서 감정을 여러 개 고를 수 있어서 합계가 100%를 넘을 수 있어요.','Each share uses the '+n+' entries in this period as the denominator. Several feelings can be picked in one entry, so the total can pass 100%.')+'</p>'
+    +tierHTML({id:rawPat?rawPat.id:'', fact:fact, pattern:patternTxt, inference:inferTxt, confirmable:!!rawPat, pinKey:top?'r01':''})
+    +'</div>';
+}
+
+/* 02 · 서로 다른 상황의 연결 */
+function section02HTML(a){
+  var crosses=a.crosses.slice(0,2);
+  var conns=a.connections.filter(function(p){ return !crosses.some(function(c){ return c.id===p.id; }); }).slice(0,2);
+  var h='<div class="card rep-sec">'+secHead('02',tr('서로 다른 상황의 연결','Links across different situations'),tr('장면은 달라도 같은 마음이 반복되는지','Whether the same feeling returns in different scenes'));
+  if(crosses.length){
+    crosses.forEach(function(p,i){
+      var sits=(p.situations||[]).map(sitCatLabel).join(' · ');
+      var fact=tr('상황이 ‘'+sits+'’처럼 서로 달랐던 기록 '+p.count+'건에서 ‘'+emotionLabel(p.emotion)+'’'+josa(emotionLabel(p.emotion),'과','와')+' ‘'+needLabel(p.need)+'’의 바람이 같은 기록에 함께 적혔어요. 서로 다른 '+p.distinctDays+'일이에요.',
+                  'In '+p.count+' entries whose situation differed ('+sits+'), “'+emotionLabel(p.emotion)+'” and a wish for “'+needLabel(p.need)+'” were written together — on '+p.distinctDays+' different days.');
+      var infer=tr('상황 자체보다 그 아래 ‘'+needLabel(p.need)+'’의 바람이 반복해서 올라오는 것일 수 있어요. 기록이 말해주는 것은 ‘다른 장면에서도 같은 감정이 올라왔다’까지예요.','What repeats may be the wish for “'+needLabel(p.need)+'” rather than the situation itself. The entries only say that the same feeling rose in different scenes.');
+      var key='r02_'+i;
+      TIER_PINS[key]={title:tr('상황을 가로지르는 반복','A repeat across situations'),sentence:plainText(p.sentence),evidence:plainText(evidenceLine(p))};
+      h+=tierHTML({id:p.id,fact:fact,pattern:p.sentence,inference:infer,confirmable:true,pinKey:key});
+    });
+  }else{
+    var g=a.list.length;
+    h+=tierHTML({id:'section|02',confirmable:false,
+      fact:tr('서로 다른 상황에서 같은 감정·욕구 조합이 반복된 기록은 아직 없어요. 이 기간 기록은 '+g+'건이에요.','No combination of feeling and wish has yet repeated across different situations. This period holds '+g+' entries.'),
+      pattern:tr('이 단서는 기록 3건 이상 · 서로 다른 3일 이상 · 서로 다른 상황 2가지 이상이 모일 때 만들어져요.','This clue appears with three or more entries, on three or more different days, across at least two different situations.'),
+      inference:tr('모자란 상태에서 추론을 만들지 않았어요.','No inference is made while the evidence is thin.'),
+      needNote:tr('필요한 기록이 쌓이면 이 자리에 보여드릴게요.','It will appear here once enough entries gather.')});
+  }
+  if(conns.length){
+    h+='<div class="sub-h">'+tr('같은 상황 안에서의 연결','Links inside one situation')+'</div>';
+    conns.forEach(function(p){
+      h+='<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence
+        +'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button>'
+        +'<button class="btn ghost small" style="margin-top:8px" onclick="togglePinPatternBtn(\''+esc(p.id)+'\')">'+(isPinned('pattern',p.id)?'📌 '+tr('저장됨','Kept'):'📌 '+tr('보관소에 저장','Keep'))+'</button></div>';
+    });
+  }
+  h+='</div>';
+  return h;
+}
+
+/* 03 · 욕구와 반응의 차이 */
+function section03HTML(a){
+  var mis=a.mismatches;
+  var gs=gapStats(a.list);
+  var h='<div class="card rep-sec">'+secHead('03',tr('욕구와 반응의 차이','The gap between wish and reaction'),tr('바라는 것과 실제로 나온 반응','What was wished for and what actually came out'));
+  var mRej=mis.length? stateOfId(mis[0].id) : null;
+  if(mis.length&&mRej&&mRej.status==='rejected'){
+    var m0=mis[0];
+    h+=tierHTML({id:m0.id,confirmable:true,
+      fact:tr('이 단서는 ‘제외’로 표시되어 있어요. 기록 자체는 그대로 남아 있어요.','This clue is marked as left out; the entries themselves stay.'),
+      pattern:tr('다시 포함하면 이 자리에 단서가 보여요.','Include it again and the clue returns here.'),
+      inference:'—',needNote:''});
+  }else if(mis.length){
+    var m=mis[0];
+    var fact=tr('연결을 바라는 욕구(인정·이해·관심·존중·표현·함께함)와 억제하는 반응(참기·회피)이 같은 기록에 함께 적힌 건 '+m.count+'건, 서로 다른 '+m.distinctDays+'일이에요.',
+                'Connection wishes (recognition, being understood, attention, respect, expression, togetherness) and suppressing reactions (holding it in, stepping away) appear together in '+m.count+' entries over '+m.distinctDays+' different days.');
+    var patternTxt=tr('그 기록들에서 가장 자주 나온 조합은 ‘'+needLabel(m.need)+'’의 바람과 ‘'+reactionLabel(m.reaction)+'’ 반응이에요.',
+                      'The most frequent pairing there is a wish for “'+needLabel(m.need)+'” with the reaction “'+reactionLabel(m.reaction)+'”.');
+    var infer=tr('바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않은지 스스로 물어볼 수 있어요. 단정하지 않고 질문으로만 남겨둘게요.','It may be worth asking yourself whether the wish and the way it comes out are moving in different directions. Kept as a question, not a conclusion.');
+    TIER_PINS['r03']={title:tr('욕구와 반응의 차이','Wish and reaction'),sentence:plainText(m.sentence),evidence:tr('근거 기록 '+m.count+'건 · 서로 다른 '+m.distinctDays+'일','')};
+    h+=tierHTML({id:m.id,fact:fact,pattern:patternTxt+' '+plainText(m.sentence),inference:infer,confirmable:true,pinKey:'r03'});
+  }else{
+    var fact2=gs.count
+      ? tr('연결 욕구와 억제 반응이 함께 적힌 기록은 '+gs.count+'건(서로 다른 '+gs.days+'일)이에요.','Connection wish and suppressing reaction appear together in '+gs.count+' entries ('+gs.days+' days).')
+      : tr('연결을 바라는 욕구와 억제 반응이 함께 적힌 기록이 아직 없어요.','No entry yet holds both a connection wish and a suppressing reaction.');
+    h+=tierHTML({id:'section|03',confirmable:false,fact:fact2,
+      pattern:tr('이 단서는 그런 기록이 3건 이상 · 서로 다른 3일 이상일 때 나타나요.','This clue appears with three or more such entries on three or more different days.'),
+      inference:tr('아직 질문을 만들지 않았어요.','No question is made yet.'),
+      needNote:tr('지금은 '+(gs.count>=3? '날짜가 모자라요. 서로 다른 3일이 필요해요.' : '한두 건 더 쌓이면 보여드릴 수 있어요.'),'')});
+  }
+  h+='</div>';
+  return h;
+}
+
+/* 04 · 지난달과 달라진 점 */
+function section04HTML(){
+  var cmp=periodComparison();
+  var h='<div class="card rep-sec">'+secHead('04',tr('지난달과 달라진 점','What changed from last month'),tr('최근 30일 vs 그 이전 30일','The last 30 days against the 30 before'));
+  if(!cmp.ok){
+    h+=tierHTML({id:'compare|none',confirmable:false,fact:cmp.note,
+      pattern:tr('비교할 두 시기가 없으면 ‘달라졌다’고 말하지 않아요.','Without two periods there is nothing to call changed.'),
+      inference:tr('추론을 만들지 않았어요.','No inference is made.'),
+      needNote:tr('기록이 2건 이상 모이면 이 자리에서 비교를 시작해요.','With two or more entries the comparison starts here.')});
+    h+='</div>'; return h;
+  }
+  var rows=cmp.topDiffs.slice(0,3).map(function(x){
+    var cls=x.dp>0?'up':(x.dp<0?'down':'');
+    var sign=(x.dp>0?'+':'')+x.dp+'%p';
+    return '<div class="delta-row"><span class="dk">'+esc(tr({emotion:'감정',need:'욕구',situation:'상황'}[x.kind]||'항목',
+      {emotion:'feeling',need:'wish',situation:'situation'}[x.kind]||'item'))+'</span><span class="dl2">'+esc(x.label)+'</span>'
+      +'<span class="dv">'+x.ap+'% → '+x.bp+'%</span><span class="dd '+cls+'">'+sign+'</span></div>';
+  }).join('');
+  var fact=periodFactSentence(cmp);
+  var patternTxt;
+  if(cmp.topDiffs.length&&Math.abs(cmp.topDiffs[0].dp)>=10){
+    patternTxt=tr('가장 크게 움직인 것은 '+deltaSentence(cmp.topDiffs[0])+'예요.','The biggest shift is '+deltaSentence(cmp.topDiffs[0])+'.');
+  }else{
+    patternTxt=tr('두 시기의 감정·욕구 구성이 비슷해요 — 같은 방식이 이어지고 있다는 뜻이에요.','The mix of feelings and wishes is much the same in both periods — the same way is continuing.');
+  }
+  var infer;
+  if(cmp.newcomers.length){
+    var nc=cmp.newcomers[0];
+    infer=tr('최근에 새로 나타난 ‘'+nc.label+'’('+nc.bCount+'건)은 그동안과 다른 신호일 수 있어요. 기간이 짧아 우연일 수도 있으니 다음 기록에서 한 번 더 살펴볼게요.','“'+nc.label+'” ('+nc.bCount+' entries) is new in the recent period and may be a different signal. With a short period it may be chance, so it is worth watching.');
+  }else if(cmp.mode==='half'){
+    infer=tr('30일 창을 채우지 못해 절반끼리 비교했어요. 달라진 것처럼 보여도 시기가 짧아 우연일 수 있어요.','The periods were split in half instead of 30-day windows, so a difference may still be chance.');
+  }else{
+    infer=tr('이 비교는 기간의 비중 차이를 보는 것이지 원인을 말하는 게 아니에요.','This compares proportions between periods — it does not say why.');
+  }
+  TIER_PINS['r04']={title:tr('지난달과 달라진 점','What changed from last month'),sentence:plainText(fact+' '+patternTxt),evidence:tr(cmp.labelBefore+' '+cmp.before.n+'건 · '+cmp.labelNow+' '+cmp.now.n+'건','')};
+  h+='<div class="delta-list">'+rows+'</div>'
+    +'<p class="quiet" style="margin:0 0 9px">'+tr('기간 비교는 ‘전체’ 기록으로 계산해요.','The period comparison uses all entries.')+'</p>'
+    +tierHTML({id:'compare|'+cmp.mode,fact:fact,pattern:patternTxt,inference:infer,confirmable:true,pinKey:'r04'});
+  h+='</div>';
+  return h;
+}
+
 function renderReport(){
   var el=document.getElementById('reportContent'); if(!el) return;
   var a=analyzePatterns(patternScope);
@@ -4423,20 +5022,18 @@ function renderReport(){
   var html='';
   html+=scopeToggle();
   html+='<div class="range">'+scopeLine(a)+'</div>';
+  html+=reportTools();
   if(!n){
-    html+='<div class="card"><div class="empty">'+tr('이 기간에는 기록이 없어요 🌷<br>리포트는 기록이 있어야 만들어져요. 없는 패턴은 지어내지 않아요.','No entries in this period 🌷<br>A report needs entries. Patterns are never invented.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
+    html+='<div class="card"><div class="empty">'+tr('이 기간에는 기록이 없어요 🌷<br>기록이 있어야 리포트가 만들어져요.','No entries in this period 🌷<br>A report needs entries.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
     html+=backupCardHTML();
     el.innerHTML=html; return;
   }
-  /* 감정 TOP 3 — 분모는 이 기간 전체 기록 수 */
-  var emo=topItems('emotion',a.list).slice(0,3);
-  var emoRows=emo.map(function(x){
-    return '<div class="bar-row"><div class="bar-top"><span>'+esc(emotionLabel(x.key))+'</span><b>'+pctOf(x.count,n)+'% · '+tr(x.count+'건',''+x.count+'×')+'</b></div><div class="bar"><i style="width:'+Math.max(6,pctOf(x.count,n))+'%"></i></div></div>';
-  }).join('');
-  html+='<div class="card"><div class="card-title">🌊 '+tr('감정 TOP 3','Top 3 feelings')+'</div>'
-    +(emo.length? emoRows : '<div class="empty" style="padding:14px 6px">'+tr('이 기간에는 아직 감정 기록이 없어요.','No feelings recorded in this period yet.')+'</div>')
-    +'<p class="quiet" style="margin-top:8px">'+tr('비율은 이 기간 기록 '+n+'건을 분모로 계산했어요. 한 기록에서 감정을 여러 개 고를 수 있어서 합계가 100%를 넘을 수 있어요.','Each share uses the '+n+' entries in this period as the denominator. Several feelings can be picked in one entry, so the total can pass 100%.')+'</p></div>';
-  /* 반복 상황 */
+  html+='<div class="card rep-head"><div class="card-title">✿ '+tr('월간 마음 패턴 리포트','Monthly mind pattern report')+' <span class="clue-badge" style="margin-left:auto">'+esc(a.levelLabel)+'</span></div>'
+    +'<p class="prompt" style="margin-bottom:6px">'+tr('① 사실 ② 패턴 ③ 추론 ④ 확인, 네 칸으로 봐요.','Four parts: ① fact ② pattern ③ inference ④ confirmation.')+'</p>'
+    +'<p class="quiet" style="margin:0">'+tr('분석한 기록 '+n+'건 · 서로 다른 '+distinctDaysOf(a.list).length+'일',''+n+' entries · '+distinctDaysOf(a.list).length+' different days')+'</p></div>';
+
+  html+=section01HTML(a);
+
   var sitPats=a.active.filter(function(p){return p.type==='situation';}).slice(0,3);
   html+='<div class="card"><div class="card-title">🗺 '+tr('반복되는 상황','Repeating situations')+'</div>';
   if(sitPats.length) html+=sitPats.map(function(p){ return '<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence+'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button></div>'; }).join('');
@@ -4445,30 +5042,22 @@ function renderReport(){
     html+='<p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+tr('아직 반복이라고 부를 수 있는 상황은 없어요. 가장 자주 적힌 상황은 ‘'+esc(o.label)+'’ 1건이에요.','No situation can be called repeating yet. The most frequent is “'+esc(o.label)+'”, a single entry.')+'</p>';
   }else html+='<p class="quiet" style="margin:0">'+tr('이 기간에는 상황을 적은 기록이 없어요.','No situations were written in this period.')+'</p>';
   html+='</div>';
-  /* 자주 표현된 욕구 */
   var needPats=a.active.filter(function(p){return p.type==='need';}).slice(0,3);
   html+='<div class="card"><div class="card-title">💧 '+tr('자주 표현된 욕구','Wishes that kept appearing')+'</div>';
   if(needPats.length) html+=needPats.map(function(p){ return '<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence+'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button></div>'; }).join('');
   else html+='<p class="quiet" style="margin:0">'+tr('욕구를 적은 기록이 아직 적어요. 다음 기록에서 감정 아래의 바람을 한두 개 골라보면 여기에 쌓여요.','Not many entries name a wish yet. Picking one or two under the feeling will gather here.')+'</p>';
   html+='</div>';
-  /* 연결 패턴 · 인사이트 */
-  var links=a.connections.slice(0,2);
-  var cross=a.crosses.filter(function(p){ return !links.some(function(q){return q.id===p.id}); }).slice(0,1);
-  var insightCards=[];
-  links.forEach(function(p){ insightCards.push(patternCard(p)); });
-  cross.forEach(function(p){ insightCards.push(patternCard(p)); });
-  a.mismatches.forEach(function(m){ insightCards.push(insightCard('❓',tr('바라는 것과 반응','wish and reaction'),m.sentence,m.evidenceIds)); });
-  a.blindSpots.forEach(function(b){ insightCards.push(insightCard('🫧',tr('아직 비어 있는 자리','a space not yet named'),b.sentence,null)); });
-  if(insightCards.length){
-    html+='<div class="card"><div class="card-title">✧ '+tr('연결해서 본 단서','Links between entries')+'</div><p class="prompt">'+tr('한 기록 안의 사실만으로 만든 관찰이에요. 진단이 아니고, 맞지 않으면 알려주세요.','These are observations built only from what is in the entries. Not a diagnosis — tell me if they do not fit.')+'</p>'+insightCards.join('')+'</div>';
-  }
-  /* 변화 흐름 — 전체 범위에서만 */
+
+  html+=section02HTML(a);
+  html+=section03HTML(a);
+  html+=section04HTML();
+
   if(patternScope==='all'){
-    html+=changeFlowHTML();
+    html+='<details class="legacy-ref"><summary>🕰 '+tr('이전 참고 보기 · 방어기제 변화','Earlier reference · defence shift')+'</summary>'+changeFlowHTML()+'</details>';
   }else{
     html+='<div class="card"><div class="card-title">🌊 '+tr('나의 변화 흐름','How I am shifting')+' <span class="bubble" style="margin-left:auto">'+tr('전체에서 볼 수 있어요','in All')+'</span></div><p class="quiet" style="margin:0">'+tr('변화 흐름은 기간을 나눠 비교하기 때문에 ‘전체’ 보기에서 보여드려요.','The change flow compares periods, so it appears in the “All” view.')+'</p><button class="btn secondary small" style="margin-top:9px" onclick="setScope(\'all\')">'+tr('전체 보기로','Switch to All')+'</button></div>';
   }
-  /* 다음 달 질문 */
+  var emo=topItems('emotion',a.list).slice(0,3);
   var topEmo=emo[0]?emo[0].key:'';
   var topNeed=needPats[0]?needPats[0].key:'';
   var q;
@@ -4480,10 +5069,17 @@ function renderReport(){
               : '다음 달에는 평범한 날에도 ‘내가 원했던 것’을 한 문장으로 남겨볼까요?';
   }
   html+='<div class="card"><div class="card-title">✦ '+tr('다음 달 질문','A question for next month')+'</div><div class="qbox">'+esc(q)+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 정해두지 않아도 돼요. 기록하다 보면 자연스럽게 답이 보여요.','You don’t have to answer it now. It tends to answer itself as you write.')+'</p></div>';
-  html+='<p class="quiet" style="padding:0 4px">'+tr('이 리포트는 기록을 세고 정리한 것이에요. 진단이나 심리 평가가 아니고, 기록이 바뀌면 숫자도 바로 바뀌어요.','This report counts and arranges your entries. It is not a diagnosis or an assessment, and the numbers change as soon as entries do.')+'</p>';
+
+  var pins=pinList();
+  html+='<div class="card"><div class="card-title">📚 '+tr('나의 변화 기록 보관소','My change archive')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개 저장','')+'</span></div>'
+    +'<p class="prompt">'+tr('30일 전의 나와 지금의 나를 견주고, 내가 의미 있다고 느낀 발견을 모아둘 수 있어요. 리포트나 오늘의 발견에서 ‘📌 변화 보관소에 저장’을 누르면 여기 쌓여요.','Compare the me of 30 days ago with now, and keep the findings you found meaningful. Tap “📌 Save to the change archive” on a report clue or today’s discovery and it gathers here.')+'</p>'
+    +'<button class="btn secondary small" onclick="show(\'archive\')">'+tr('보관소 열기','Open the archive')+'</button></div>';
+
+  html+='<p class="quiet" style="padding:0 4px">'+tr('기록을 세어 정리한 리포트예요. 진단이 아니에요.','A report that counts your entries — not a diagnosis.')+'</p>';
   html+=backupCardHTML();
   el.innerHTML=html;
 }
+
 function backupCardHTML(){
   return '<div class="card"><div class="card-title">📦 '+tr('기록 백업','Backup')+'</div><p class="prompt">'+tr('기록은 이 기기 브라우저에만 저장돼요. JSON으로 내려받아 두면 기기를 바꾸거나 브라우저 데이터를 지워도 다시 불러올 수 있어요. 예전 버전에서 내보낸 파일도 그대로 불러와요.','Entries live only in this browser. A JSON copy brings them back after changing devices or clearing data, and files exported by earlier versions still import.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('내보내기','Export')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('가져오기','Import')+'</button></div></div>';
 }
@@ -4492,7 +5088,7 @@ function backupCardHTML(){
 function cardHTML(r){
   var emo=emotionsOf(r).map(emotionLabel).join(' · ');
   var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ');
-  var sit=situationString(r);
+  var sit=situationDisplay(r);
   var rej=recordRejected(r)? ' · '+tr('분석 제외','excluded') : '';
   return '<div class="entry" role="button" tabindex="0" data-open="'+r.id+'"><div class="entry-top"><span>'+esc(dstr(r.date))+rej+'</span><span>'+tr('열어보기 ›','Open ›')+'</span></div>'
     +'<h3>'+esc(emo||sit||tr('오늘의 마음 기록','Today’s entry'))+'</h3>'
@@ -4502,7 +5098,7 @@ function openDetail(id){
   var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
   detailId=id;
   var rows=[
-    [tr('상황','Situation'),situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):''),tr('아직 적지 않았어요.','Not written yet.')],
+    [tr('상황','Situation'),situationDisplay(r),tr('아직 적지 않았어요.','Not written yet.')],
     [tr('감정','Feelings'),emotionsOf(r).map(emotionLabel).join(' · '),tr('아직 고르지 않았어요.','Nothing picked yet.')],
     [tr('몸과 마음의 반응','Body and mind'),reactionsOf(r).map(reactionLabel).join(' · '),tr('아직 적지 않았어요.','Not written yet.')],
     [tr('떠오른 생각','Thought'),thoughtsOf(r),tr('아직 적지 않았어요.','Not written yet.')],
@@ -4524,7 +5120,7 @@ function openDetail(id){
 /* ---------- AI 분석 카드 상단 (오늘 + 과거 연결 + 질문) ---------- */
 function patternTopHTML(r){
   var emo=emotionsOf(r).map(emotionLabel).join(' · ')||tr('감정 없음','no feeling');
-  var sit=situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):'')||tr('상황 없음','no situation');
+  var sit=situationDisplay(r)||tr('상황 없음','no situation');
   var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ')||tr('아직 모름','not sure yet');
   var a=analyzePatterns('all');
   var mine=null;
@@ -4550,6 +5146,356 @@ function patternTopHTML(r){
   return h;
 }
 function aiHTML(r){ return patternTopHTML(r)+aiHTMLBase(r); }
+
+
+/* =========================================================
+   v8 · 나의 변화 기록 보관소 + 상담·보관용 PDF(인쇄)
+   ========================================================= */
+function pinDateStr(at){
+  var d=new Date(at||0); if(isNaN(d.getTime())) return '';
+  return d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
+}
+function pinBtnPattern(p){
+  var on=isPinned('pattern',p.id);
+  return '<button class="btn ghost small pin-btn'+(on?' on':'')+'" onclick="togglePinPatternBtn(\''+esc(p.id)+'\')">'
+    +(on? '📌 '+tr('보관소에 저장됨 · 빼기','Kept in the archive · remove') : '📌 '+tr('변화 보관소에 저장','Save to the change archive'))+'</button>';
+}
+function togglePinPatternBtn(id){
+  var p=patternById(id);
+  if(!p){ toast(tr('이 단서를 찾지 못했어요','That clue could not be found')); return; }
+  var r=togglePinPattern(p);
+  toast(r==='added'? tr('변화 보관소에 저장했어요','Saved to the change archive') : tr('보관소에서 뺐어요','Removed from the archive'));
+  renderPatternUi();
+}
+function pinBtnRecord(id){
+  var on=isPinned('record',id);
+  return '<button class="btn ghost small pin-btn'+(on?' on':'')+'" onclick="togglePinRecordBtn('+Number(id)+')">'
+    +(on? '📌 '+tr('보관소에 저장됨 · 빼기','Kept in the archive · remove') : '📌 '+tr('변화 보관소에 저장','Save to the change archive'))+'</button>';
+}
+function togglePinRecordBtn(id){
+  var r=records.filter(function(x){ return x.id===id; })[0];
+  if(!r) return;
+  var res=togglePinRecord(r);
+  toast(res==='added'? tr('변화 보관소에 저장했어요','Saved to the change archive') : tr('보관소에서 뺐어요','Removed from the archive'));
+  if(currentView==='archive') renderArchive(); else if(currentView==='discovery'&&detailId!=null) renderDiscovery(detailId);
+  else refreshView();
+}
+function removePinBtn(pid){
+  removePin(pid);
+  toast(tr('보관소에서 뺐어요','Removed from the archive'));
+  renderArchive();
+}
+
+/* ---------- 보관소 화면 ---------- */
+function renderArchive(){
+  var el=document.getElementById('archiveContent'); if(!el) return;
+  var cmp=periodComparison();
+  var shift=archiveShift(cmp);
+  var pins=pinList();
+  var h='<button class="btn ghost" onclick="show(\'report\')">'+tr('← 월간 리포트','← Monthly report')+'</button>';
+  h+='<div class="hero"><div class="eyebrow">CHANGE ARCHIVE ✧</div><h2>'+tr('나의 변화 기록<br>보관소','My change<br>archive')+'</h2><p>'+tr('30일 전의 나와 지금의 나를 견주고, 내가 의미 있다고 느낀 발견을 모아두는 곳이에요.','Where the me of 30 days ago and the me now are set side by side, and the findings I chose to keep are gathered.')+'</p></div>';
+  h+=archiveCompareHTML(cmp);
+  h+=archiveShiftHTML(shift);
+  h+=archivePinsHTML(pins);
+  h+='<div class="card"><div class="card-title">📦 '+tr('보관소와 백업','Archive and backup')+'</div><p class="prompt">'+tr('핀으로 저장한 발견은 이 기기에 함께 저장돼요. ‘내보내기’를 받으면 핀 목록도 같이 들어가고, ‘가져오기’에서 기록과 함께 복원돼요.','Pinned findings stay on this device. A JSON export carries them, and an import restores them with the entries.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('내보내기','Export')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('가져오기','Import')+'</button><button class="btn small" onclick="printReport()">📄 '+tr('리포트 PDF','Report PDF')+'</button></div></div>';
+  el.innerHTML=h;
+}
+function archiveCompareHTML(cmp){
+  var h='<div class="card"><div class="card-title">🕰 '+tr('30일 전의 나와 지금의 나','Me 30 days ago and me now')+'</div>';
+  if(!cmp||cmp.mode==='none'){
+    h+='<div class="empty">'+tr('비교할 기록이 아직 부족해요.<br>서로 다른 때의 기록이 2건 모이면 30일 전과 지금을 견줘 보여드려요.','Not enough entries to compare yet.<br>With two entries from different times, then and now can be set side by side.')+'</div>'
+      +'<button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
+    return h;
+  }
+  h+='<p class="prompt" style="margin-bottom:8px">'+tr('앞 칸은 그 전, 뒷 칸은 지금이에요. 비율은 각 시기의 기록 수를 분모로 계산해요.','The first column is the earlier period, the second is now. Shares use each period’s entry count.')+'</p>';
+  h+='<div class="cmp2"><div class="cmp2-h"><span class="c1">'+tr('항목','Item')+'</span><span>'+esc(cmp.labelBefore)+'</span><span>'+esc(cmp.labelNow)+'</span><span>'+tr('변화','Δ')+'</span></div>';
+  cmp.topDiffs.slice(0,5).forEach(function(x){
+    var cls=x.dp>0?'up':(x.dp<0?'down':'');
+    h+='<div class="cmp2-r"><span class="c1">'+esc(x.label)+'</span><span>'+x.aCount+tr('건','')+' · '+x.ap+'%</span><span>'+x.bCount+tr('건','')+' · '+x.bp+'%</span><span class="dd '+cls+'">'+(x.dp>0?'+':'')+x.dp+'%p</span></div>';
+  });
+  h+='</div>';
+  h+='<p style="margin:11px 0 0;font-size:13px;line-height:1.78;color:#514661">'+esc(periodFactSentence(cmp))+'</p>';
+  if(cmp.newcomers.length){
+    h+='<p class="quiet" style="margin-top:7px">'+tr('최근에 새로 나타난 것: ','New recently: ')+cmp.newcomers.slice(0,3).map(function(x){ return esc(x.label)+' ('+x.bCount+tr('건','')+')'; }).join(' · ')+'</p>';
+  }
+  h+='<p class="quiet" style="margin-top:7px">'+tr('① 기록에서 센 비율 차이만 보여드려요. 원인은 추론하지 않아요.','Only the difference in counted shares is shown; no cause is inferred.')+'</p>';
+  h+='</div>';
+  return h;
+}
+function archiveShiftHTML(shift){
+  var h='<div class="card"><div class="card-title">🌱 '+tr('과거의 고민과 최근의 변화','Old worries and recent change')+'</div>';
+  if(!shift||!shift.ok){
+    h+='<p class="quiet" style="margin:0">'+tr('두 시기를 나눌 만큼 기록이 쌓이면 여기에 보여드려요.','Once entries fill two periods, this space fills in.')+'</p></div>';
+    return h;
+  }
+  h+='<div class="sub-h">'+tr('과거에 자주 등장했던 고민 (상황·감정)','Worries that used to appear often (situation · feeling)')+'</div>';
+  if(shift.oldConcerns.length){
+    h+='<div class="chips">'+shift.oldConcerns.map(function(x){
+      return '<span class="tag">'+esc(x.label)+' <b style="opacity:.55">'+x.aCount+'→'+x.bCount+'</b></span>';
+    }).join('')+'</div>';
+  }else{
+    h+='<p class="quiet" style="margin:0">'+tr('두 번 이상 나왔던 고민이 최근에 줄어든 경우는 아직 없어요.','No worry that appeared twice or more has clearly dropped recently.')+'</p>';
+  }
+  h+='<div class="sub-h">'+tr('최근 새롭게 나타난 반응·변화','What has newly appeared recently')+'</div>';
+  if(shift.newSignals.length){
+    h+='<div class="chips">'+shift.newSignals.map(function(x){
+      return '<span class="tag depth">'+esc(x.label)+' <b style="opacity:.55">'+x.bCount+tr('건','')+'</b></span>';
+    }).join('')+'</div>';
+  }else{
+    h+='<p class="quiet" style="margin:0">'+tr('그동안 없던 반응이 새로 두 번 이상 나온 경우는 아직 없어요.','Nothing unseen before has appeared twice or more yet.')+'</p>';
+  }
+  h+='<p class="quiet" style="margin-top:9px">'+tr('두 번 이상 반복된 것만 넣었어요. 한 번 나온 것은 변화라고 부르지 않아요.','Only what appeared twice or more is listed; a single appearance is not called a change.')+'</p>';
+  h+='</div>';
+  return h;
+}
+function archivePinsHTML(pins){
+  var h='<div class="card"><div class="card-title">📌 '+tr('내가 직접 고른 발견','Findings I chose to keep')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개','')+'</span></div>';
+  if(!pins.length){
+    h+='<div class="empty">'+tr('아직 저장한 발견이 없어요.<br>리포트의 단서나 ‘오늘의 마음 발견’에서 <b>📌 변화 보관소에 저장</b>을 누르면 여기에 모여요.','Nothing kept yet.<br>Tap <b>📌 Save to the change archive</b> on a report clue or in today’s discovery and it gathers here.')+'</div></div>';
+    return h;
+  }
+  pins.forEach(function(p){
+    h+='<div class="pin-item"><div class="pin-h"><span class="pin-t">'+esc(p.title||'')+'</span><span class="pin-d">'+esc(pinDateStr(p.at))+'</span></div>'
+      +'<p class="pat-say">'+esc(p.sentence||'')+'</p>'
+      +(p.evidence?'<p class="quiet" style="margin:4px 0 0">'+esc(p.evidence)+'</p>':'')
+      +'<div class="row" style="margin-top:8px">'
+      +(p.kind==='pattern'?'<button class="btn secondary small" onclick="openPattern(\''+esc(p.refId)+'\')">'+tr('근거 기록','Entries')+'</button>':'')
+      +(p.kind==='record'?'<button class="btn secondary small" onclick="openDetail('+Number(p.refId)+')">'+tr('그 날의 기록','That day')+'</button>':'')
+      +'<button class="btn ghost small" onclick="removePinBtn(\''+esc(p.pid)+'\')">'+tr('빼기','Remove')+'</button></div></div>';
+  });
+  h+='<p class="quiet" style="margin-top:8px">'+tr('저장한 문장은 그때의 기록을 그대로 담아둔 거예요. 기록이 바뀌어도 보관소의 문장은 그대로 남아요.','A kept sentence holds the entry as it was then; it stays even if the entries change.')+'</p>';
+  h+='</div>';
+  return h;
+}
+
+/* ---------- 상담·보관용 PDF (인쇄) ---------- */
+function printStatusOf(id){
+  var st=id? stateOfId(id):null;
+  var s=st? String(st.status||'') : '';
+  return s==='confirmed'? tr('사용자가 ‘맞아요’로 확인함','confirmed by the user')
+    : s==='partial'? tr('사용자가 ‘수정’으로 표시함','marked as partly by the user')
+    : s==='rejected'? tr('사용자가 ‘제외’로 표시함','left out by the user')
+    : tr('아직 확인하지 않음','not yet confirmed');
+}
+function printBlock(label,body){
+  return '<p class="pr-line"><b>'+label+'</b> '+(body||'—')+'</p>';
+}
+function buildPrintReport(){
+  var el=document.getElementById('printReport'); if(!el) return '';
+  var a=analyzePatterns('all');
+  var n=a.n;
+  var cmp=periodComparison();
+  var pins=pinList();
+  var d=new Date();
+  var sorted=cleanRecordList();
+  var h='<div class="pr">';
+  h+='<div class="pr-head"><div class="pr-brand">🧊 '+tr('마음의 빙산','Mind’s Iceberg')+'</div>'
+    +'<h1>'+tr('월간 마음 패턴 리포트','Monthly mind pattern report')+'</h1>'
+    +'<div class="pr-meta">'+tr('기간','Period')+' '+esc(n? dstr(sorted[sorted.length-1].date)+' – '+dstr(sorted[0].date) : '—')
+    +' · '+tr('기록','entries')+' '+n+' · '+tr('서로 다른 날','days')+' '+distinctDaysOf(a.list).length
+    +' · '+tr('작성','created')+' '+d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate()+'</div>'
+    +'<p class="pr-disc">'+tr('이 리포트는 기록을 세어 정리한 것이며 진단이나 심리 평가가 아닙니다. ①은 기록에서 센 사실, ②는 반복 단서, ③은 기록만으로 만든 짐작, ④는 사용자가 확인한 내용입니다.','This report counts and arranges entries and is not a diagnosis or an assessment. ① is what the entries show, ② a repeating clue, ③ a guess made from the entries, ④ what the user confirmed.')+'</p></div>';
+
+  /* 01 */
+  h+='<section class="pr-sec"><h2>01 '+tr('반복되는 감정','Feelings that repeat')+'</h2>';
+  var emo=topItems('emotion',a.list).slice(0,4);
+  if(emo.length){
+    h+='<table class="pr-tbl"><tr><th>'+tr('감정','Feeling')+'</th><th>'+tr('기록','Entries')+'</th><th>'+tr('비율','Share')+'</th></tr>';
+    emo.forEach(function(x){ h+='<tr><td>'+esc(emotionLabel(x.key))+'</td><td>'+x.count+'</td><td>'+pctOf(x.count,n)+'%</td></tr>'; });
+    h+='</table>';
+    h+='<p class="pr-note">'+tr('비율의 분모는 기간 기록 '+n+'건이에요. 한 기록에서 감정을 여러 개 고를 수 있어 합계가 100%를 넘을 수 있어요.','Shares use the '+n+' entries as the denominator; several feelings can be picked in one entry, so the total may pass 100%.')+'</p>';
+    var top=emo[0];
+    var pat=a.patterns.filter(function(p){ return p.type==='emotion'&&p.key===top.key; })[0]||null;
+    if(pat&&pat.hidden) pat=null;
+    var nb=needsBehindEmotion(a.list,top.key);
+    h+=printBlock(tr('① 사실','① Fact'), esc(tr('기록 '+n+'건 중 '+top.count+'건('+pctOf(top.count,n)+'%)에 ‘'+emotionLabel(top.key)+'’이 적혔어요.','“'+emotionLabel(top.key)+'” appears in '+top.count+' of '+n+' entries ('+pctOf(top.count,n)+'%).')));
+    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc((pat&&pat.level!=='record')? confidenceLabel(pat.level)+' · '+plainText(pat.sentence) : tr('아직 반복이라고 부를 만큼 쌓이지 않았어요.','Not enough to call it a repeat yet.')));
+    h+=printBlock(tr('③ 추론','③ Inference'), (nb&&nb.top&&nb.top.count>=2)? esc(tr('‘'+emotionLabel(top.key)+'’이 적힌 '+nb.total+'건 중 '+nb.top.count+'건에 ‘'+needLabel(nb.top.key)+'’의 바람이 함께 있었어요. 짐작이며 틀릴 수 있어요.','In '+nb.top.count+' of '+nb.total+' entries with that feeling, a wish for “'+needLabel(nb.top.key)+'” was written too. A guess; it may be wrong.')) : esc(tr('추론을 만들지 않았어요.','No inference was made.')));
+    h+=printBlock(tr('④ 확인','④ Confirmation'), esc(printStatusOf(pat?pat.id:'')));
+  }else{
+    h+='<p class="pr-line">'+esc(tr('이 기간에 감정을 적은 기록이 없어요.','No feelings were written in this period.'))+'</p>';
+  }
+  h+='</section>';
+
+  /* 02 */
+  h+='<section class="pr-sec"><h2>02 '+tr('서로 다른 상황의 연결','Links across different situations')+'</h2>';
+  var crosses=a.crosses.slice(0,2);
+  if(crosses.length){
+    crosses.forEach(function(p){
+      var sits=(p.situations||[]).map(sitCatLabel).join(' · ');
+      h+=printBlock(tr('① 사실','① Fact'), esc(tr('상황이 서로 달랐던 '+p.count+'건에서 ‘'+emotionLabel(p.emotion)+'’과 ‘'+needLabel(p.need)+'’의 바람이 함께 적혔어요 ('+sits+', 서로 다른 '+p.distinctDays+'일).','In '+p.count+' entries with different situations ('+sits+'), “'+emotionLabel(p.emotion)+'” and a wish for “'+needLabel(p.need)+'” appeared together, over '+p.distinctDays+' days.')));
+      h+=printBlock(tr('② 반복 패턴','② Pattern'), esc(plainText(p.sentence)));
+      h+=printBlock(tr('③ 추론','③ Inference'), esc(tr('상황이 아니라 그 아래 ‘'+needLabel(p.need)+'’의 바람이 반복해서 올라오는 것일 수 있어요.','What repeats may be the wish for “'+needLabel(p.need)+'” rather than the situation.')));
+      h+=printBlock(tr('④ 확인','④ Confirmation'), esc(printStatusOf(p.id)));
+    });
+  }else{
+    h+='<p class="pr-line">'+esc(tr('서로 다른 상황에서 같은 감정·욕구 조합이 반복된 기록은 아직 없어요. 단서를 만들 조건(3건 이상·서로 다른 3일 이상·상황 2가지 이상)이 모이지 않아 이 칸은 비워 두었어요.','No combination has yet repeated across different situations; the conditions for a clue (3+ entries, 3+ days, 2+ situations) were not met, so this section stays empty.'))+'</p>';
+  }
+  h+='</section>';
+
+  /* 03 */
+  h+='<section class="pr-sec"><h2>03 '+tr('욕구와 반응의 차이','The gap between wish and reaction')+'</h2>';
+  var mis=a.mismatches;
+  var gs=gapStats(a.list);
+  if(mis.length){
+    var m=mis[0];
+    h+=printBlock(tr('① 사실','① Fact'), esc(tr('연결 욕구와 억제 반응이 같은 기록에 적힌 건 '+m.count+'건(서로 다른 '+m.distinctDays+'일)이에요. 가장 잦은 조합은 ‘'+needLabel(m.need)+'’ + ‘'+reactionLabel(m.reaction)+'’.','Connection wish and suppressing reaction appear together in '+m.count+' entries over '+m.distinctDays+' days; the most frequent pairing is “'+needLabel(m.need)+'” with “'+reactionLabel(m.reaction)+'”.')));
+    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc(tr('바라는 마음과 실제로 나온 반응이 반복해서 다른 방향으로 이어져요.','The wish and the actual reaction repeatedly point different ways.')));
+    h+=printBlock(tr('③ 추론','③ Inference'), esc(plainText(m.sentence)));
+    h+=printBlock(tr('④ 확인','④ Confirmation'), esc(printStatusOf(m.id)));
+  }else{
+    h+='<p class="pr-line">'+esc(tr('연결 욕구와 억제 반응이 함께 적힌 기록은 '+gs.count+'건(서로 다른 '+gs.days+'일)이에요. 3건·3일이 모이면 이 칸에 단서를 적어요.','Connection wish with a suppressing reaction appears in '+gs.count+' entries ('+gs.days+' days). With 3 entries on 3 days a clue is written here.'))+'</p>';
+  }
+  h+='</section>';
+
+  /* 04 */
+  h+='<section class="pr-sec"><h2>04 '+tr('지난달과 달라진 점','What changed from last month')+'</h2>';
+  if(cmp.ok){
+    h+='<table class="pr-tbl"><tr><th>'+tr('항목','Item')+'</th><th>'+esc(cmp.labelBefore)+'</th><th>'+esc(cmp.labelNow)+'</th><th>Δ</th></tr>';
+    cmp.topDiffs.slice(0,4).forEach(function(x){
+      h+='<tr><td>'+esc(x.label)+'</td><td>'+x.aCount+' · '+x.ap+'%</td><td>'+x.bCount+' · '+x.bp+'%</td><td>'+(x.dp>0?'+':'')+x.dp+'%p</td></tr>';
+    });
+    h+='</table>';
+    h+=printBlock(tr('① 사실','① Fact'), esc(periodFactSentence(cmp)));
+    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc((cmp.topDiffs[0]&&Math.abs(cmp.topDiffs[0].dp)>=10)? tr('가장 크게 움직인 것은 '+deltaSentence(cmp.topDiffs[0])+'예요.','The biggest shift is '+deltaSentence(cmp.topDiffs[0])+'.') : tr('두 시기의 구성이 비슷해요.','The mix is much the same in both periods.')));
+    h+=printBlock(tr('③ 추론','③ Inference'), esc(cmp.newcomers.length? tr('최근에 새로 나타난 ‘'+cmp.newcomers[0].label+'’은 다른 신호일 수 있어요. 기간이 짧아 우연일 수도 있어요.','“'+cmp.newcomers[0].label+'” is new recently and may be a different signal; with a short period it may be chance.') : tr('원인은 추론하지 않았어요.','No cause is inferred.')));
+    h+=printBlock(tr('④ 확인','④ Confirmation'), esc(printStatusOf('compare|'+cmp.mode)));
+  }else{
+    h+='<p class="pr-line">'+esc(cmp.note)+'</p>';
+  }
+  h+='</section>';
+
+  /* 확인한 발견 + 근거 요약 */
+  var confirmed=a.patterns.filter(function(p){ var st=stateOfId(p.id); return st&&st.status==='confirmed'; });
+  h+='<section class="pr-sec"><h2>'+tr('사용자가 확인한 발견','Findings the user confirmed')+'</h2>';
+  if(!pins.length&&!confirmed.length){
+    h+='<p class="pr-line">'+esc(tr('아직 확인하거나 보관소에 저장한 발견이 없어요.','Nothing has been confirmed or kept yet.'))+'</p>';
+  }else{
+    if(confirmed.length) confirmed.forEach(function(p){
+      h+='<p class="pr-line">· '+esc(itemLabel(p.type,p.key))+' — '+esc(plainText(p.sentence))+'</p>';
+    });
+    pins.forEach(function(p){
+      h+='<p class="pr-line">📌 '+esc(p.title||'')+' — '+esc(p.sentence||'')+(p.evidence?' <span class="pr-dim">('+esc(p.evidence)+')</span>':'')+'</p>';
+    });
+  }
+  h+='</section>';
+
+  /* 근거 기록 요약 */
+  h+='<section class="pr-sec"><h2>'+tr('근거 기록 요약','What the report is based on')+'</h2>';
+  var sits=topItems('situation',a.list).slice(0,3).map(function(x){ return sitCatLabel(x.key)+' '+x.count; }).join(' · ');
+  var nds=topItems('need',a.list).slice(0,3).map(function(x){ return needLabel(x.key)+' '+x.count; }).join(' · ');
+  h+='<p class="pr-line">'+esc(tr('기록 ','Entries '))+n+' · '+esc(tr('서로 다른 날 ','different days '))+distinctDaysOf(a.list).length+' · '+esc(tr('감정 ','feelings '))+(emo.length? emo.map(function(x){return emotionLabel(x.key)+' '+x.count;}).join(' · '):'—')+'</p>';
+  h+='<p class="pr-line">'+esc(tr('상황 ','Situations '))+(sits||'—')+' · '+esc(tr('욕구 ','Wishes '))+(nds||'—')+'</p>';
+  var recent=a.list.slice(0,5);
+  if(recent.length){
+    h+='<p class="pr-note">'+tr('최근 기록','Recent entries')+'</p>';
+    recent.forEach(function(r){
+      var line=dstr(r.date)+' · '+(emotionsOf(r).map(emotionLabel).join(' · ')||tr('감정 없음','no feeling'))
+        +(needsOf(r).filter(function(x){return !isUnsureNeed(x)}).length? ' · '+needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · '):'');
+      h+='<p class="pr-line pr-dim">'+esc(line)+'</p>';
+    });
+  }
+  h+='</section>';
+  h+='<div class="pr-foot">'+tr('마음의 빙산 · 상담이나 진료에 참고용으로 쓰려면 이 리포트를 그대로 가져가세요. 기록 원문은 앱의 ‘기록 백업’에서 내려받을 수 있어요.','Mind’s Iceberg · Take this report as it is if it helps a conversation with a counsellor. The original entries can be exported from the app’s backup.')+'</div>';
+  h+='</div>';
+  el.innerHTML=h;
+  return h;
+}
+function printReport(){
+  buildPrintReport();
+  try{ window.print(); }catch(e){}
+}
+
+/* ---------- 백업: 핀 목록 포함 ---------- */
+function exportData(){
+  var payload={app:'maeum-bingsan',version:3,exportedAt:new Date().toISOString(),count:records.length,records:records,archive:pinList()};
+  var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  var d=new Date();
+  var name='maeum-bingsan-backup-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'.json';
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
+  toast(tr('기록 '+records.length+'개와 보관소 '+pinList().length+'개를 내보냈어요',records.length+' entries and '+pinList().length+' kept findings exported'));
+}
+function readImport(file){
+  var reader=new FileReader();
+  reader.onload=function(){
+    var parsed=null, arr=null, pins=null;
+    try{ parsed=JSON.parse(String(reader.result||'')); }catch(err){
+      alert(tr('JSON 파일을 읽지 못했어요. 마음의 빙산에서 내보낸 파일인지 확인해 주세요.','Could not read that JSON file. Please check that it was exported from Mind’s Iceberg.')); return;
+    }
+    if(Array.isArray(parsed)) arr=parsed;
+    else if(parsed&&Array.isArray(parsed.records)) arr=parsed.records;
+    if(parsed&&!Array.isArray(parsed)&&Array.isArray(parsed.archive)) pins=parsed.archive;
+    var addedPins=pins? mergePins(pins) : 0;
+    if(!arr||!arr.length){
+      if(addedPins){ toast(tr('보관소 발견 '+addedPins+'개를 가져왔어요','Imported '+addedPins+' kept findings')); refreshView(); return; }
+      alert(tr('기록 목록을 찾지 못했어요.','No entry list was found in the file.')); return;
+    }
+    arr=arr.filter(function(r){ return r&&typeof r==='object'; }).map(normalizeRecord);
+    if(!arr.length){ alert(tr('가져올 기록이 없어요.','There are no entries to import.')); return; }
+    if(addedPins) toast(tr('보관소 발견 '+addedPins+'개도 함께 가져왔어요','Also imported '+addedPins+' kept findings'));
+    showImportModal(arr);
+  };
+  reader.onerror=function(){ alert(tr('파일을 읽지 못했어요.','Could not read the file.')); };
+  reader.readAsText(file);
+}
+
+/* =========================================================
+   v8 · 캘린더(.ics) 반복 리마인더 — 웹 푸시가 닿지 않는 시간대 보완
+   VEVENT + RRULE:FREQ=DAILY 로 iOS/안드로이드 캘린더에 매일 알림을 건다.
+   ========================================================= */
+function icsPad(n){ return (n<10?'0':'')+n; }
+function icsStampUTC(d){
+  return d.getUTCFullYear()+icsPad(d.getUTCMonth()+1)+icsPad(d.getUTCDate())+'T'+icsPad(d.getUTCHours())+icsPad(d.getUTCMinutes())+'00Z';
+}
+function icsStampLocal(d){
+  return d.getFullYear()+icsPad(d.getMonth()+1)+icsPad(d.getDate())+'T'+icsPad(d.getHours())+icsPad(d.getMinutes())+'00';
+}
+function icsEsc(s){
+  return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+}
+/* 순수 함수 — 테스트에서 문자열만 검사한다 */
+function buildReminderICS(opts){
+  opts=opts||{};
+  var hour=(opts.hour==null)?21:Number(opts.hour);
+  var now=opts.now? new Date(opts.now) : new Date();
+  var start=new Date(now.getFullYear(),now.getMonth(),now.getDate(),hour,0,0);
+  if(start.getTime()<=now.getTime()) start=new Date(start.getTime()+86400000);
+  var summary=isEN()? 'Mind’s Iceberg · one line about today'
+                    : '마음의 빙산 · 오늘의 마음 한 줄';
+  var desc=isEN()? 'One feeling and one line is enough. Open the app and tap once.'
+                 : '감정 하나, 한 줄이면 충분해요. 앱을 열고 한 번만 눌러 주세요.';
+  var lines=[
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Maeum Bingsan//Daily Reminder v8//KO','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+    'BEGIN:VTIMEZONE','TZID:Asia/Seoul',
+    'BEGIN:STANDARD','DTSTART:19700101T000000','TZOFFSETFROM:+0900','TZOFFSETTO:+0900','TZNAME:KST','END:STANDARD',
+    'END:VTIMEZONE',
+    'BEGIN:VEVENT',
+    'UID:maeum-bingsan-daily-'+icsStampUTC(now)+'@local',
+    'DTSTAMP:'+icsStampUTC(now),
+    'DTSTART;TZID=Asia/Seoul:'+icsStampLocal(start),
+    'DTEND;TZID=Asia/Seoul:'+icsStampLocal(new Date(start.getTime()+15*60000)),
+    'RRULE:FREQ=DAILY',
+    'SUMMARY:'+icsEsc(summary),
+    'DESCRIPTION:'+icsEsc(desc),
+    'TRANSP:TRANSPARENT',
+    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:'+icsEsc(summary),'END:VALARM',
+    'END:VEVENT','END:VCALENDAR',''
+  ];
+  return lines.join('\r\n');
+}
+function downloadReminderICS(){
+  var txt=buildReminderICS({hour:21});
+  var blob=new Blob([txt],{type:'text/calendar;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='maeum-bingsan-reminder-9pm.ics';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
+  toast(tr('캘린더에 추가할 .ics 파일을 만들었어요','Made the .ics file for your calendar'));
+}
 
 
 /* =========================================================

@@ -231,7 +231,7 @@ function questionOf(r){
   return '비슷한 일이 다시 생긴다면, 그때는 무엇을 조금 더 일찍 알아차리고 싶나요?';
 }
 function possibleReadingNote(){
-  return tr('아래 내용은 기록에서 만든 <b>가능한 해석</b>이에요. 사실과 다를 수 있고, 정답이 아니에요. 고치거나 분석에서 빼둘 수 있어요.','What follows is a <b>possible reading</b> built from your entry. It may not be right — not an answer. You can rewrite it or leave it out of the analysis.');
+  return tr('기록에서 만든 <b>가능한 해석</b>이에요. 고치거나 빼둘 수 있어요.','A <b>possible reading</b> from your entry — edit it or leave it out.');
 }
 
 /* ---------- 화면 ③ 오늘의 마음 발견 ---------- */
@@ -243,7 +243,7 @@ function renderDiscovery(id){
   var emo=emotionsOf(r).length? emotionsOf(r).map(function(f){return '<span class="tag">'+esc(emotionLabel(f))+'</span>'}).join('') : '<span class="quiet">'+tr('오늘은 감정을 고르지 않았어요','No feeling picked today')+'</span>';
   var ns=needsOf(r).filter(function(n){return !isUnsureNeed(n)});
   var needs=ns.length? ns.map(function(n){return '<span class="tag depth">'+esc(needLabel(n))+'</span>'}).join('') : '<span class="quiet">'+tr('아직 잘 모르겠어요','Not sure yet')+'</span>';
-  var sit=situationString(r);
+  var sit=situationDisplay(r);
   var clue=mainClueFor(r);
   var html='';
   html+='<div class="hero"><div class="eyebrow">TODAY’S DISCOVERY ✧</div><h2>'+tr('오늘의 마음 발견','Today’s discovery')+'</h2><p>'+esc(dstr(r.date))+'</p></div>';
@@ -257,15 +257,16 @@ function renderDiscovery(id){
   html+='<div class="read-note">'+possibleReadingNote()+'</div>';
   html+='<textarea class="field" id="discSentence" maxlength="240">'+esc(sentenceOf(r))+'</textarea>';
   html+='<div class="row" style="margin-top:9px"><button class="btn small" onclick="saveSentence('+r.id+')">'+tr('이 문장으로 저장','Keep this sentence')+'</button><button class="btn secondary small" onclick="askAIFor('+r.id+')">'+(aiState.loading?'…':tr('✦ AI에게 더 묻기','✦ Ask AI'))+'</button></div>';
+  html+='<div class="row" style="margin-top:6px">'+pinBtnRecord(r.id)+'</div>';
   if(r.ai&&r.ai.comment){
     html+='<div class="ai-box" style="margin-top:11px"><div class="ai-h">AI · '+tr('가능한 해석','possible reading')+'</div><div class="ai-text">'+esc(r.ai.comment)+'</div>'+(r.ai.question?'<div class="ai-q">'+esc(r.ai.question)+'</div>':'')+'</div>';
   }
   html+='</div>';
-  html+='<div class="card"><div class="card-title">'+tr('나에게 남기는 질문','A question to keep')+'</div><div class="qbox">'+esc(r.ai&&r.ai.question? r.ai.question : questionOf(r))+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 지금 하지 않아도 괜찮아요. 다음 기록에서 이어질 수 있어요.','You don’t have to answer now. It can carry into your next entry.')+'</p></div>';
+  html+='<div class="card"><div class="card-title">'+tr('나에게 남기는 질문','A question to keep')+'</div><div class="qbox">'+esc(r.ai&&r.ai.question? r.ai.question : questionOf(r))+'</div><p class="quiet" style="margin-top:9px">'+tr('지금 답하지 않아도 괜찮아요.','No need to answer now.')+'</p></div>';
   if(clue){
-    html+='<div class="card clue"><div class="clue-h">✨ '+tr('최근 발견한 마음','Recently found')+' <span class="clue-badge">'+esc(clue.badge)+'</span></div><p class="clue-say">'+clue.sentence+'</p><p class="quiet" style="margin-top:6px">'+esc(clue.evidenceLine||'')+'</p><button class="btn secondary small" style="margin-top:10px" onclick="openPattern(\''+esc(clue.id)+'\')">'+tr('관련 기록 살펴보기','Look at the related entries')+'</button></div>';
+    html+='<div class="card clue"><div class="clue-h">✨ '+tr('최근 발견한 마음','Recently found')+' <span class="clue-badge">'+esc(clue.badge)+'</span></div><p class="clue-say">'+clue.sentence+'</p><p class="quiet" style="margin-top:6px">'+esc(clue.evidenceLine||'')+'</p><button class="btn secondary small" style="margin-top:10px" onclick="openPattern(\''+esc(clue.id)+'\')">'+tr('관련 기록 살펴보기','Look at the related entries')+'</button>'+pinBtnPattern(clue)+'</div>';
   }
-  html+='<div class="card"><div class="card-title">'+tr('이 해석이 맞나요?','Does this reading fit?')+'</div><p class="prompt">'+tr('틀렸다고 느끼면 분석에서 빼둘 수 있어요. 기록 자체는 그대로 남아요.','If it feels wrong, you can leave it out of the analysis. The entry itself stays.')+'</p>';
+  html+='<div class="card"><div class="card-title">'+tr('이 해석이 맞나요?','Does this reading fit?')+'</div><p class="prompt">'+tr('분석에서 빼도 기록은 그대로 남아요.','Leaving it out keeps the entry itself.')+'</p>';
   html+='<div class="row"><button class="btn secondary small" onclick="startEdit('+r.id+')">'+tr('✎ 직접 수정','✎ Edit')+'</button><button class="btn ghost small" onclick="setAnalysisFeedback('+r.id+',\''+(fb==='rejected'?'':'rejected')+'\')">'+(fb==='rejected'? tr('↺ 분석에 다시 포함','↺ Include again') : tr('✕ 틀렸어요 (분석 제외)','✕ Not right (leave out)'))+'</button></div>';
   if(fb) html+='<p class="okline">'+(fb==='rejected'? tr('이 기록은 패턴 분석에서 제외되어 있어요.','This entry is excluded from pattern analysis.') : (fb==='partial'? tr('‘일부 달라요’로 표시했어요.','Marked as “partly different”.') : tr('‘맞아요’로 표시했어요.','Marked as “fits”.')))+'</p>';
   html+='<button class="btn secondary small" style="margin-top:9px" onclick="openDeep('+r.id+')">'+tr('🧊 이 기록의 심층 리포트 (방어기제 · AI)','🧊 Deep report for this entry')+'</button>';

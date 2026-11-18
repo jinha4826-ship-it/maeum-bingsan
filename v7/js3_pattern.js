@@ -28,6 +28,7 @@ function setPatternFeedback(id,status,pat){
 function renderPatternUi(){
   if(currentView==='map') renderMap(); else if(currentView==='report') renderReport(); else if(currentView==='layer') renderLayer(); else if(currentView==='home'){ renderHomeTop(); }
   else if(currentView==='discovery'&&detailId!=null) renderDiscovery(detailId);
+  else if(currentView==='archive') renderArchive();
 }
 
 /* 최근 7일 / 전체 — 각자 자기 기간만 센다 */
@@ -316,4 +317,278 @@ function mainClueFor(r){
     if(others.length>=2&&p.level!=='record'){ p.evidenceLine=evidenceLine(p); mine=p; }
   });
   return mine;
+}
+
+/* =========================================================
+   v8 · 기간 비교 (최근 30일 vs 그 이전 30일)
+   · 30일 창에 기록이 모자라면 날짜 순서로 절반씩 나눠 비교한다.
+   · 전체 2건 미만이면 비교하지 않고 정직하게 안내한다(mode:'none').
+   · 비율의 분모는 각 기간의 기록 수이고, 한 기록에 감정·욕구를 여러 개
+     고를 수 있어서 합계는 100%를 넘을 수 있다.
+   ========================================================= */
+var DAY_MS = 86400000;
+function recTimeOf(r){ var t=new Date(r&&r.date).getTime(); return isFinite(t)? t : 0; }
+function cleanRecordList(){
+  return records.filter(function(r){ return !recordRejected(r); })
+    .slice().sort(function(a,b){ return recTimeOf(b)-recTimeOf(a); });
+}
+function countMapArr(obj){
+  return Object.keys(obj).map(function(k){ return {key:k,count:obj[k]}; })
+    .sort(function(a,b){ return b.count-a.count || String(a.key).localeCompare(String(b.key)); });
+}
+function aggPeriod(list){
+  var emo={}, need={}, sit={}, rea={};
+  list.forEach(function(r){
+    uniq(emotionsOf(r)).forEach(function(k){ emo[k]=(emo[k]||0)+1; });
+    needsOf(r).filter(function(x){ return !isUnsureNeed(x); }).forEach(function(k){ need[k]=(need[k]||0)+1; });
+    var s=sitCatOf(r); if(s) sit[s]=(sit[s]||0)+1;
+    uniq(reactionsOf(r)).forEach(function(k){ rea[k]=(rea[k]||0)+1; });
+  });
+  return {n:list.length, days:distinctDaysOf(list).length, list:list,
+    emotions:countMapArr(emo), needs:countMapArr(need),
+    situations:countMapArr(sit), reactions:countMapArr(rea)};
+}
+function sharePct(c,n){ return n? Math.round(c/n*100) : 0; }
+function compareItemLists(kind,aList,bList,an,bn){
+  var keys={},out=[];
+  aList.forEach(function(x){ keys[x.key]=1; });
+  bList.forEach(function(x){ keys[x.key]=1; });
+  Object.keys(keys).forEach(function(k){
+    var a=aList.filter(function(x){return x.key===k;})[0];
+    var b=bList.filter(function(x){return x.key===k;})[0];
+    var ac=a?a.count:0, bc=b?b.count:0;
+    var ap=sharePct(ac,an), bp=sharePct(bc,bn);
+    out.push({kind:kind,key:k,label:itemLabel(kind,k),aCount:ac,bCount:bc,ap:ap,bp:bp,dp:bp-ap});
+  });
+  out.sort(function(p,q){ return Math.abs(q.dp)-Math.abs(p.dp) || (q.bCount-p.bCount); });
+  return out;
+}
+function periodComparison(){
+  var list=cleanRecordList(), now=Date.now();
+  var recent=list.filter(function(r){ var t=recTimeOf(r); return t>=now-30*DAY_MS; });
+  var earlier=list.filter(function(r){ var t=recTimeOf(r); return t>=now-60*DAY_MS && t<now-30*DAY_MS; });
+  var mode='m30', note='', labelNow='', labelBefore='';
+
+  if(recent.length<2||earlier.length<2){
+    if(list.length>=2){
+      var cut=Math.ceil(list.length/2);
+      recent=list.slice(0,cut); earlier=list.slice(cut);
+      mode='half';
+      note = isEN()
+        ? 'Too few entries to fill two 30-day windows, so the entries were split in half by date (newest '+recent.length+' vs the ' + earlier.length + ' before them).'
+        : '30일 창을 채우기에는 기록이 적어, 전체 기록을 날짜 순서로 절반씩 나눠 비교했어요 (최근 '+recent.length+'건 vs 그 이전 '+earlier.length+'건).';
+    }else{
+      mode='none';
+      note = isEN()
+        ? 'A comparison needs at least two entries from different times. There '+(list.length===1?'is 1 entry':'are '+list.length+' entries')+' so far.'
+        : '시기를 나눠 비교하려면 서로 다른 때의 기록이 2건 이상 필요해요. 지금은 '+list.length+'건이에요.';
+    }
+  }
+  var A=aggPeriod(earlier), B=aggPeriod(recent);
+  if(mode==='m30'){
+    labelNow = isEN()? 'last 30 days' : '최근 30일';
+    labelBefore = isEN()? 'the 30 days before' : '그 이전 30일';
+  }else if(mode==='half'){
+    labelNow = isEN()? 'recent half' : '최근 절반';
+    labelBefore = isEN()? 'earlier half' : '이전 절반';
+  }else{
+    labelNow = isEN()? 'now' : '지금'; labelBefore = isEN()? 'before' : '이전';
+  }
+  var diffs = {
+    emotions: compareItemLists('emotion', A.emotions, B.emotions, A.n, B.n),
+    needs: compareItemLists('need', A.needs, B.needs, A.n, B.n),
+    situations: compareItemLists('situation', A.situations, B.situations, A.n, B.n),
+    reactions: compareItemLists('reaction', A.reactions, B.reactions, A.n, B.n)
+  };
+  var topDiffs = diffs.emotions.concat(diffs.needs).concat(diffs.situations)
+    .filter(function(x){ return x.aCount||x.bCount; })
+    .sort(function(p,q){ return Math.abs(q.dp)-Math.abs(p.dp) || (q.bCount-p.bCount); });
+  /* 이전 기간에는 없었는데 최근에 새로 나타난 것 (2건 이상) */
+  var newcomers = diffs.emotions.concat(diffs.needs).concat(diffs.reactions)
+    .filter(function(x){ return x.aCount===0 && x.bCount>=2; })
+    .sort(function(p,q){ return q.bCount-p.bCount; });
+  return {
+    mode:mode, ok:mode!=='none', note:note,
+    labelNow:labelNow, labelBefore:labelBefore,
+    now:B, before:A, diffs:diffs, topDiffs:topDiffs, newcomers:newcomers,
+    days30:{recent:recent.length, earlier:earlier.length, total:list.length}
+  };
+}
+/* ④ ‘지난달과 달라진 점’ 문장 — 화면·보관소·PDF가 같은 문장을 쓴다 */
+function periodFactSentence(cmp){
+  if(!cmp||cmp.mode==='none') return cmp? cmp.note : '';
+  if(isEN()){
+    var s='The '+cmp.labelNow+' holds '+cmp.now.n+' entr'+(cmp.now.n===1?'y':'ies')+' over '+cmp.now.days+' day'+(cmp.now.days===1?'':'s')
+      +', the '+cmp.labelBefore+' '+cmp.before.n+' over '+cmp.before.days+'.';
+    if(cmp.mode==='half') s+=' '+cmp.note;
+    return s;
+  }
+  var k='‘'+cmp.labelNow+'’ 기록은 '+cmp.now.n+'건(서로 다른 '+cmp.now.days+'일), ‘'+cmp.labelBefore+'’은 '+cmp.before.n+'건(서로 다른 '+cmp.before.days+'일)이에요.';
+  if(cmp.mode==='half') k+=' '+cmp.note;
+  return k;
+}
+function deltaSentence(x){
+  if(!x) return '';
+  var sign=x.dp>0?'+':'';
+  if(isEN()){
+    return '“'+x.label+'” '+x.ap+'% → '+x.bp+'% ('+sign+x.dp+'%p)';
+  }
+  return '‘'+x.label+'’ '+x.ap+'% → '+x.bp+'% ('+sign+x.dp+'%p)';
+}
+/* =========================================================
+   v8 · 보관소 인사이트
+   · 과거에 자주 등장했던 고민(상황·감정) vs 최근 새롭게 나타난 반응·변화
+   ========================================================= */
+function archiveShift(cmp){
+  cmp=cmp||periodComparison();
+  var out={oldConcerns:[],newSignals:[],moved:null,ok:false};
+  if(!cmp.ok) return out;
+  out.ok=true;
+  cmp.diffs.situations.concat(cmp.diffs.emotions).forEach(function(x){
+    /* 과거 2건 이상이면서 비중이 10%p 이상 줄었거나 최근에 자취를 감춘 항목 */
+    if(x.aCount>=2 && (x.dp<=-10 || x.bCount===0)) out.oldConcerns.push(x);
+  });
+  out.oldConcerns.sort(function(p,q){ return q.dp-p.dp; });
+  out.oldConcerns=out.oldConcerns.slice(0,4);
+  /* 최근 새로 나타난 반응을 먼저, 그다음 감정·욕구 */
+  cmp.diffs.reactions.forEach(function(x){ if(x.aCount===0&&x.bCount>=2) out.newSignals.push(x); });
+  cmp.diffs.emotions.concat(cmp.diffs.needs).forEach(function(x){
+    if(x.aCount===0&&x.bCount>=2) out.newSignals.push(x);
+  });
+  out.newSignals.sort(function(p,q){ return q.bCount-p.aCount; });
+  out.newSignals=out.newSignals.slice(0,4);
+  out.moved=cmp.topDiffs.filter(function(x){ return Math.abs(x.dp)>=10; })[0]||null;
+  return out;
+}
+/* 특정 감정과 함께 적힌 욕구 — ③ 추론의 근거 */
+function needsBehindEmotion(list,emoKey){
+  var ev=(list||[]).filter(function(r){ return emotionsOf(r).indexOf(emoKey)>=0; });
+  var c={};
+  ev.forEach(function(r){
+    needsOf(r).filter(function(x){ return !isUnsureNeed(x); }).forEach(function(k){ c[k]=(c[k]||0)+1; });
+  });
+  var arr=countMapArr(c);
+  return {total:ev.length, top:arr[0]||null, all:arr};
+}
+/* 연결 욕구 + 억제 반응이 같은 기록에 있던 통계 — 03 섹션의 사실·부족 안내 */
+function gapStats(list){
+  var ev=(list||[]).filter(function(r){
+    var hasNeed=needsOf(r).some(function(x){ return CONNECT_NEEDS.indexOf(x)>=0; });
+    var hasSup=reactionsOf(r).some(function(x){ return SUPPRESS_REACTS.indexOf(x)>=0; });
+    return hasNeed&&hasSup;
+  });
+  var needC={}, reaC={};
+  ev.forEach(function(r){
+    needsOf(r).filter(function(x){ return CONNECT_NEEDS.indexOf(x)>=0; }).forEach(function(x){ needC[x]=(needC[x]||0)+1; });
+    reactionsOf(r).filter(function(x){ return SUPPRESS_REACTS.indexOf(x)>=0; }).forEach(function(x){ reaC[x]=(reaC[x]||0)+1; });
+  });
+  var na=countMapArr(needC), ra=countMapArr(reaC);
+  return {count:ev.length, days:distinctDaysOf(ev).length,
+    needTop:na[0]||null, reactionTop:ra[0]||null, evidenceIds:ev.map(idOf)};
+}
+/* =========================================================
+   v8 · 변화 보관소 핀 (기기 저장 + 백업 호환)
+   ========================================================= */
+var LS_PINS='maeum-archive-pins';
+var PIN_MAX=80;
+function pinStore(){
+  try{ var a=JSON.parse(localStorage.getItem(LS_PINS)||'[]'); return Array.isArray(a)? a : []; }catch(e){ return []; }
+}
+function savePinStore(a){ try{ localStorage.setItem(LS_PINS, JSON.stringify((a||[]).slice(0,PIN_MAX))); }catch(e){} }
+function pinKey(kind,refId){ return kind+'::'+refId; }
+function recDateLabel(d){ var x=new Date(d); if(isNaN(x.getTime())) return ''; return x.getFullYear()+'.'+(x.getMonth()+1)+'.'+x.getDate(); }
+function isPinned(kind,refId){
+  var k=pinKey(kind,refId);
+  return pinStore().some(function(p){ return p && p.pid===k; });
+}
+function pinFind(pid){
+  return pinStore().filter(function(p){ return p && p.pid===pid; })[0]||null;
+}
+function addPin(o){
+  if(!o||!o.pid) return null;
+  var a=pinStore().filter(function(p){ return p && p.pid!==o.pid; });
+  a.unshift(o);
+  savePinStore(a);
+  return o;
+}
+function removePin(pid){
+  var a=pinStore().filter(function(p){ return p && p.pid!==pid; });
+  savePinStore(a);
+}
+function snapOfRecord(r){
+  return {emotions:emotionsOf(r).map(emotionLabel), needs:needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel),
+    situations:[sitCatOf(r)].filter(Boolean).map(sitCatLabel)};
+}
+function pinPatternData(p){
+  if(!p) return null;
+  var title=(p.type==='cross'? (isEN()?'Across situations':'상황을 가로지르는 반복') :
+             p.type==='connection'? (isEN()?'Connection':'연결 패턴') :
+             p.type==='emotion'? (isEN()?'Repeating feeling':'반복되는 감정') :
+             p.type==='need'? (isEN()?'Repeating wish':'반복되는 욕구') :
+             p.type==='situation'? (isEN()?'Repeating situation':'반복되는 상황') :
+             (isEN()?'Finding':'발견'));
+  return {pid:pinKey('pattern',p.id), kind:'pattern', refId:p.id, at:nowISO(),
+    title:title+' · '+itemLabel(p.type,p.key),
+    sentence:plainText(p.sentence),
+    evidence:plainText(evidenceLine(p))+(p.count?' · '+p.count+(isEN()?' entries':'건'):''),
+    meta:{type:p.type,key:p.key,count:p.count,distinctDays:p.distinctDays,level:p.level}};
+}
+function pinRecordData(r,sentence){
+  if(!r) return null;
+  var sn=snapOfRecord(r);
+  return {pid:pinKey('record',r.id), kind:'record', refId:r.id, at:nowISO(),
+    title:(isEN()?'Today’s discovery':'오늘의 마음 발견')+' · '+recDateLabel(r.date),
+    sentence:plainText(sentence||sentenceOf(r)||''),
+    evidence:[sn.emotions.join(' · '),sn.needs.join(' · ')].filter(Boolean).join(' / '),
+    meta:{date:r.date,emotions:sn.emotions,needs:sn.needs,situations:sn.situations}};
+}
+function pinManualData(key,title,sentence,evidence){
+  return {pid:pinKey('manual',key), kind:'manual', refId:key, at:nowISO(),
+    title:title|| (isEN()?'Finding I kept':'내가 고른 발견'),
+    sentence:plainText(sentence||''), evidence:plainText(evidence||''), meta:{}};
+}
+function plainText(s){ return String(s==null?'':s).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); }
+function togglePinPattern(p){
+  if(!p) return '';
+  var pid=pinKey('pattern',p.id);
+  if(pinFind(pid)){ removePin(pid); return 'removed'; }
+  addPin(pinPatternData(p)); return 'added';
+}
+function togglePinRecord(r){
+  if(!r) return '';
+  var pid=pinKey('record',r.id);
+  if(pinFind(pid)){ removePin(pid); return 'removed'; }
+  addPin(pinRecordData(r)); return 'added';
+}
+function togglePinManual(key,title,sentence,evidence){
+  var pid=pinKey('manual',key);
+  if(pinFind(pid)){ removePin(pid); return 'removed'; }
+  addPin(pinManualData(key,title,sentence,evidence)); return 'added';
+}
+function pinList(){
+  return pinStore().filter(function(p){ return p&&p.pid; })
+    .sort(function(a,b){ return new Date(b.at||0)-new Date(a.at||0); });
+}
+function mergePins(arr){
+  if(!Array.isArray(arr)||!arr.length) return 0;
+  var cur=pinStore(), byId={}, added=0;
+  cur.forEach(function(p){ if(p&&p.pid) byId[p.pid]=p; });
+  arr.forEach(function(p){
+    if(!p||!p.pid) return;
+    var old=byId[p.pid];
+    if(!old){ byId[p.pid]=p; added++; }
+    else if(new Date(p.at||0)>new Date(old.at||0)) byId[p.pid]=p;
+  });
+  savePinStore(Object.keys(byId).map(function(k){ return byId[k]; }));
+  return added;
+}
+/* 섹션 단위 확인 상태 — 패턴이 아닌 발견(④ 변화 등)도 같은 저장소에 남긴다 */
+function stateOfId(id){
+  var s=patternStateStore()[id];
+  return (s&&s.status)? s : null;
+}
+function setStateId(id,status){
+  var st=patternStateStore();
+  st[id]={status:status,snapshot:{},at:nowISO()};
+  savePatternState(st);
 }

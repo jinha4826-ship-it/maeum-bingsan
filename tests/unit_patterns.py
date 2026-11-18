@@ -26,7 +26,7 @@ var window={scrollTo:function(){}};
 var records=[];
 """
 
-ENGINE_FILES = ['js1_core.js', 'js3_pattern.js']
+ENGINE_FILES = ['js1_core.js', 'js3_pattern.js', 'js6_archive.js']
 
 def make_ctx():
     ctx = quickjs.Context()
@@ -196,6 +196,115 @@ def main():
     load(ctx, [rec(1, '2026-11-10T09:00:00.000Z', ['서운함'], ['이해'])])
     r = run(ctx)
     check('기록 1건에서는 반복 패턴이 생기지 않음', not r['active'] and len(r['obs']) >= 1)
+
+
+    # ===== v8 · 기간 비교 =====
+    from datetime import datetime as _dt, timedelta as _td, timezone as _tz
+    now2 = _dt.now(_tz.utc)
+    def iso2(days_ago, h=3):
+        return (now2 - _td(days=days_ago)).replace(hour=h, minute=0, second=0, microsecond=0).isoformat().replace('+00:00', 'Z')
+
+    rows = [rec(1, iso2(40), ['화남']), rec(2, iso2(50), ['화남']), rec(3, iso2(55), ['화남']),
+            rec(4, iso2(2), ['서운함']), rec(5, iso2(3), ['서운함']), rec(6, iso2(4), ['서운함'])]
+    load(ctx, rows)
+    cmp = json.loads(ctx.eval('JSON.stringify(periodComparison())'))
+    check('v8 기간 비교 · 최근 30일 vs 그 이전 30일', cmp['mode'] == 'm30' and cmp['now']['n'] == 3 and cmp['before']['n'] == 3,
+          (cmp['mode'], cmp['now']['n'], cmp['before']['n']))
+    moved = [x for x in cmp['topDiffs'] if x['key'] == '서운함'][0]
+    check('v8 기간 비교 · 감정 이동(서운함 0%→100%)', moved['ap'] == 0 and moved['bp'] == 100 and moved['dp'] == 100, moved)
+    check('v8 기간 비교 · ④ 문장에 두 기간 건수', '기록은 3건' in ctx.eval('periodFactSentence(periodComparison())'),
+          ctx.eval('periodFactSentence(periodComparison())'))
+
+    # 30일 창을 채우지 못하면 절반끼리 + 정직한 안내
+    load(ctx, [rec(i, iso2(i), ['서운함']) for i in (1, 2, 3, 4)])
+    cmp2 = json.loads(ctx.eval('JSON.stringify(periodComparison())'))
+    check('v8 기간 비교 · 기록 부족 시 절반 비교', cmp2['mode'] == 'half' and cmp2['now']['n'] == 2 and cmp2['before']['n'] == 2,
+          (cmp2['mode'], cmp2['now']['n'], cmp2['before']['n']))
+    check('v8 기간 비교 · 절반 비교임을 밝힘', '절반' in cmp2['note'], cmp2['note'])
+
+    # 1건이면 비교하지 않고 안내
+    load(ctx, [rec(1, iso2(1), ['서운함'])])
+    cmp3 = json.loads(ctx.eval('JSON.stringify(periodComparison())'))
+    check('v8 기간 비교 · 1건이면 비교하지 않음', cmp3['mode'] == 'none' and cmp3['ok'] is False, cmp3['mode'])
+
+    # ===== v8 · 보관소 인사이트 =====
+    rows = [rec(11, iso2(45), ['화남'], ['인정'], '회의에서 다퉜다', '일·업무', ['다른 일로 바빴다']),
+            rec(12, iso2(46), ['화남'], ['인정'], '보고가 밀렸다', '일·업무', ['다른 일로 바빴다']),
+            rec(13, iso2(47), ['지침'], [], '야근이 이어졌다', '일·업무'),
+            rec(14, iso2(1), ['서운함'], ['이해'], '무시당함', '관계', ['괜찮은 척했어요']),
+            rec(15, iso2(2), ['서운함'], ['이해'], '연락이 씹힘', '가족', ['말을 못 하고 삼켰다']),
+            rec(16, iso2(3), ['답답함'], ['이해'], '맴돌았다', '공부·시험', ['괜찮은 척했어요'])]
+    load(ctx, rows)
+    sh = json.loads(ctx.eval('JSON.stringify(archiveShift(periodComparison()))'))
+    olds = [x['key'] for x in sh['oldConcerns']]
+    news = [x['key'] for x in sh['newSignals']]
+    check('v8 보관소 · 과거 자주 나온 고민(화남)', '화남' in olds, sh['oldConcerns'])
+    check('v8 보관소 · 최근 새로 나타난 항목', ('답답함' in news) or ('서운함' in news), sh['newSignals'])
+    check('v8 보관소 · 한 번 나온 것은 변화로 부르지 않음', all(x['aCount'] == 0 and x['bCount'] >= 2 for x in sh['newSignals']), sh['newSignals'])
+
+    # ===== v8 · 추론 근거 =====
+    load(ctx, [rec(1, iso2(1), ['서운함'], ['이해']), rec(2, iso2(2), ['서운함'], ['이해']),
+               rec(3, iso2(3), ['서운함'], ['인정'])])
+    nb = json.loads(ctx.eval('JSON.stringify(needsBehindEmotion(records,"서운함"))'))
+    check('v8 추론 근거 · 감정과 함께 적힌 욕구 집계', nb['total'] == 3 and nb['top']['key'] == '이해' and nb['top']['count'] == 2, nb)
+
+    load(ctx, [rec(i, iso2(i), ['서운함'], ['이해'], '', '일·업무', ['괜찮은 척했어요']) for i in (1, 2, 3)])
+    gs = json.loads(ctx.eval('JSON.stringify(gapStats(records))'))
+    check('v8 욕구↔반응 통계 (3건·3일)', gs['count'] == 3 and gs['days'] == 3 and gs['needTop']['key'] == '이해', gs)
+
+    # ===== v8 · 보관소 핀 저장/삭제 =====
+    ctx.eval("localStorage.removeItem('maeum-archive-pins');")
+    load(ctx, [rec(21, iso2(1), ['서운함'], ['이해'], '회의', '일·업무')])
+    r1 = json.loads(ctx.eval("(function(){var r=records[0];var a=togglePinRecord(r);var on=isPinned('record',r.id);var n=pinList().length;var b=togglePinRecord(r);return JSON.stringify({a:a,on:on,n:n,b:b,after:pinList().length});})()"))
+    check('v8 핀 · 기록(오늘의 발견) 저장·삭제', r1['a'] == 'added' and r1['on'] is True and r1['n'] == 1 and r1['b'] == 'removed' and r1['after'] == 0, r1)
+
+    load(ctx, [rec(i, iso2(i), ['서운함'], ['이해']) for i in (1, 2, 3)])
+    r2 = json.loads(ctx.eval("(function(){var a=analyzePatterns('all');var p=a.active[0];var x=togglePinPattern(p);var pin=pinList()[0];var y=togglePinPattern(p);return JSON.stringify({x:x,id:p.id,pid:pin.pid,hasSentence:!!pin.sentence,hasEvidence:!!pin.evidence,y:y,left:pinList().length});})()"))
+    check('v8 핀 · 패턴 카드 저장(문장·근거 포함)·삭제', r2['x'] == 'added' and r2['pid'] == 'pattern::' + r2['id'] and r2['hasSentence'] and r2['hasEvidence'] and r2['y'] == 'removed' and r2['left'] == 0, r2)
+
+    load(ctx, [rec(31, iso2(1), ['서운함'], ['이해'])])
+    r3 = json.loads(ctx.eval("(function(){var r=records[0];togglePinRecord(r);var a=pinList().length;var data=JSON.parse(localStorage.getItem('maeum-archive-pins'));var b=data.length;var added=mergePins([{pid:'manual::x',kind:'manual',refId:'x',at:'2026-11-01T00:00:00Z',title:'t',sentence:'s'},{pid:'manual::x',kind:'manual',refId:'x',at:'2026-11-02T00:00:00Z',title:'t2',sentence:'s2'}]);var t=pinFind('manual::x');return JSON.stringify({a:a,b:b,added:added,title:t.title,total:pinList().length});})()"))
+    check('v8 핀 · 기기 저장 + 가져오기 중복 병합', r3['a'] == 1 and r3['b'] == 1 and r3['added'] == 1 and r3['title'] == 't2' and r3['total'] == 2, r3)
+
+    # ===== v8 · 섹션 확인 상태 =====
+    r4 = json.loads(ctx.eval("(function(){setStateId('compare|m30','confirmed');var s=stateOfId('compare|m30');return JSON.stringify({st:s&&s.status,other:stateOfId('없는키')});})()"))
+    check('v8 확인 상태 · 섹션 단위 저장', r4['st'] == 'confirmed' and r4['other'] is None, r4)
+
+    # 영문 전환 시 문장
+    ctx.eval("LANG='en';")
+    en = ctx.eval('periodFactSentence(periodComparison())')
+    ctx.eval("LANG='ko';")
+    check('v8 영문 문장 생성', 'last 30 days' in en or 'half' in en or 'entry' in en, en)
+
+
+    # ===== v8 마감 · EN 라벨 누수 0 =====
+    ctx.eval("LANG='en';")
+    r_tap = ctx.eval("reactionLabel('가슴이 답답해요')")
+    r_tap2 = ctx.eval("reactionLabel('괜찮은 척했어요')")
+    r_dict = ctx.eval("reactionLabel('몸이 굳었다')")
+    check('EN 반응 라벨(3초 원탭 키) 영어 출력', r_tap == 'my chest feels tight' and r_tap2 == 'I pretended to be fine',
+          (r_tap, r_tap2))
+    check('EN 반응 라벨(사전 키) 영어 출력', r_dict == 'my body went stiff', r_dict)
+    s_tap = ctx.eval("situationDisplay({situation:'사람과의 일'})")
+    s_tap2 = ctx.eval("situationDisplay({situation:'직장·업무'})")
+    s_free = ctx.eval("situationDisplay({situation:'회의에서 무시당함'})")
+    check('EN 상황 라벨(원탭 키) 영어 출력', s_tap == 'a problem with someone' and s_tap2 == 'work', (s_tap, s_tap2))
+    check('EN 사용자가 쓴 문장은 그대로', s_free == '회의에서 무시당함', s_free)
+    ctx.eval("LANG='ko';")
+    check('KO 반응·상황 라벨 그대로', ctx.eval("reactionLabel('가슴이 답답해요')") == '가슴이 답답해요'
+          and ctx.eval("situationDisplay({situation:'사람과의 일'})") == '사람과의 일')
+
+    # ===== v8 마감 · .ics 반복 리마인더 =====
+    ics = ctx.eval("buildReminderICS({hour:21,now:'2026-11-18T12:00:00+09:00'})")
+    check('ICS · VEVENT + RRULE:FREQ=DAILY', ('BEGIN:VEVENT' in ics) and ('RRULE:FREQ=DAILY' in ics) and ('END:VCALENDAR' in ics))
+    check('ICS · 매일 21시 시작 + 서울 시간대', ('DTSTART;TZID=Asia/Seoul:20261118T210000' in ics), ics.split('\r\n')[10:13])
+    check('ICS · CRLF 줄바꿈', ics.count('\r\n') >= 15 and ics.endswith('\r\n'))
+    check('ICS · 알람 포함', 'BEGIN:VALARM' in ics and 'TRIGGER:PT0M' in ics)
+    ctx.eval("LANG='en';")
+    ics_en = ctx.eval("buildReminderICS({hour:21,now:'2026-11-18T12:00:00+09:00'})")
+    ctx.eval("LANG='ko';")
+    check('ICS · EN 요약문', 'SUMMARY:Mind' in ics_en, ics_en.split('\r\n')[12:14])
+    check('ICS · 쉼표 이스케이프', ctx.eval("icsEsc('a,b;c')") == 'a\\,b\\;c')
 
     bad = [n for n, ok, _ in RESULTS if not ok]
     print('\n%d checks · %d failed' % (len(RESULTS), len(bad)))

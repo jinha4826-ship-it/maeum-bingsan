@@ -37,6 +37,7 @@ function patternCard(p,opts){
     +'<p class="quiet" style="margin:4px 0 0">'+esc(evidenceLine(p))+'</p>'
     +(opts.hideFb?'':feedbackRow(p))
     +'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록 보기','See the entries')+'</button>'
+    +pinBtnPattern(p)
     +'</div>';
 }
 function insightCard(icon,title,body,ids){
@@ -126,11 +127,11 @@ function renderMap(){
   html+='<p class="quiet" style="margin:6px 0 0">'+esc(a.note)+'</p>';
   html+='<div class="unlock" style="margin-top:12px"><div class="track"><i style="width:'+Math.min(100,Math.round(a.n/7*100))+'%"></i><u style="left:42.8%"></u></div><div class="marks"><span>0</span><span>'+tr('3 · 단서','3 · clue')+'</span><span>'+tr('7 · 패턴','7 · pattern')+'</span><span>'+tr('14 · 비교','14 · compare')+'</span></div></div></div>';
   html+='<div class="card"><div class="card-title">🗺 '+tr('내 빙하 지도','My glacier map')+'</div>';
-  html+='<p class="prompt">'+tr('층을 누르면 그 층을 만든 기록을 바로 볼 수 있어요. 수면 위에서 심해로 갈수록, 겉으로 드러나지 않았던 마음이에요.','Tap a layer to see the entries behind it. The deeper the layer, the less it was visible on the outside.')+'</p>';
+  html+='<p class="prompt">'+tr('층을 누르면 그 기록을 바로 볼 수 있어요.','Tap a layer to see the entries behind it.')+'</p>';
   html+='<button class="layer-band surface" onclick="openLayer(\'situation\')"><span class="lb-k">'+tr('수면 위','Above')+'</span><span class="lb-t"><b>'+tr('반복되는 상황','Repeating situations')+'</b><span class="lb-chips">'+chips('situation')+'</span></span><span class="lb-a">›</span></button>';
   html+='<button class="layer-band mid" onclick="openLayer(\'emotion\')"><span class="lb-k">'+tr('중간층','Middle')+'</span><span class="lb-t"><b>'+tr('반복되는 감정과 생각','Repeating feelings and thoughts')+'</b><span class="lb-chips">'+chips('emotion')+'</span></span><span class="lb-a">›</span></button>';
   html+='<button class="layer-band deep" onclick="openLayer(\'need\')"><span class="lb-k">'+tr('심해','Deep')+'</span><span class="lb-t"><b>'+tr('반복되는 욕구','Repeating wishes')+'</b><span class="lb-chips">'+chips('need')+'</span></span><span class="lb-a">›</span></button>';
-  html+='<p class="quiet" style="margin-top:11px">'+tr('이 지도는 기록을 세어 그린 그림이에요. 진단이나 성격 평가가 아니고, 기록을 고치거나 지우면 지도도 바로 다시 그려져요.','This map counts your entries and draws them. It is not a diagnosis or a personality assessment, and it redraws as soon as entries change.')+'</p></div>';
+  html+='<p class="quiet" style="margin-top:11px">'+tr('진단이 아니에요. 기록을 고치면 지도도 다시 그려져요.','Not a diagnosis. The map redraws when entries change.')+'</p></div>';
   var cards=[];
   a.active.slice(0,4).forEach(function(p){ cards.push(patternCard(p)); });
   a.crosses.slice(0,2).forEach(function(p){ if(cards.length<6) cards.push(patternCard(p)); });
@@ -214,7 +215,7 @@ function recordRows(arr,pat){
   arr.slice(0,40).forEach(function(r){
     var emo=emotionsOf(r).map(emotionLabel).join(' · ');
     var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ');
-    var sit=situationString(r);
+    var sit=situationDisplay(r);
     h+='<div class="entry" role="button" tabindex="0" data-open="'+r.id+'"><div class="entry-top"><span>'+esc(dstr(r.date))+'</span><span>'+tr('열어보기 ›','Open ›')+'</span></div>'
       +'<h3>'+(emo? esc(emo) : esc(tr('감정을 적지 않은 날','a day without a named feeling')))+'</h3>'
       +'<p>'+esc(cut(sit||nd||tr('나의 마음','my mind'),90))+'</p>'
@@ -234,7 +235,209 @@ function bindRecordRows(){
   }
 }
 
-/* ---------- 화면 ⑤ 리포트 ---------- */
+/* ---------- 화면 ⑤ 리포트 (v8 · 월간 4섹션 · 4단 구분) ---------- */
+var TIER_PINS={};
+function reportTools(){
+  return '<div class="report-tools">'
+    +'<button class="btn small" onclick="printReport()">📄 '+tr('상담·보관용 리포트 PDF 저장/인쇄','Save or print a PDF for counselling')+'</button>'
+    +'<button class="btn secondary small" onclick="show(\'archive\')">📚 '+tr('변화 기록 보관소','Change archive')+'</button></div>';
+}
+function secHead(num,title,sub){
+  return '<div class="sec-head"><span class="sec-num">'+num+'</span><div class="sec-tt"><b>'+esc(title)+'</b>'+(sub?'<span class="sec-sub">'+esc(sub)+'</span>':'')+'</div></div>';
+}
+function tierHTML(o){
+  o=o||{};
+  var st=o.id? stateOfId(o.id) : null;
+  var status=st? String(st.status||'') : '';
+  var h='<div class="tiers">';
+  h+='<div class="tier fact"><span class="tk">'+tr('① 관찰된 사실','① What the entries show')+'</span><div class="tv">'+(o.fact||'—')+'</div></div>';
+  h+='<div class="tier pat"><span class="tk">'+tr('② 반복 패턴','② Repeating pattern')+'</span><div class="tv">'+(o.pattern||'—')+'</div></div>';
+  h+='<div class="tier inf"><span class="tk">'+tr('③ 추론 가능성','③ A possible inference')+'</span><div class="tv">'+(o.inference||'—')+'</div></div>';
+  h+='<div class="tier cf"><span class="tk">'+tr('④ 확인이 필요해요','④ Needs your confirmation')+'</span><div class="tv">';
+  if(o.confirmable&&o.id){
+    h+='<div class="tier-fb">'
+      +'<button class="'+(status==='confirmed'?'on':'')+'" onclick="tierConfirm(\''+esc(o.id)+'\',\'confirmed\')">'+tr('맞아요','Fits')+'</button>'
+      +'<button class="'+(status==='partial'?'on':'')+'" onclick="tierConfirm(\''+esc(o.id)+'\',\'partial\')">'+tr('수정','Partly')+'</button>'
+      +'<button class="'+(status==='rejected'?'on':'')+'" onclick="tierConfirm(\''+esc(o.id)+'\',\'rejected\')">'+tr('제외','Leave out')+'</button>'
+      +'</div><p class="tier-note">'
+      +(status==='confirmed'? tr('확인했어요. 이 발견은 보관소와 PDF의 ‘확인한 발견’에 들어가요.','Confirmed — it goes into the archive and the PDF as a confirmed finding.')
+        : status==='partial'? tr('‘수정’으로 표시했어요. 내 문장으로 고쳐 보관소에 저장할 수 있어요.','Marked as partly. You can keep your own wording in the archive.')
+        : status==='rejected'? tr('제외했어요. 이 단서는 다시 띄우지 않고 PDF에도 넣지 않아요.','Left out — it will not be shown again or printed.')
+        : tr('맞는지 알려주면 확인한 발견으로 보관소와 PDF에 담아요.','Tell me whether it fits and it becomes a confirmed finding.')
+      )+'</p>';
+  }else{
+    h+='<p class="tier-note">'+(o.needNote||tr('이 단서는 아직 확인을 요청할 만큼 쌓이지 않았어요.','This clue has not gathered enough to ask you to confirm it.'))+'</p>';
+  }
+  if(o.pinKey) h+='<button class="btn ghost small pin-btn'+(isPinned('manual',o.pinKey)?' on':'')+'" onclick="pinTier(\''+esc(o.pinKey)+'\')">'+(isPinned('manual',o.pinKey)? '📌 '+tr('보관소에 저장됨 · 빼기','Kept · remove') : '📌 '+tr('변화 보관소에 저장','Save to the change archive'))+'</button>';
+  h+='</div></div></div>';
+  return h;
+}
+function tierConfirm(id,status){
+  var p=patternById(id);
+  if(p){ setPatternFeedback(id,status,p); }
+  else { setStateId(id,status); renderPatternUi(); }
+  toast(status==='rejected'? tr('이 단서는 다시 띄우지 않을게요','I will not show this clue again')
+    : status==='confirmed'? tr('확인한 발견으로 표시했어요','Marked as a confirmed finding')
+    : tr('‘수정’으로 표시했어요','Marked as partly'));
+}
+function pinTier(key){
+  var o=TIER_PINS[key]; if(!o) return;
+  var r=togglePinManual(key,o.title,o.sentence,o.evidence);
+  toast(r==='added'? tr('변화 보관소에 저장했어요','Saved to the change archive') : tr('보관소에서 뺐어요','Removed from the archive'));
+  renderPatternUi();
+}
+
+/* 01 · 반복되는 감정 */
+function section01HTML(a){
+  var n=a.n, list=a.list;
+  var emo=topItems('emotion',list).slice(0,3);
+  var bars=emo.map(function(x){
+    return '<div class="bar-row"><div class="bar-top"><span>'+esc(emotionLabel(x.key))+'</span><b>'+pctOf(x.count,n)+'% · '+tr(x.count+'건',''+x.count+'×')+'</b></div><div class="bar"><i style="width:'+Math.max(6,pctOf(x.count,n))+'%"></i></div></div>';
+  }).join('');
+  var top=emo[0]||null;
+  var rawPat=top? (a.patterns.filter(function(p){ return p.type==='emotion'&&p.key===top.key; })[0]||null) : null;
+  var pat=(rawPat&&!rawPat.hidden)? rawPat : null;
+  var nb=top? needsBehindEmotion(list,top.key) : null;
+  var fact, patternTxt, inferTxt, label=top? emotionLabel(top.key):'';
+  if(top){
+    fact=tr('이 기간 기록 '+n+'건 중 '+top.count+'건('+pctOf(top.count,n)+'%)에 ‘'+label+'’'+josa(label,'이','가')+' 적혔어요.'+(pat?' 서로 다른 '+pat.distinctDays+'일의 기록이에요.':''),
+            'Out of '+n+' entries, “'+label+'” appears in '+top.count+' ('+pctOf(top.count,n)+'%)'+(pat?' on '+pat.distinctDays+' different days':'')+'.');
+    patternTxt=(rawPat&&rawPat.hidden)
+      ? tr('이 단서는 ‘제외’로 표시되어 있어요. 아래 ④에서 다시 포함할 수 있어요.','This clue is marked as left out; you can include it again in ④ below.')
+      : ((pat&&pat.level!=='record')
+        ? '<span class="lv">'+esc(confidenceLabel(pat.level))+'</span> '+pat.sentence
+        : tr('아직 ‘반복’이라고 부를 만큼 쌓이지 않았어요. 같은 감정이 서로 다른 날 3건 이상 모이면 반복 단서로 보여드려요.','Not enough to call it a repeat yet. Three or more entries on different days and it becomes a clue.'));
+    inferTxt=(nb&&nb.top&&nb.top.count>=2)
+      ? tr('‘'+label+'’'+josa(label,'이','가')+' 적힌 '+nb.total+'건 중 '+nb.top.count+'건에 ‘'+needLabel(nb.top.key)+'’의 바람이 함께 있었어요. 이 감정이 올라올 때 그 바람도 같이 올라오는 것일 수 있어요. 다만 기록에 적힌 것만으로 만든 짐작이에요.','In '+nb.top.count+' of the '+nb.total+' entries with “'+label+'”, a wish for “'+needLabel(nb.top.key)+'” was written too. The two may rise together — a guess made only from what was written.')
+      : tr('지금 기록만으로는 이 감정 아래의 바람을 짐작하지 않았어요. 다음 기록에서 감정과 욕구를 함께 적으면 연결이 보여요.','No inference about the wish underneath is made yet. Writing a feeling and a wish together will show the link.');
+  }else{
+    fact=tr('이 기간에는 아직 감정을 적은 기록이 없어요.','No feelings were written in this period yet.');
+    patternTxt=tr('셀 것이 없으면 문장도 만들지 않아요.','Nothing to count, so nothing is claimed.');
+    inferTxt=tr('추론도 만들지 않았어요. 감정을 하나만 골라도 이 자리가 채워져요.','No inference either. Picking one feeling fills this space.');
+  }
+  if(top){
+    TIER_PINS['r01']={title:tr('반복되는 감정 · ','Repeating feeling · ')+label,
+      sentence:tr('이 기간 기록 '+n+'건 중 '+top.count+'건에 ‘'+label+'’'+josa(label,'이','가')+' 적혔어요.','Out of '+n+' entries, “'+label+'” appears in '+top.count+'.'),
+      evidence:(pat? plainText(evidenceLine(pat)) : '')};
+  }
+  return '<div class="card rep-sec">'+secHead('01',tr('반복되는 감정','Feelings that repeat'),tr('이 기간에 자주 올라온 감정','The feelings that came up most in this period'))
+    +(bars? '<div class="bars">'+bars+'</div>' : '')
+    +'<p class="quiet" style="margin:2px 0 9px">'+tr('비율은 이 기간 기록 '+n+'건을 분모로 계산했어요. 한 기록에서 감정을 여러 개 고를 수 있어서 합계가 100%를 넘을 수 있어요.','Each share uses the '+n+' entries in this period as the denominator. Several feelings can be picked in one entry, so the total can pass 100%.')+'</p>'
+    +tierHTML({id:rawPat?rawPat.id:'', fact:fact, pattern:patternTxt, inference:inferTxt, confirmable:!!rawPat, pinKey:top?'r01':''})
+    +'</div>';
+}
+
+/* 02 · 서로 다른 상황의 연결 */
+function section02HTML(a){
+  var crosses=a.crosses.slice(0,2);
+  var conns=a.connections.filter(function(p){ return !crosses.some(function(c){ return c.id===p.id; }); }).slice(0,2);
+  var h='<div class="card rep-sec">'+secHead('02',tr('서로 다른 상황의 연결','Links across different situations'),tr('장면은 달라도 같은 마음이 반복되는지','Whether the same feeling returns in different scenes'));
+  if(crosses.length){
+    crosses.forEach(function(p,i){
+      var sits=(p.situations||[]).map(sitCatLabel).join(' · ');
+      var fact=tr('상황이 ‘'+sits+'’처럼 서로 달랐던 기록 '+p.count+'건에서 ‘'+emotionLabel(p.emotion)+'’'+josa(emotionLabel(p.emotion),'과','와')+' ‘'+needLabel(p.need)+'’의 바람이 같은 기록에 함께 적혔어요. 서로 다른 '+p.distinctDays+'일이에요.',
+                  'In '+p.count+' entries whose situation differed ('+sits+'), “'+emotionLabel(p.emotion)+'” and a wish for “'+needLabel(p.need)+'” were written together — on '+p.distinctDays+' different days.');
+      var infer=tr('상황 자체보다 그 아래 ‘'+needLabel(p.need)+'’의 바람이 반복해서 올라오는 것일 수 있어요. 기록이 말해주는 것은 ‘다른 장면에서도 같은 감정이 올라왔다’까지예요.','What repeats may be the wish for “'+needLabel(p.need)+'” rather than the situation itself. The entries only say that the same feeling rose in different scenes.');
+      var key='r02_'+i;
+      TIER_PINS[key]={title:tr('상황을 가로지르는 반복','A repeat across situations'),sentence:plainText(p.sentence),evidence:plainText(evidenceLine(p))};
+      h+=tierHTML({id:p.id,fact:fact,pattern:p.sentence,inference:infer,confirmable:true,pinKey:key});
+    });
+  }else{
+    var g=a.list.length;
+    h+=tierHTML({id:'section|02',confirmable:false,
+      fact:tr('서로 다른 상황에서 같은 감정·욕구 조합이 반복된 기록은 아직 없어요. 이 기간 기록은 '+g+'건이에요.','No combination of feeling and wish has yet repeated across different situations. This period holds '+g+' entries.'),
+      pattern:tr('이 단서는 기록 3건 이상 · 서로 다른 3일 이상 · 서로 다른 상황 2가지 이상이 모일 때 만들어져요.','This clue appears with three or more entries, on three or more different days, across at least two different situations.'),
+      inference:tr('모자란 상태에서 추론을 만들지 않았어요.','No inference is made while the evidence is thin.'),
+      needNote:tr('필요한 기록이 쌓이면 이 자리에 보여드릴게요.','It will appear here once enough entries gather.')});
+  }
+  if(conns.length){
+    h+='<div class="sub-h">'+tr('같은 상황 안에서의 연결','Links inside one situation')+'</div>';
+    conns.forEach(function(p){
+      h+='<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence
+        +'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button>'
+        +'<button class="btn ghost small" style="margin-top:8px" onclick="togglePinPatternBtn(\''+esc(p.id)+'\')">'+(isPinned('pattern',p.id)?'📌 '+tr('저장됨','Kept'):'📌 '+tr('보관소에 저장','Keep'))+'</button></div>';
+    });
+  }
+  h+='</div>';
+  return h;
+}
+
+/* 03 · 욕구와 반응의 차이 */
+function section03HTML(a){
+  var mis=a.mismatches;
+  var gs=gapStats(a.list);
+  var h='<div class="card rep-sec">'+secHead('03',tr('욕구와 반응의 차이','The gap between wish and reaction'),tr('바라는 것과 실제로 나온 반응','What was wished for and what actually came out'));
+  var mRej=mis.length? stateOfId(mis[0].id) : null;
+  if(mis.length&&mRej&&mRej.status==='rejected'){
+    var m0=mis[0];
+    h+=tierHTML({id:m0.id,confirmable:true,
+      fact:tr('이 단서는 ‘제외’로 표시되어 있어요. 기록 자체는 그대로 남아 있어요.','This clue is marked as left out; the entries themselves stay.'),
+      pattern:tr('다시 포함하면 이 자리에 단서가 보여요.','Include it again and the clue returns here.'),
+      inference:'—',needNote:''});
+  }else if(mis.length){
+    var m=mis[0];
+    var fact=tr('연결을 바라는 욕구(인정·이해·관심·존중·표현·함께함)와 억제하는 반응(참기·회피)이 같은 기록에 함께 적힌 건 '+m.count+'건, 서로 다른 '+m.distinctDays+'일이에요.',
+                'Connection wishes (recognition, being understood, attention, respect, expression, togetherness) and suppressing reactions (holding it in, stepping away) appear together in '+m.count+' entries over '+m.distinctDays+' different days.');
+    var patternTxt=tr('그 기록들에서 가장 자주 나온 조합은 ‘'+needLabel(m.need)+'’의 바람과 ‘'+reactionLabel(m.reaction)+'’ 반응이에요.',
+                      'The most frequent pairing there is a wish for “'+needLabel(m.need)+'” with the reaction “'+reactionLabel(m.reaction)+'”.');
+    var infer=tr('바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않은지 스스로 물어볼 수 있어요. 단정하지 않고 질문으로만 남겨둘게요.','It may be worth asking yourself whether the wish and the way it comes out are moving in different directions. Kept as a question, not a conclusion.');
+    TIER_PINS['r03']={title:tr('욕구와 반응의 차이','Wish and reaction'),sentence:plainText(m.sentence),evidence:tr('근거 기록 '+m.count+'건 · 서로 다른 '+m.distinctDays+'일','')};
+    h+=tierHTML({id:m.id,fact:fact,pattern:patternTxt+' '+plainText(m.sentence),inference:infer,confirmable:true,pinKey:'r03'});
+  }else{
+    var fact2=gs.count
+      ? tr('연결 욕구와 억제 반응이 함께 적힌 기록은 '+gs.count+'건(서로 다른 '+gs.days+'일)이에요.','Connection wish and suppressing reaction appear together in '+gs.count+' entries ('+gs.days+' days).')
+      : tr('연결을 바라는 욕구와 억제 반응이 함께 적힌 기록이 아직 없어요.','No entry yet holds both a connection wish and a suppressing reaction.');
+    h+=tierHTML({id:'section|03',confirmable:false,fact:fact2,
+      pattern:tr('이 단서는 그런 기록이 3건 이상 · 서로 다른 3일 이상일 때 나타나요.','This clue appears with three or more such entries on three or more different days.'),
+      inference:tr('아직 질문을 만들지 않았어요.','No question is made yet.'),
+      needNote:tr('지금은 '+(gs.count>=3? '날짜가 모자라요. 서로 다른 3일이 필요해요.' : '한두 건 더 쌓이면 보여드릴 수 있어요.'),'')});
+  }
+  h+='</div>';
+  return h;
+}
+
+/* 04 · 지난달과 달라진 점 */
+function section04HTML(){
+  var cmp=periodComparison();
+  var h='<div class="card rep-sec">'+secHead('04',tr('지난달과 달라진 점','What changed from last month'),tr('최근 30일 vs 그 이전 30일','The last 30 days against the 30 before'));
+  if(!cmp.ok){
+    h+=tierHTML({id:'compare|none',confirmable:false,fact:cmp.note,
+      pattern:tr('비교할 두 시기가 없으면 ‘달라졌다’고 말하지 않아요.','Without two periods there is nothing to call changed.'),
+      inference:tr('추론을 만들지 않았어요.','No inference is made.'),
+      needNote:tr('기록이 2건 이상 모이면 이 자리에서 비교를 시작해요.','With two or more entries the comparison starts here.')});
+    h+='</div>'; return h;
+  }
+  var rows=cmp.topDiffs.slice(0,3).map(function(x){
+    var cls=x.dp>0?'up':(x.dp<0?'down':'');
+    var sign=(x.dp>0?'+':'')+x.dp+'%p';
+    return '<div class="delta-row"><span class="dk">'+esc(tr({emotion:'감정',need:'욕구',situation:'상황'}[x.kind]||'항목',
+      {emotion:'feeling',need:'wish',situation:'situation'}[x.kind]||'item'))+'</span><span class="dl2">'+esc(x.label)+'</span>'
+      +'<span class="dv">'+x.ap+'% → '+x.bp+'%</span><span class="dd '+cls+'">'+sign+'</span></div>';
+  }).join('');
+  var fact=periodFactSentence(cmp);
+  var patternTxt;
+  if(cmp.topDiffs.length&&Math.abs(cmp.topDiffs[0].dp)>=10){
+    patternTxt=tr('가장 크게 움직인 것은 '+deltaSentence(cmp.topDiffs[0])+'예요.','The biggest shift is '+deltaSentence(cmp.topDiffs[0])+'.');
+  }else{
+    patternTxt=tr('두 시기의 감정·욕구 구성이 비슷해요 — 같은 방식이 이어지고 있다는 뜻이에요.','The mix of feelings and wishes is much the same in both periods — the same way is continuing.');
+  }
+  var infer;
+  if(cmp.newcomers.length){
+    var nc=cmp.newcomers[0];
+    infer=tr('최근에 새로 나타난 ‘'+nc.label+'’('+nc.bCount+'건)은 그동안과 다른 신호일 수 있어요. 기간이 짧아 우연일 수도 있으니 다음 기록에서 한 번 더 살펴볼게요.','“'+nc.label+'” ('+nc.bCount+' entries) is new in the recent period and may be a different signal. With a short period it may be chance, so it is worth watching.');
+  }else if(cmp.mode==='half'){
+    infer=tr('30일 창을 채우지 못해 절반끼리 비교했어요. 달라진 것처럼 보여도 시기가 짧아 우연일 수 있어요.','The periods were split in half instead of 30-day windows, so a difference may still be chance.');
+  }else{
+    infer=tr('이 비교는 기간의 비중 차이를 보는 것이지 원인을 말하는 게 아니에요.','This compares proportions between periods — it does not say why.');
+  }
+  TIER_PINS['r04']={title:tr('지난달과 달라진 점','What changed from last month'),sentence:plainText(fact+' '+patternTxt),evidence:tr(cmp.labelBefore+' '+cmp.before.n+'건 · '+cmp.labelNow+' '+cmp.now.n+'건','')};
+  h+='<div class="delta-list">'+rows+'</div>'
+    +'<p class="quiet" style="margin:0 0 9px">'+tr('기간 비교는 ‘전체’ 기록으로 계산해요.','The period comparison uses all entries.')+'</p>'
+    +tierHTML({id:'compare|'+cmp.mode,fact:fact,pattern:patternTxt,inference:infer,confirmable:true,pinKey:'r04'});
+  h+='</div>';
+  return h;
+}
+
 function renderReport(){
   var el=document.getElementById('reportContent'); if(!el) return;
   var a=analyzePatterns(patternScope);
@@ -242,20 +445,18 @@ function renderReport(){
   var html='';
   html+=scopeToggle();
   html+='<div class="range">'+scopeLine(a)+'</div>';
+  html+=reportTools();
   if(!n){
-    html+='<div class="card"><div class="empty">'+tr('이 기간에는 기록이 없어요 🌷<br>리포트는 기록이 있어야 만들어져요. 없는 패턴은 지어내지 않아요.','No entries in this period 🌷<br>A report needs entries. Patterns are never invented.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
+    html+='<div class="card"><div class="empty">'+tr('이 기간에는 기록이 없어요 🌷<br>기록이 있어야 리포트가 만들어져요.','No entries in this period 🌷<br>A report needs entries.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 기록 남기기','☁️ Write an entry')+'</button></div>';
     html+=backupCardHTML();
     el.innerHTML=html; return;
   }
-  /* 감정 TOP 3 — 분모는 이 기간 전체 기록 수 */
-  var emo=topItems('emotion',a.list).slice(0,3);
-  var emoRows=emo.map(function(x){
-    return '<div class="bar-row"><div class="bar-top"><span>'+esc(emotionLabel(x.key))+'</span><b>'+pctOf(x.count,n)+'% · '+tr(x.count+'건',''+x.count+'×')+'</b></div><div class="bar"><i style="width:'+Math.max(6,pctOf(x.count,n))+'%"></i></div></div>';
-  }).join('');
-  html+='<div class="card"><div class="card-title">🌊 '+tr('감정 TOP 3','Top 3 feelings')+'</div>'
-    +(emo.length? emoRows : '<div class="empty" style="padding:14px 6px">'+tr('이 기간에는 아직 감정 기록이 없어요.','No feelings recorded in this period yet.')+'</div>')
-    +'<p class="quiet" style="margin-top:8px">'+tr('비율은 이 기간 기록 '+n+'건을 분모로 계산했어요. 한 기록에서 감정을 여러 개 고를 수 있어서 합계가 100%를 넘을 수 있어요.','Each share uses the '+n+' entries in this period as the denominator. Several feelings can be picked in one entry, so the total can pass 100%.')+'</p></div>';
-  /* 반복 상황 */
+  html+='<div class="card rep-head"><div class="card-title">✿ '+tr('월간 마음 패턴 리포트','Monthly mind pattern report')+' <span class="clue-badge" style="margin-left:auto">'+esc(a.levelLabel)+'</span></div>'
+    +'<p class="prompt" style="margin-bottom:6px">'+tr('① 사실 ② 패턴 ③ 추론 ④ 확인, 네 칸으로 봐요.','Four parts: ① fact ② pattern ③ inference ④ confirmation.')+'</p>'
+    +'<p class="quiet" style="margin:0">'+tr('분석한 기록 '+n+'건 · 서로 다른 '+distinctDaysOf(a.list).length+'일',''+n+' entries · '+distinctDaysOf(a.list).length+' different days')+'</p></div>';
+
+  html+=section01HTML(a);
+
   var sitPats=a.active.filter(function(p){return p.type==='situation';}).slice(0,3);
   html+='<div class="card"><div class="card-title">🗺 '+tr('반복되는 상황','Repeating situations')+'</div>';
   if(sitPats.length) html+=sitPats.map(function(p){ return '<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence+'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button></div>'; }).join('');
@@ -264,30 +465,22 @@ function renderReport(){
     html+='<p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+tr('아직 반복이라고 부를 수 있는 상황은 없어요. 가장 자주 적힌 상황은 ‘'+esc(o.label)+'’ 1건이에요.','No situation can be called repeating yet. The most frequent is “'+esc(o.label)+'”, a single entry.')+'</p>';
   }else html+='<p class="quiet" style="margin:0">'+tr('이 기간에는 상황을 적은 기록이 없어요.','No situations were written in this period.')+'</p>';
   html+='</div>';
-  /* 자주 표현된 욕구 */
   var needPats=a.active.filter(function(p){return p.type==='need';}).slice(0,3);
   html+='<div class="card"><div class="card-title">💧 '+tr('자주 표현된 욕구','Wishes that kept appearing')+'</div>';
   if(needPats.length) html+=needPats.map(function(p){ return '<div class="mini"><div class="k">'+esc(confidenceLabel(p.level))+' · '+esc(evidenceLine(p))+'</div>'+p.sentence+'<button class="btn secondary small" style="margin-top:8px" onclick="openPattern(\''+esc(p.id)+'\')">'+tr('근거 기록','Entries')+'</button></div>'; }).join('');
   else html+='<p class="quiet" style="margin:0">'+tr('욕구를 적은 기록이 아직 적어요. 다음 기록에서 감정 아래의 바람을 한두 개 골라보면 여기에 쌓여요.','Not many entries name a wish yet. Picking one or two under the feeling will gather here.')+'</p>';
   html+='</div>';
-  /* 연결 패턴 · 인사이트 */
-  var links=a.connections.slice(0,2);
-  var cross=a.crosses.filter(function(p){ return !links.some(function(q){return q.id===p.id}); }).slice(0,1);
-  var insightCards=[];
-  links.forEach(function(p){ insightCards.push(patternCard(p)); });
-  cross.forEach(function(p){ insightCards.push(patternCard(p)); });
-  a.mismatches.forEach(function(m){ insightCards.push(insightCard('❓',tr('바라는 것과 반응','wish and reaction'),m.sentence,m.evidenceIds)); });
-  a.blindSpots.forEach(function(b){ insightCards.push(insightCard('🫧',tr('아직 비어 있는 자리','a space not yet named'),b.sentence,null)); });
-  if(insightCards.length){
-    html+='<div class="card"><div class="card-title">✧ '+tr('연결해서 본 단서','Links between entries')+'</div><p class="prompt">'+tr('한 기록 안의 사실만으로 만든 관찰이에요. 진단이 아니고, 맞지 않으면 알려주세요.','These are observations built only from what is in the entries. Not a diagnosis — tell me if they do not fit.')+'</p>'+insightCards.join('')+'</div>';
-  }
-  /* 변화 흐름 — 전체 범위에서만 */
+
+  html+=section02HTML(a);
+  html+=section03HTML(a);
+  html+=section04HTML();
+
   if(patternScope==='all'){
-    html+=changeFlowHTML();
+    html+='<details class="legacy-ref"><summary>🕰 '+tr('이전 참고 보기 · 방어기제 변화','Earlier reference · defence shift')+'</summary>'+changeFlowHTML()+'</details>';
   }else{
     html+='<div class="card"><div class="card-title">🌊 '+tr('나의 변화 흐름','How I am shifting')+' <span class="bubble" style="margin-left:auto">'+tr('전체에서 볼 수 있어요','in All')+'</span></div><p class="quiet" style="margin:0">'+tr('변화 흐름은 기간을 나눠 비교하기 때문에 ‘전체’ 보기에서 보여드려요.','The change flow compares periods, so it appears in the “All” view.')+'</p><button class="btn secondary small" style="margin-top:9px" onclick="setScope(\'all\')">'+tr('전체 보기로','Switch to All')+'</button></div>';
   }
-  /* 다음 달 질문 */
+  var emo=topItems('emotion',a.list).slice(0,3);
   var topEmo=emo[0]?emo[0].key:'';
   var topNeed=needPats[0]?needPats[0].key:'';
   var q;
@@ -299,10 +492,17 @@ function renderReport(){
               : '다음 달에는 평범한 날에도 ‘내가 원했던 것’을 한 문장으로 남겨볼까요?';
   }
   html+='<div class="card"><div class="card-title">✦ '+tr('다음 달 질문','A question for next month')+'</div><div class="qbox">'+esc(q)+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 정해두지 않아도 돼요. 기록하다 보면 자연스럽게 답이 보여요.','You don’t have to answer it now. It tends to answer itself as you write.')+'</p></div>';
-  html+='<p class="quiet" style="padding:0 4px">'+tr('이 리포트는 기록을 세고 정리한 것이에요. 진단이나 심리 평가가 아니고, 기록이 바뀌면 숫자도 바로 바뀌어요.','This report counts and arranges your entries. It is not a diagnosis or an assessment, and the numbers change as soon as entries do.')+'</p>';
+
+  var pins=pinList();
+  html+='<div class="card"><div class="card-title">📚 '+tr('나의 변화 기록 보관소','My change archive')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개 저장','')+'</span></div>'
+    +'<p class="prompt">'+tr('30일 전의 나와 지금의 나를 견주고, 내가 의미 있다고 느낀 발견을 모아둘 수 있어요. 리포트나 오늘의 발견에서 ‘📌 변화 보관소에 저장’을 누르면 여기 쌓여요.','Compare the me of 30 days ago with now, and keep the findings you found meaningful. Tap “📌 Save to the change archive” on a report clue or today’s discovery and it gathers here.')+'</p>'
+    +'<button class="btn secondary small" onclick="show(\'archive\')">'+tr('보관소 열기','Open the archive')+'</button></div>';
+
+  html+='<p class="quiet" style="padding:0 4px">'+tr('기록을 세어 정리한 리포트예요. 진단이 아니에요.','A report that counts your entries — not a diagnosis.')+'</p>';
   html+=backupCardHTML();
   el.innerHTML=html;
 }
+
 function backupCardHTML(){
   return '<div class="card"><div class="card-title">📦 '+tr('기록 백업','Backup')+'</div><p class="prompt">'+tr('기록은 이 기기 브라우저에만 저장돼요. JSON으로 내려받아 두면 기기를 바꾸거나 브라우저 데이터를 지워도 다시 불러올 수 있어요. 예전 버전에서 내보낸 파일도 그대로 불러와요.','Entries live only in this browser. A JSON copy brings them back after changing devices or clearing data, and files exported by earlier versions still import.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('내보내기','Export')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('가져오기','Import')+'</button></div></div>';
 }
@@ -311,7 +511,7 @@ function backupCardHTML(){
 function cardHTML(r){
   var emo=emotionsOf(r).map(emotionLabel).join(' · ');
   var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ');
-  var sit=situationString(r);
+  var sit=situationDisplay(r);
   var rej=recordRejected(r)? ' · '+tr('분석 제외','excluded') : '';
   return '<div class="entry" role="button" tabindex="0" data-open="'+r.id+'"><div class="entry-top"><span>'+esc(dstr(r.date))+rej+'</span><span>'+tr('열어보기 ›','Open ›')+'</span></div>'
     +'<h3>'+esc(emo||sit||tr('오늘의 마음 기록','Today’s entry'))+'</h3>'
@@ -321,7 +521,7 @@ function openDetail(id){
   var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
   detailId=id;
   var rows=[
-    [tr('상황','Situation'),situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):''),tr('아직 적지 않았어요.','Not written yet.')],
+    [tr('상황','Situation'),situationDisplay(r),tr('아직 적지 않았어요.','Not written yet.')],
     [tr('감정','Feelings'),emotionsOf(r).map(emotionLabel).join(' · '),tr('아직 고르지 않았어요.','Nothing picked yet.')],
     [tr('몸과 마음의 반응','Body and mind'),reactionsOf(r).map(reactionLabel).join(' · '),tr('아직 적지 않았어요.','Not written yet.')],
     [tr('떠오른 생각','Thought'),thoughtsOf(r),tr('아직 적지 않았어요.','Not written yet.')],
@@ -343,7 +543,7 @@ function openDetail(id){
 /* ---------- AI 분석 카드 상단 (오늘 + 과거 연결 + 질문) ---------- */
 function patternTopHTML(r){
   var emo=emotionsOf(r).map(emotionLabel).join(' · ')||tr('감정 없음','no feeling');
-  var sit=situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):'')||tr('상황 없음','no situation');
+  var sit=situationDisplay(r)||tr('상황 없음','no situation');
   var nd=needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · ')||tr('아직 모름','not sure yet');
   var a=analyzePatterns('all');
   var mine=null;
