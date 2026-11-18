@@ -4870,8 +4870,25 @@ function tierConfirm(id,status){
 }
 function pinTier(key){
   var o=TIER_PINS[key]; if(!o) return;
-  var r=togglePinManual(key,o.title,o.sentence,o.evidence);
-  toast(r==='added'? tr('변화 보관소에 저장했어요','Saved to the change archive') : tr('보관소에서 뺐어요','Removed from the archive'));
+  var pid=pinKey('manual',key);
+  if(pinFind(pid)){
+    removePin(pid);
+    toast(tr('보관소에서 뺐어요','Removed from the archive'));
+    renderPatternUi(); return;
+  }
+  /* EN 화면에서도 한국어가 남지 않도록 두 언어 문장을 함께 담아둔다 */
+  var en=null;
+  if(!isEN()){
+    var prev=LANG; LANG='en';
+    try{ var a=analyzePatterns('all'); section01HTML(a); section02HTML(a); section03HTML(a); section04HTML(); }catch(e){}
+    LANG=prev;
+    var eo=TIER_PINS[key];
+    if(eo) en={title:eo.title,sentence:eo.sentence,evidence:eo.evidence};
+  }
+  var d=pinManualData(key,o.title,o.sentence,o.evidence);
+  if(en){ d.titleEn=en.title; d.sentenceEn=en.sentence; d.evidenceEn=en.evidence; }
+  addPin(d);
+  toast(tr('변화 보관소에 저장했어요','Saved to the change archive'));
   renderPatternUi();
 }
 
@@ -5263,6 +5280,8 @@ function pinView(p){
   var o={title:p.title||'',sentence:p.sentence||'',evidence:p.evidence||'',kind:p.kind,refId:p.refId,pid:p.pid,at:p.at};
   if(isEN()){
     if(p.titleEn) o.title=p.titleEn;
+    if(p.sentenceEn) o.sentence=p.sentenceEn;
+    if(p.evidenceEn) o.evidence=p.evidenceEn;
     if(p.kind==='pattern'){
       var pat=patternById(p.refId);
       if(pat){ o.sentence=pat.sentence; o.evidence=evidenceLine(pat); }

@@ -102,6 +102,8 @@ function pinView(p){
   var o={title:p.title||'',sentence:p.sentence||'',evidence:p.evidence||'',kind:p.kind,refId:p.refId,pid:p.pid,at:p.at};
   if(isEN()){
     if(p.titleEn) o.title=p.titleEn;
+    if(p.sentenceEn) o.sentence=p.sentenceEn;
+    if(p.evidenceEn) o.evidence=p.evidenceEn;
     if(p.kind==='pattern'){
       var pat=patternById(p.refId);
       if(pat){ o.sentence=pat.sentence; o.evidence=evidenceLine(pat); }
