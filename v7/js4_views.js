@@ -321,17 +321,17 @@ function openDetail(id){
   var r=records.filter(function(x){return x.id===id})[0]; if(!r) return;
   detailId=id;
   var rows=[
-    [tr('상황','Situation'),situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):'')],
-    [tr('감정','Feelings'),emotionsOf(r).map(emotionLabel).join(' · ')],
-    [tr('몸과 마음의 반응','Body and mind'),reactionsOf(r).map(reactionLabel).join(' · ')],
-    [tr('떠오른 생각','Thought'),thoughtsOf(r)],
-    [tr('내가 원했던 것 (욕구)','What I wanted'),needsOf(r).map(needLabel).join(' · ')],
-    [tr('한 문장','One sentence'),sentenceOf(r)]
+    [tr('상황','Situation'),situationString(r)||(sitCatOf(r)?sitCatLabel(sitCatOf(r)):''),tr('아직 적지 않았어요.','Not written yet.')],
+    [tr('감정','Feelings'),emotionsOf(r).map(emotionLabel).join(' · '),tr('아직 고르지 않았어요.','Nothing picked yet.')],
+    [tr('몸과 마음의 반응','Body and mind'),reactionsOf(r).map(reactionLabel).join(' · '),tr('아직 적지 않았어요.','Not written yet.')],
+    [tr('떠오른 생각','Thought'),thoughtsOf(r),tr('아직 적지 않았어요.','Not written yet.')],
+    [tr('내가 원했던 것 (욕구)','What I wanted'),needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel).join(' · '),tr('아직 잘 모르겠어요.','Not sure yet.')],
+    [tr('한 문장','One sentence'),sentenceOf(r),tr('아직 적지 않았어요.','Not written yet.')]
   ];
   var fb=analysisOf(r).userFeedback;
   document.getElementById('detailContent').innerHTML='<div class="hero"><div class="eyebrow">'+esc(dstr(r.date))+'</div><h2>'+tr('오늘의 마음 기록 ♡','Today’s entry ♡')+'</h2></div>'
     +'<div class="card">'+rows.map(function(pair){
-      return '<div class="detail-label">'+pair[0]+'</div><div class="detail-text">'+esc(pair[1]||tr('아직 적지 않았어요.','Not written yet.'))+'</div>';
+      return '<div class="detail-label">'+pair[0]+'</div><div class="detail-text">'+esc(pair[1]||pair[2]||tr('아직 적지 않았어요.','Not written yet.'))+'</div>';
     }).join('')
     +(fb?'<div class="detail-label">'+tr('해석 피드백','Reading feedback')+'</div><div class="detail-text">'+esc(fb==='rejected'?tr('내 마음과 달라요 · 패턴 분석에서 제외','Not like me · excluded from patterns'):(fb==='partial'?tr('일부 달라요','partly different'):tr('맞아요','fits')))+'</div>':'')
     +'</div>'

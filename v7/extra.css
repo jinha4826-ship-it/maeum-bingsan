@@ -31,3 +31,6 @@
 .prio-h{font-size:10.5px;font-weight:850;letter-spacing:.5px;color:#9a7fb8;margin-bottom:7px}
 .prio .chips{gap:6px}
 .prio .qbox{background:#fffdfa;border:1px solid #e6dcf0}
+.layer-band .lb-chips .tag{white-space:nowrap;display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-size:10.5px;background:#fff;border:1px solid #ecdfc8;color:#6a5a78;border-radius:999px}
+.layer-band.mid .lb-chips .tag{border-color:#e2d7ec;color:#5f4c78}
+.layer-band.deep .lb-chips .tag{border-color:#c9b8dd;background:#f8f3fd;color:#4f3f66}
