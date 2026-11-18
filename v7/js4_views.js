@@ -447,7 +447,7 @@ function section04HTML(){
   }else{
     infer=tr('이 비교는 기간의 비중 차이를 보는 것이지 원인을 말하는 게 아니에요.','This compares proportions between periods — it does not say why.');
   }
-  TIER_PINS['r04']={title:tr('지난달과 달라진 점','What changed from last month'),sentence:plainText(fact+' '+patternTxt),evidence:tr(cmp.labelBefore+' '+cmp.before.n+'건 · '+cmp.labelNow+' '+cmp.now.n+'건','')};
+  TIER_PINS['r04']={title:tr('지난달과 달라진 점','What changed from last month'),sentence:plainText(fact+' '+patternTxt),evidence:tr(cmp.labelBefore+' '+cmp.before.n+'건 · '+cmp.labelNow+' '+cmp.now.n+'건',cmp.labelBefore+' '+cmp.before.n+' · '+cmp.labelNow+' '+cmp.now.n)};
   h+='<div class="delta-list">'+rows+'</div>'
     +'<p class="quiet" style="margin:0 0 9px">'+tr('기간 비교는 ‘전체’ 기록으로 계산해요.','The period comparison uses all entries.')+'</p>'
     +tierHTML({id:'compare|'+cmp.mode,fact:fact,pattern:patternTxt,inference:infer,confirmable:true,pinKey:'r04'});
