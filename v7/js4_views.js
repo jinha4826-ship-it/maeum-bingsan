@@ -494,7 +494,7 @@ function renderReport(){
   html+='<div class="card"><div class="card-title">✦ '+tr('다음 달 질문','A question for next month')+'</div><div class="qbox">'+esc(q)+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 정해두지 않아도 돼요. 기록하다 보면 자연스럽게 답이 보여요.','You don’t have to answer it now. It tends to answer itself as you write.')+'</p></div>';
 
   var pins=pinList();
-  html+='<div class="card"><div class="card-title">📚 '+tr('나의 변화 기록 보관소','My change archive')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개 저장','')+'</span></div>'
+  html+='<div class="card"><div class="card-title">📚 '+tr('나의 변화 기록 보관소','My change archive')+' <span class="clue-badge" style="margin-left:auto">'+tr(pins.length+'개 저장',pins.length+' kept')+'</span></div>'
     +'<p class="prompt">'+tr('30일 전의 나와 지금의 나를 견주고, 내가 의미 있다고 느낀 발견을 모아둘 수 있어요. 리포트나 오늘의 발견에서 ‘📌 변화 보관소에 저장’을 누르면 여기 쌓여요.','Compare the me of 30 days ago with now, and keep the findings you found meaningful. Tap “📌 Save to the change archive” on a report clue or today’s discovery and it gathers here.')+'</p>'
     +'<button class="btn secondary small" onclick="show(\'archive\')">'+tr('보관소 열기','Open the archive')+'</button></div>';
 

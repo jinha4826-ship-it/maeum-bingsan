@@ -98,8 +98,20 @@ function archiveShiftHTML(shift){
   h+='</div>';
   return h;
 }
-function archivePinsHTML(pins){
-  var h='<div class="card"><div class="card-title">📌 '+tr('내가 직접 고른 발견','Findings I chose to keep')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개','')+'</span></div>';
+function pinView(p){
+  var o={title:p.title||'',sentence:p.sentence||'',evidence:p.evidence||'',kind:p.kind,refId:p.refId,pid:p.pid,at:p.at};
+  if(isEN()){
+    if(p.titleEn) o.title=p.titleEn;
+    if(p.kind==='pattern'){
+      var pat=patternById(p.refId);
+      if(pat){ o.sentence=pat.sentence; o.evidence=evidenceLine(pat); }
+    }
+  }
+  return o;
+}
+function archivePinsHTML(pinsRaw){
+  var pins=pinsRaw.map(pinView);
+  var h='<div class="card"><div class="card-title">📌 '+tr('내가 직접 고른 발견','Findings I chose to keep')+' <span class="clue-badge" style="margin-left:auto">'+tr(pins.length+'개',pins.length+' kept')+'</span></div>';
   if(!pins.length){
     h+='<div class="empty">'+tr('아직 저장한 발견이 없어요.<br>리포트의 단서나 ‘오늘의 마음 발견’에서 <b>📌 변화 보관소에 저장</b>을 누르면 여기에 모여요.','Nothing kept yet.<br>Tap <b>📌 Save to the change archive</b> on a report clue or in today’s discovery and it gathers here.')+'</div></div>';
     return h;
@@ -139,7 +151,7 @@ function buildPrintReport(){
   var d=new Date();
   var sorted=cleanRecordList();
   var h='<div class="pr">';
-  h+='<div class="pr-head"><div class="pr-brand">🧊 '+tr('마음의 빙산','Mind’s Iceberg')+'</div>'
+  h+='<div class="pr-head"><div class="pr-brand">'+tr('마음의 빙산 · Mind’s Iceberg','Mind’s Iceberg')+'</div>'
     +'<h1>'+tr('월간 마음 패턴 리포트','Monthly mind pattern report')+'</h1>'
     +'<div class="pr-meta">'+tr('기간','Period')+' '+esc(n? dstr(sorted[sorted.length-1].date)+' – '+dstr(sorted[0].date) : '—')
     +' · '+tr('기록','entries')+' '+n+' · '+tr('서로 다른 날','days')+' '+distinctDaysOf(a.list).length
@@ -159,7 +171,7 @@ function buildPrintReport(){
     if(pat&&pat.hidden) pat=null;
     var nb=needsBehindEmotion(a.list,top.key);
     h+=printBlock(tr('① 사실','① Fact'), esc(tr('기록 '+n+'건 중 '+top.count+'건('+pctOf(top.count,n)+'%)에 ‘'+emotionLabel(top.key)+'’이 적혔어요.','“'+emotionLabel(top.key)+'” appears in '+top.count+' of '+n+' entries ('+pctOf(top.count,n)+'%).')));
-    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc((pat&&pat.level!=='record')? confidenceLabel(pat.level)+' · '+plainText(pat.sentence) : tr('아직 반복이라고 부를 만큼 쌓이지 않았어요.','Not enough to call it a repeat yet.')));
+    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc((pat&&pat.level!=='record')? plainText(pat.sentence) : tr('아직 반복이라고 부를 만큼 쌓이지 않았어요.','Not enough to call it a repeat yet.')));
     h+=printBlock(tr('③ 추론','③ Inference'), (nb&&nb.top&&nb.top.count>=2)? esc(tr('‘'+emotionLabel(top.key)+'’이 적힌 '+nb.total+'건 중 '+nb.top.count+'건에 ‘'+needLabel(nb.top.key)+'’의 바람이 함께 있었어요. 짐작이며 틀릴 수 있어요.','In '+nb.top.count+' of '+nb.total+' entries with that feeling, a wish for “'+needLabel(nb.top.key)+'” was written too. A guess; it may be wrong.')) : esc(tr('추론을 만들지 않았어요.','No inference was made.')));
     h+=printBlock(tr('④ 확인','④ Confirmation'), esc(printStatusOf(pat?pat.id:'')));
   }else{
@@ -224,7 +236,7 @@ function buildPrintReport(){
     if(confirmed.length) confirmed.forEach(function(p){
       h+='<p class="pr-line">· '+esc(itemLabel(p.type,p.key))+' — '+esc(plainText(p.sentence))+'</p>';
     });
-    pins.forEach(function(p){
+    pins.map(pinView).forEach(function(p){
       h+='<p class="pr-line">📌 '+esc(p.title||'')+' — '+esc(p.sentence||'')+(p.evidence?' <span class="pr-dim">('+esc(p.evidence)+')</span>':'')+'</p>';
     });
   }

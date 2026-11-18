@@ -1,0 +1,477 @@
+{
+ "app": "maeum-bingsan",
+ "version": 3,
+ "exportedAt": "2026-11-18T16:00:25.530632",
+ "count": 14,
+ "records": [
+  {
+   "id": 201,
+   "date": "2026-11-18T22:00:00",
+   "situation": "사람과의 일",
+   "situationCategory": "관계",
+   "emotions": [
+    "답답함"
+   ],
+   "feeling": [
+    "답답함"
+   ],
+   "needs": [],
+   "need": [],
+   "reactions": [
+    "가슴이 답답해요",
+    "괜찮은 척했어요"
+   ],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "tap",
+   "schema": 3
+  },
+  {
+   "id": 101,
+   "date": "2026-10-04T21:00:00",
+   "situation": "회의에서 내 의견이 묻혔다",
+   "situationCategory": "일·업무",
+   "emotions": [
+    "화남"
+   ],
+   "feeling": [
+    "화남"
+   ],
+   "needs": [
+    "인정"
+   ],
+   "need": [
+    "인정"
+   ],
+   "reactions": [
+    "다른 일로 바빴다"
+   ],
+   "thoughts": "또 내 말은 사라졌다.",
+   "other": "",
+   "selfExpression": "또 내 말은 사라졌다.",
+   "action": "또 내 말은 사라졌다.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 102,
+   "date": "2026-10-05T21:00:00",
+   "situation": "보고를 혼자 다 했다",
+   "situationCategory": "일·업무",
+   "emotions": [
+    "화남",
+    "서운함"
+   ],
+   "feeling": [
+    "화남",
+    "서운함"
+   ],
+   "needs": [
+    "인정"
+   ],
+   "need": [
+    "인정"
+   ],
+   "reactions": [
+    "다른 일로 바빴다"
+   ],
+   "thoughts": "내가 다 해야 하나.",
+   "other": "",
+   "selfExpression": "내가 다 해야 하나.",
+   "action": "내가 다 해야 하나.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 103,
+   "date": "2026-10-06T21:00:00",
+   "situation": "야근이 사흘째",
+   "situationCategory": "일·업무",
+   "emotions": [
+    "지침"
+   ],
+   "feeling": [
+    "지침"
+   ],
+   "needs": [
+    "혼자만의 시간"
+   ],
+   "need": [
+    "혼자만의 시간"
+   ],
+   "reactions": [
+    "잠이 오지 않았다"
+   ],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 104,
+   "date": "2026-10-11T21:00:00",
+   "situation": "친구가 내 이야기를 끊었다",
+   "situationCategory": "관계",
+   "emotions": [
+    "서운함"
+   ],
+   "feeling": [
+    "서운함"
+   ],
+   "needs": [
+    "이해"
+   ],
+   "need": [
+    "이해"
+   ],
+   "reactions": [
+    "웃으며 넘겼다"
+   ],
+   "thoughts": "괜찮은 척했다.",
+   "other": "",
+   "selfExpression": "괜찮은 척했다.",
+   "action": "괜찮은 척했다.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 105,
+   "date": "2026-10-13T21:00:00",
+   "situation": "카드 결제가 계속 실패했다",
+   "situationCategory": "돈·생활",
+   "emotions": [
+    "불안함"
+   ],
+   "feeling": [
+    "불안함"
+   ],
+   "needs": [
+    "안정감"
+   ],
+   "need": [
+    "안정감"
+   ],
+   "reactions": [
+    "몸이 굳었다"
+   ],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 111,
+   "date": "2026-11-09T21:00:00",
+   "situation": "회의에서 말을 자르셨다",
+   "situationCategory": "일·업무",
+   "emotions": [
+    "서운함"
+   ],
+   "feeling": [
+    "서운함"
+   ],
+   "needs": [
+    "이해"
+   ],
+   "need": [
+    "이해"
+   ],
+   "reactions": [
+    "괜찮은 척했어요"
+   ],
+   "thoughts": "아무 말도 못 했다.",
+   "other": "",
+   "selfExpression": "아무 말도 못 했다.",
+   "action": "아무 말도 못 했다.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 112,
+   "date": "2026-11-11T21:00:00",
+   "situation": "친구가 연락을 씹었다",
+   "situationCategory": "관계",
+   "emotions": [
+    "서운함"
+   ],
+   "feeling": [
+    "서운함"
+   ],
+   "needs": [
+    "이해"
+   ],
+   "need": [
+    "이해"
+   ],
+   "reactions": [
+    "말을 못 하고 삼켰다"
+   ],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 113,
+   "date": "2026-11-13T21:00:00",
+   "situation": "엄마가 내 얘기를 안 들었다",
+   "situationCategory": "가족",
+   "emotions": [
+    "서운함"
+   ],
+   "feeling": [
+    "서운함"
+   ],
+   "needs": [
+    "이해"
+   ],
+   "need": [
+    "이해"
+   ],
+   "reactions": [
+    "괜찮은 척했어요"
+   ],
+   "thoughts": "또 넘겼다.",
+   "other": "",
+   "selfExpression": "또 넘겼다.",
+   "action": "또 넘겼다.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 114,
+   "date": "2026-11-14T21:00:00",
+   "situation": "해야 할 일이 계속 맴돌았다",
+   "situationCategory": "공부·시험",
+   "emotions": [
+    "답답함",
+    "지침"
+   ],
+   "feeling": [
+    "답답함",
+    "지침"
+   ],
+   "needs": [
+    "혼자만의 시간"
+   ],
+   "need": [
+    "혼자만의 시간"
+   ],
+   "reactions": [
+    "잠이 오지 않았다"
+   ],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 115,
+   "date": "2026-11-15T21:00:00",
+   "situation": "팀장이 내 아이디어를 자기 것처럼 말했다",
+   "situationCategory": "일·업무",
+   "emotions": [
+    "서운함"
+   ],
+   "feeling": [
+    "서운함"
+   ],
+   "needs": [
+    "이해"
+   ],
+   "need": [
+    "이해"
+   ],
+   "reactions": [
+    "괜찮은 척했어요"
+   ],
+   "thoughts": "자리에서 웃기만 했다.",
+   "other": "",
+   "selfExpression": "자리에서 웃기만 했다.",
+   "action": "자리에서 웃기만 했다.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 116,
+   "date": "2026-11-16T21:00:00",
+   "situation": "오랜만에 친구와 밥을 먹었다",
+   "situationCategory": "관계",
+   "emotions": [
+    "편안함"
+   ],
+   "feeling": [
+    "편안함"
+   ],
+   "needs": [
+    "관심"
+   ],
+   "need": [
+    "관심"
+   ],
+   "reactions": [],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 117,
+   "date": "2026-11-17T21:00:00",
+   "situation": "하고 싶은 말을 또 삼켰다",
+   "situationCategory": "관계",
+   "emotions": [
+    "답답함"
+   ],
+   "feeling": [
+    "답답함"
+   ],
+   "needs": [
+    "표현"
+   ],
+   "need": [
+    "표현"
+   ],
+   "reactions": [
+    "말을 못 하고 삼켰다"
+   ],
+   "thoughts": "다음엔 말해보자.",
+   "other": "",
+   "selfExpression": "다음엔 말해보자.",
+   "action": "다음엔 말해보자.",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  },
+  {
+   "id": 118,
+   "date": "2026-11-18T21:00:00",
+   "situation": "내일 발표가 걱정된다",
+   "situationCategory": "일·업무",
+   "emotions": [
+    "불안함"
+   ],
+   "feeling": [
+    "불안함"
+   ],
+   "needs": [
+    "안정감"
+   ],
+   "need": [
+    "안정감"
+   ],
+   "reactions": [
+    "가슴이 답답했다"
+   ],
+   "thoughts": "",
+   "other": "",
+   "selfExpression": "",
+   "action": "",
+   "analysis": {
+    "confirmed": null,
+    "userFeedback": "",
+    "at": ""
+   },
+   "source": "step",
+   "schema": 3
+  }
+ ],
+ "archive": [
+  {
+   "pid": "pattern::emotion|서운함",
+   "kind": "pattern",
+   "refId": "emotion|서운함",
+   "at": "2026-11-15T20:00:00",
+   "title": "반복되는 감정 · 서운함",
+   "sentence": "최근 기록 13건 중 6건에서 ‘서운함’이 올라왔어요. 서로 다른 5일의 기록이에요.",
+   "evidence": "근거 기록 6건 · 서로 다른 5일",
+   "meta": {}
+  },
+  {
+   "pid": "manual::r04",
+   "kind": "manual",
+   "refId": "r04",
+   "at": "2026-11-16T20:00:00",
+   "title": "지난달과 달라진 점",
+   "sentence": "최근 30일 기록 9건, 그 이전 30일 5건. ‘서운함’ 0% → 56%(+56%p).",
+   "evidence": "그 이전 30일 5건 · 최근 30일 9건",
+   "meta": {}
+  }
+ ]
+}

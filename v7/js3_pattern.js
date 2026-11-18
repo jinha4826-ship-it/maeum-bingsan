@@ -260,7 +260,7 @@ function mismatchInsights(list){
   var reaTop=Object.keys(reaC).sort(function(a,b){return reaC[b]-reaC[a]})[0]||'';
   var q=isEN()
     ? 'In '+ev.length+' entries (over '+days.length+' days) the wish was for “'+needLabel(needTop)+'”, while the reaction written down was “'+reactionLabel(reaTop)+'”. Might what you wish for and how it comes out be moving in different directions?'
-    : '원하는 마음은 ‘'+needLabel(needTop)+'’인데, 실제 반응은 ‘'+reactionLabel(reaTop)+'’으로 이어진 기록이 '+ev.length+'건(서로 다른 '+days.length+'일) 있어요. 바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않나요?';
+    : '원하는 마음은 ‘'+needLabel(needTop)+'’인데, 실제 반응은 ‘'+reactionLabel(reaTop)+'’'+josa(reactionLabel(reaTop),'으로','로')+' 이어진 기록이 '+ev.length+'건(서로 다른 '+days.length+'일) 있어요. 바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않나요?';
   return [{id:'mismatch|'+needTop+'|'+reaTop,type:'mismatch',need:needTop,reaction:reaTop,count:ev.length,distinctDays:days.length,evidenceIds:ev.map(idOf),sentence:q}];
 }
 
@@ -387,7 +387,7 @@ function periodComparison(){
   var A=aggPeriod(earlier), B=aggPeriod(recent);
   if(mode==='m30'){
     labelNow = isEN()? 'last 30 days' : '최근 30일';
-    labelBefore = isEN()? 'the 30 days before' : '그 이전 30일';
+    labelBefore = isEN()? 'previous 30 days' : '그 이전 30일';
   }else if(mode==='half'){
     labelNow = isEN()? 'recent half' : '최근 절반';
     labelBefore = isEN()? 'earlier half' : '이전 절반';
@@ -418,8 +418,8 @@ function periodComparison(){
 function periodFactSentence(cmp){
   if(!cmp||cmp.mode==='none') return cmp? cmp.note : '';
   if(isEN()){
-    var s='The '+cmp.labelNow+' holds '+cmp.now.n+' entr'+(cmp.now.n===1?'y':'ies')+' over '+cmp.now.days+' day'+(cmp.now.days===1?'':'s')
-      +', the '+cmp.labelBefore+' '+cmp.before.n+' over '+cmp.before.days+'.';
+    var s='The '+cmp.labelNow+' hold'+((cmp.mode==='m30')?'':'')+' '+cmp.now.n+' entr'+(cmp.now.n===1?'y':'ies')+' over '+cmp.now.days+' day'+(cmp.now.days===1?'':'s')
+      +'; the '+cmp.labelBefore+' hold '+cmp.before.n+' over '+cmp.before.days+' day'+(cmp.before.days===1?'':'s')+'.';
     if(cmp.mode==='half') s+=' '+cmp.note;
     return s;
   }
@@ -446,7 +446,7 @@ function archiveShift(cmp){
   out.ok=true;
   cmp.diffs.situations.concat(cmp.diffs.emotions).forEach(function(x){
     /* 과거 2건 이상이면서 비중이 10%p 이상 줄었거나 최근에 자취를 감춘 항목 */
-    if(x.aCount>=2 && (x.dp<=-10 || x.bCount===0)) out.oldConcerns.push(x);
+    if(x.aCount>=2 && x.bCount<x.aCount && (x.dp<=-10 || x.bCount===0)) out.oldConcerns.push(x);
   });
   out.oldConcerns.sort(function(p,q){ return q.dp-p.dp; });
   out.oldConcerns=out.oldConcerns.slice(0,4);
@@ -519,6 +519,16 @@ function snapOfRecord(r){
   return {emotions:emotionsOf(r).map(emotionLabel), needs:needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel),
     situations:[sitCatOf(r)].filter(Boolean).map(sitCatLabel)};
 }
+function titleEN(p){
+  if(!p) return 'Finding';
+  if(p.type==='cross') return 'Across situations';
+  if(p.type==='connection') return 'Connection';
+  if(p.type==='emotion') return 'Repeating feeling';
+  if(p.type==='need') return 'Repeating wish';
+  if(p.type==='situation') return 'Repeating situation';
+  if(p.type==='mismatch') return 'Wish and reaction';
+  return 'Finding';
+}
 function pinPatternData(p){
   if(!p) return null;
   var title=(p.type==='cross'? (isEN()?'Across situations':'상황을 가로지르는 반복') :
@@ -528,7 +538,7 @@ function pinPatternData(p){
              p.type==='situation'? (isEN()?'Repeating situation':'반복되는 상황') :
              (isEN()?'Finding':'발견'));
   return {pid:pinKey('pattern',p.id), kind:'pattern', refId:p.id, at:nowISO(),
-    title:title+' · '+itemLabel(p.type,p.key),
+    title:title+' · '+itemLabel(p.type,p.key), titleEn:titleEN(p)+' · '+itemLabel(p.type,p.key),
     sentence:plainText(p.sentence),
     evidence:plainText(evidenceLine(p))+(p.count?' · '+p.count+(isEN()?' entries':'건'):''),
     meta:{type:p.type,key:p.key,count:p.count,distinctDays:p.distinctDays,level:p.level}};
@@ -538,6 +548,7 @@ function pinRecordData(r,sentence){
   var sn=snapOfRecord(r);
   return {pid:pinKey('record',r.id), kind:'record', refId:r.id, at:nowISO(),
     title:(isEN()?'Today’s discovery':'오늘의 마음 발견')+' · '+recDateLabel(r.date),
+    titleEn:'Today’s discovery · '+recDateLabel(r.date),
     sentence:plainText(sentence||sentenceOf(r)||''),
     evidence:[sn.emotions.join(' · '),sn.needs.join(' · ')].filter(Boolean).join(' / '),
     meta:{date:r.date,emotions:sn.emotions,needs:sn.needs,situations:sn.situations}};

@@ -4241,7 +4241,7 @@ function mismatchInsights(list){
   var reaTop=Object.keys(reaC).sort(function(a,b){return reaC[b]-reaC[a]})[0]||'';
   var q=isEN()
     ? 'In '+ev.length+' entries (over '+days.length+' days) the wish was for “'+needLabel(needTop)+'”, while the reaction written down was “'+reactionLabel(reaTop)+'”. Might what you wish for and how it comes out be moving in different directions?'
-    : '원하는 마음은 ‘'+needLabel(needTop)+'’인데, 실제 반응은 ‘'+reactionLabel(reaTop)+'’으로 이어진 기록이 '+ev.length+'건(서로 다른 '+days.length+'일) 있어요. 바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않나요?';
+    : '원하는 마음은 ‘'+needLabel(needTop)+'’인데, 실제 반응은 ‘'+reactionLabel(reaTop)+'’'+josa(reactionLabel(reaTop),'으로','로')+' 이어진 기록이 '+ev.length+'건(서로 다른 '+days.length+'일) 있어요. 바라는 것과 표현 방식이 조금 다르게 움직이고 있진 않나요?';
   return [{id:'mismatch|'+needTop+'|'+reaTop,type:'mismatch',need:needTop,reaction:reaTop,count:ev.length,distinctDays:days.length,evidenceIds:ev.map(idOf),sentence:q}];
 }
 
@@ -4368,7 +4368,7 @@ function periodComparison(){
   var A=aggPeriod(earlier), B=aggPeriod(recent);
   if(mode==='m30'){
     labelNow = isEN()? 'last 30 days' : '최근 30일';
-    labelBefore = isEN()? 'the 30 days before' : '그 이전 30일';
+    labelBefore = isEN()? 'previous 30 days' : '그 이전 30일';
   }else if(mode==='half'){
     labelNow = isEN()? 'recent half' : '최근 절반';
     labelBefore = isEN()? 'earlier half' : '이전 절반';
@@ -4399,8 +4399,8 @@ function periodComparison(){
 function periodFactSentence(cmp){
   if(!cmp||cmp.mode==='none') return cmp? cmp.note : '';
   if(isEN()){
-    var s='The '+cmp.labelNow+' holds '+cmp.now.n+' entr'+(cmp.now.n===1?'y':'ies')+' over '+cmp.now.days+' day'+(cmp.now.days===1?'':'s')
-      +', the '+cmp.labelBefore+' '+cmp.before.n+' over '+cmp.before.days+'.';
+    var s='The '+cmp.labelNow+' hold'+((cmp.mode==='m30')?'':'')+' '+cmp.now.n+' entr'+(cmp.now.n===1?'y':'ies')+' over '+cmp.now.days+' day'+(cmp.now.days===1?'':'s')
+      +'; the '+cmp.labelBefore+' hold '+cmp.before.n+' over '+cmp.before.days+' day'+(cmp.before.days===1?'':'s')+'.';
     if(cmp.mode==='half') s+=' '+cmp.note;
     return s;
   }
@@ -4427,7 +4427,7 @@ function archiveShift(cmp){
   out.ok=true;
   cmp.diffs.situations.concat(cmp.diffs.emotions).forEach(function(x){
     /* 과거 2건 이상이면서 비중이 10%p 이상 줄었거나 최근에 자취를 감춘 항목 */
-    if(x.aCount>=2 && (x.dp<=-10 || x.bCount===0)) out.oldConcerns.push(x);
+    if(x.aCount>=2 && x.bCount<x.aCount && (x.dp<=-10 || x.bCount===0)) out.oldConcerns.push(x);
   });
   out.oldConcerns.sort(function(p,q){ return q.dp-p.dp; });
   out.oldConcerns=out.oldConcerns.slice(0,4);
@@ -4500,6 +4500,16 @@ function snapOfRecord(r){
   return {emotions:emotionsOf(r).map(emotionLabel), needs:needsOf(r).filter(function(x){return !isUnsureNeed(x)}).map(needLabel),
     situations:[sitCatOf(r)].filter(Boolean).map(sitCatLabel)};
 }
+function titleEN(p){
+  if(!p) return 'Finding';
+  if(p.type==='cross') return 'Across situations';
+  if(p.type==='connection') return 'Connection';
+  if(p.type==='emotion') return 'Repeating feeling';
+  if(p.type==='need') return 'Repeating wish';
+  if(p.type==='situation') return 'Repeating situation';
+  if(p.type==='mismatch') return 'Wish and reaction';
+  return 'Finding';
+}
 function pinPatternData(p){
   if(!p) return null;
   var title=(p.type==='cross'? (isEN()?'Across situations':'상황을 가로지르는 반복') :
@@ -4509,7 +4519,7 @@ function pinPatternData(p){
              p.type==='situation'? (isEN()?'Repeating situation':'반복되는 상황') :
              (isEN()?'Finding':'발견'));
   return {pid:pinKey('pattern',p.id), kind:'pattern', refId:p.id, at:nowISO(),
-    title:title+' · '+itemLabel(p.type,p.key),
+    title:title+' · '+itemLabel(p.type,p.key), titleEn:titleEN(p)+' · '+itemLabel(p.type,p.key),
     sentence:plainText(p.sentence),
     evidence:plainText(evidenceLine(p))+(p.count?' · '+p.count+(isEN()?' entries':'건'):''),
     meta:{type:p.type,key:p.key,count:p.count,distinctDays:p.distinctDays,level:p.level}};
@@ -4519,6 +4529,7 @@ function pinRecordData(r,sentence){
   var sn=snapOfRecord(r);
   return {pid:pinKey('record',r.id), kind:'record', refId:r.id, at:nowISO(),
     title:(isEN()?'Today’s discovery':'오늘의 마음 발견')+' · '+recDateLabel(r.date),
+    titleEn:'Today’s discovery · '+recDateLabel(r.date),
     sentence:plainText(sentence||sentenceOf(r)||''),
     evidence:[sn.emotions.join(' · '),sn.needs.join(' · ')].filter(Boolean).join(' / '),
     meta:{date:r.date,emotions:sn.emotions,needs:sn.needs,situations:sn.situations}};
@@ -5071,7 +5082,7 @@ function renderReport(){
   html+='<div class="card"><div class="card-title">✦ '+tr('다음 달 질문','A question for next month')+'</div><div class="qbox">'+esc(q)+'</div><p class="quiet" style="margin-top:9px">'+tr('답을 정해두지 않아도 돼요. 기록하다 보면 자연스럽게 답이 보여요.','You don’t have to answer it now. It tends to answer itself as you write.')+'</p></div>';
 
   var pins=pinList();
-  html+='<div class="card"><div class="card-title">📚 '+tr('나의 변화 기록 보관소','My change archive')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개 저장','')+'</span></div>'
+  html+='<div class="card"><div class="card-title">📚 '+tr('나의 변화 기록 보관소','My change archive')+' <span class="clue-badge" style="margin-left:auto">'+tr(pins.length+'개 저장',pins.length+' kept')+'</span></div>'
     +'<p class="prompt">'+tr('30일 전의 나와 지금의 나를 견주고, 내가 의미 있다고 느낀 발견을 모아둘 수 있어요. 리포트나 오늘의 발견에서 ‘📌 변화 보관소에 저장’을 누르면 여기 쌓여요.','Compare the me of 30 days ago with now, and keep the findings you found meaningful. Tap “📌 Save to the change archive” on a report clue or today’s discovery and it gathers here.')+'</p>'
     +'<button class="btn secondary small" onclick="show(\'archive\')">'+tr('보관소 열기','Open the archive')+'</button></div>';
 
@@ -5248,8 +5259,20 @@ function archiveShiftHTML(shift){
   h+='</div>';
   return h;
 }
-function archivePinsHTML(pins){
-  var h='<div class="card"><div class="card-title">📌 '+tr('내가 직접 고른 발견','Findings I chose to keep')+' <span class="clue-badge" style="margin-left:auto">'+pins.length+tr('개','')+'</span></div>';
+function pinView(p){
+  var o={title:p.title||'',sentence:p.sentence||'',evidence:p.evidence||'',kind:p.kind,refId:p.refId,pid:p.pid,at:p.at};
+  if(isEN()){
+    if(p.titleEn) o.title=p.titleEn;
+    if(p.kind==='pattern'){
+      var pat=patternById(p.refId);
+      if(pat){ o.sentence=pat.sentence; o.evidence=evidenceLine(pat); }
+    }
+  }
+  return o;
+}
+function archivePinsHTML(pinsRaw){
+  var pins=pinsRaw.map(pinView);
+  var h='<div class="card"><div class="card-title">📌 '+tr('내가 직접 고른 발견','Findings I chose to keep')+' <span class="clue-badge" style="margin-left:auto">'+tr(pins.length+'개',pins.length+' kept')+'</span></div>';
   if(!pins.length){
     h+='<div class="empty">'+tr('아직 저장한 발견이 없어요.<br>리포트의 단서나 ‘오늘의 마음 발견’에서 <b>📌 변화 보관소에 저장</b>을 누르면 여기에 모여요.','Nothing kept yet.<br>Tap <b>📌 Save to the change archive</b> on a report clue or in today’s discovery and it gathers here.')+'</div></div>';
     return h;
@@ -5289,7 +5312,7 @@ function buildPrintReport(){
   var d=new Date();
   var sorted=cleanRecordList();
   var h='<div class="pr">';
-  h+='<div class="pr-head"><div class="pr-brand">🧊 '+tr('마음의 빙산','Mind’s Iceberg')+'</div>'
+  h+='<div class="pr-head"><div class="pr-brand">'+tr('마음의 빙산 · Mind’s Iceberg','Mind’s Iceberg')+'</div>'
     +'<h1>'+tr('월간 마음 패턴 리포트','Monthly mind pattern report')+'</h1>'
     +'<div class="pr-meta">'+tr('기간','Period')+' '+esc(n? dstr(sorted[sorted.length-1].date)+' – '+dstr(sorted[0].date) : '—')
     +' · '+tr('기록','entries')+' '+n+' · '+tr('서로 다른 날','days')+' '+distinctDaysOf(a.list).length
@@ -5309,7 +5332,7 @@ function buildPrintReport(){
     if(pat&&pat.hidden) pat=null;
     var nb=needsBehindEmotion(a.list,top.key);
     h+=printBlock(tr('① 사실','① Fact'), esc(tr('기록 '+n+'건 중 '+top.count+'건('+pctOf(top.count,n)+'%)에 ‘'+emotionLabel(top.key)+'’이 적혔어요.','“'+emotionLabel(top.key)+'” appears in '+top.count+' of '+n+' entries ('+pctOf(top.count,n)+'%).')));
-    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc((pat&&pat.level!=='record')? confidenceLabel(pat.level)+' · '+plainText(pat.sentence) : tr('아직 반복이라고 부를 만큼 쌓이지 않았어요.','Not enough to call it a repeat yet.')));
+    h+=printBlock(tr('② 반복 패턴','② Pattern'), esc((pat&&pat.level!=='record')? plainText(pat.sentence) : tr('아직 반복이라고 부를 만큼 쌓이지 않았어요.','Not enough to call it a repeat yet.')));
     h+=printBlock(tr('③ 추론','③ Inference'), (nb&&nb.top&&nb.top.count>=2)? esc(tr('‘'+emotionLabel(top.key)+'’이 적힌 '+nb.total+'건 중 '+nb.top.count+'건에 ‘'+needLabel(nb.top.key)+'’의 바람이 함께 있었어요. 짐작이며 틀릴 수 있어요.','In '+nb.top.count+' of '+nb.total+' entries with that feeling, a wish for “'+needLabel(nb.top.key)+'” was written too. A guess; it may be wrong.')) : esc(tr('추론을 만들지 않았어요.','No inference was made.')));
     h+=printBlock(tr('④ 확인','④ Confirmation'), esc(printStatusOf(pat?pat.id:'')));
   }else{
@@ -5374,7 +5397,7 @@ function buildPrintReport(){
     if(confirmed.length) confirmed.forEach(function(p){
       h+='<p class="pr-line">· '+esc(itemLabel(p.type,p.key))+' — '+esc(plainText(p.sentence))+'</p>';
     });
-    pins.forEach(function(p){
+    pins.map(pinView).forEach(function(p){
       h+='<p class="pr-line">📌 '+esc(p.title||'')+' — '+esc(p.sentence||'')+(p.evidence?' <span class="pr-dim">('+esc(p.evidence)+')</span>':'')+'</p>';
     });
   }
