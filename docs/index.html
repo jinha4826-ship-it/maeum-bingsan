@@ -356,6 +356,7 @@ function nInfo(n){ if(isEN()&&NEED_EN[n]) return NEED_EN[n]; return NEED[n]||nul
 function nLabel(n){ var o=nInfo(n); return o?(o.short||n):n; }
 function nLine(n){ var o=nInfo(n); return o?(o.line||''):''; }
 function calmOf(f){ var m=isEN()?CALM_EN:CALM; return m[f]||m['혼란스러움']; }
+function ent(n){ n=Number(n)||0; return isEN()? (n===1?'1 entry':n+' entries') : ('기록 '+n+'개'); }
 
 var CALM={
   '기쁨':'좋았던 장면을 3문장으로 적고, 그때 몸이 어땠는지 한 번 느껴보기 (기쁨은 붙잡아야 오래 남아요)',
@@ -1109,7 +1110,7 @@ function renderReport(){
 
   var mm=mapData();
   var stName=isEN()?['not started','surface expedition','defence layer unlocked','unconscious root complete']:['아직 시작 전','수면 위 탐사','방어기제 지층 해금','무의식 뿌리 완성'];
-  html+='<div class="card map-teaser" role="button" tabindex="0" onclick="show(\'map\')"><div class="mt-ico">🗺</div><div class="mt-t"><b>'+tr('나만의 무의식 빙하 지도','My unconscious glacier map')+'</b>'+tr('기록 '+records.length+'개 · '+stName[mm.st]+' · 안개 '+(mm.st>=3?'모두 걷힘':'걷히는 중'),records.length+' entries · '+stName[mm.st]+' · fog '+(mm.st>=3?'all cleared':'lifting'))+'</div><div class="mt-a">›</div></div>';
+  html+='<div class="card map-teaser" role="button" tabindex="0" onclick="show(\'map\')"><div class="mt-ico">🗺</div><div class="mt-t"><b>'+tr('나만의 무의식 빙하 지도','My unconscious glacier map')+'</b>'+tr('기록 '+records.length+'개 · '+stName[mm.st]+' · 안개 '+(mm.st>=3?'모두 걷힘':'걷히는 중'),ent(records.length)+' · '+stName[mm.st]+' · fog '+(mm.st>=3?'all cleared':'lifting'))+'</div><div class="mt-a">›</div></div>';
 
   html+='<div class="card"><div class="card-title">'+tr('이 기간의 마음 기록','Entries in this period')+'</div><div class="count-wrap">';
   html+='<div class="count-left"><div class="bignum">'+d.list.length+'<span>'+tr('개','')+'</span></div><div class="quiet">'+(patternRange===7?tr('최근 7일','last 7 days'):tr('전체','all'))+'</div></div>';
@@ -1178,7 +1179,7 @@ function renderReport(){
   html+='<div class="card" style="background:linear-gradient(120deg,#f9f4fb,#eef4f2);border-color:#e5dbee"><div class="card-title">'+tr('🧊 내 빙하 카드 공유','🧊 Share my iceberg card')+'</div><p class="prompt">'+tr('감정·방어기제·욕구 라벨과 무의식 공식만 담은 익명 카드(PNG)예요. 일기 원문과 상황은 들어가지 않아요.','An anonymous PNG with only feeling, defence and need labels and your formula. No diary text or situations.')+'</p><button class="btn" onclick="shareIcebergCard()">'+tr('📤 클릭 한 번으로 지도 공유','📤 Share the map in one tap')+'</button><button class="btn secondary small" style="margin-top:8px" onclick="saveShareCard()">'+tr('🖼 이미지로 저장','🖼 Save as an image')+'</button><button class="btn ghost small" style="margin-top:4px" onclick="copyAppLink()">'+tr('🔗 앱 링크 복사','🔗 Copy the app link')+'</button><p class="quiet" style="margin-top:9px">'+tr('아이폰·안드로이드에서는 공유 시트가 바로 떠서 카톡·인스타·스레드로 바로 보낼 수 있어요.','On iPhone and Android the share sheet opens so you can send it straight to Messages, Instagram or Threads.')+'</p></div>';
 
   /* 백업 */
-  html+='<div class="card"><div class="card-title">'+tr('📦 기록 백업','📦 Backup')+'</div><p class="prompt">'+tr('기록은 이 기기 브라우저에만 저장돼요. JSON으로 내려받아 두면 기기를 바꾸거나 브라우저 데이터를 지워도 다시 불러올 수 있어요.','Entries live only in this browser. Download a JSON copy and you can bring them back after changing devices or clearing data.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('내보내기','Export')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('가져오기','Import')+'</button></div><input type="file" id="importFile" accept=".json,application/json" style="display:none"><p class="quiet" style="margin-top:9px">'+tr('총 '+records.length+'개 기록 · API 키는 백업 파일에 포함되지 않아요.','Total '+records.length+' entries · API keys are not included in the backup.')+'</p></div>';
+  html+='<div class="card"><div class="card-title">'+tr('📦 기록 백업','📦 Backup')+'</div><p class="prompt">'+tr('기록은 이 기기 브라우저에만 저장돼요. JSON으로 내려받아 두면 기기를 바꾸거나 브라우저 데이터를 지워도 다시 불러올 수 있어요.','Entries live only in this browser. Download a JSON copy and you can bring them back after changing devices or clearing data.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('내보내기','Export')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('가져오기','Import')+'</button></div><input type="file" id="importFile" accept=".json,application/json" style="display:none"><p class="quiet" style="margin-top:9px">'+tr('총 '+records.length+'개 기록 · API 키는 백업 파일에 포함되지 않아요.','Total '+ent(records.length)+' · API keys are not included in the backup.')+'</p></div>';
 
   /* 연구 근거 */
   html+='<details class="ev"><summary>'+tr('📚 이 앱이 참고한 연구 근거','📚 The research behind this app')+' <span class="ev-a">▾</span></summary><div class="ev-body">';
@@ -1759,7 +1760,7 @@ function buildTypeCard(){
   x.textAlign='left'; x.textBaseline='alphabetic';
   x.fillStyle=T.accent; x.font=f(21,800); x.fillText('MOOD ICEBERG · UNCONSCIOUS TYPE',80,92);
   x.fillStyle=T.ink; x.font=f(46,800); x.fillText(tr('마음의 빙산','Mind’s Iceberg'),80,152);
-  x.fillStyle='#8a7d95'; x.font=f(22,400); x.fillText(tr('기록 '+t.n+'개가 그린 지금의 나','who I am, drawn from '+t.n+' entries'),80,192);
+  x.fillStyle='#8a7d95'; x.font=f(22,400); x.fillText(tr('기록 '+t.n+'개가 그린 지금의 나','who I am, drawn from '+ent(t.n)),80,192);
   x.fillStyle='#a196ab'; x.font=f(19,400); x.textAlign='right'; x.fillText(cardDateStr(),1000,152); x.textAlign='left';
 
   /* 유형 */
@@ -1885,7 +1886,8 @@ function renderType(){
     +'<div class="def-line"><div class="dk">'+tr('한 걸음','One step')+'</div><div class="dv">'+esc(main.tip)+'</div></div></div>';
   if(second) html+='<p class="quiet" style="margin-top:9px">'+tr('그 아래에 <b>‘'+esc(second.name)+'’</b>의 결도 함께 보여요. 한 사람 안에 여러 방어기제가 겹쳐 있는 건 자연스러운 일이에요.','A thread of <b>“'+esc(second.name)+'”</b> shows underneath too. Several defences overlapping in one person is natural.')+'</p>';
   html+=defBars(t.def,3);
-  html+='<p class="quiet" style="margin-top:10px">'+tr('기록 '+t.n+'개에서 감정·욕구·문장 단서를 점수로 모아 가장 자주 나온 방어 방식을 골랐어요. 기록이 늘면 유형도 조금씩 달라질 수 있어요.','Scores gathered from the feelings, needs and wording of '+t.n+' entries, and the defence that appears most often was chosen. The type can shift as entries grow.')+'</p>';
+  html+='<p class="quiet" style="margin-top:10px">'+tr('기록 '+t.n+'개에서 감정·욕구·문장 단서를 점수로 모아 가장 자주 나온 방어 방식을 골랐어요. 기록이 늘면 유형도 조금씩 달라질 수 있어요.','Scores gathered from the feelings, needs and wording of '+ent(t.n)+', and the defence that appears most often was chosen. The type can shift as entries grow.')+'</p>';
+  if(t.def.estimated) html+='<p class="quiet" style="margin-top:6px">'+tr('기록이 적어 가장 가까운 유형으로 짚었어요. 3개만 쌓이면 더 정확해져요.','With few entries this is the closest type. Three entries make it more accurate.')+'</p>';
   html+='<p class="quiet" style="margin-top:6px">'+tr('이 유형은 성격이나 병명이 아니라, 힘든 순간에 나를 지키려고 익힌 방식이에요.','This type is not a personality or an illness but a way you learned to protect yourself in hard moments.')+'</p></div>';
   html+='<div class="card"><div class="card-title">'+tr('다음 한 걸음','Next small step')+'</div><p style="margin:0 0 10px;font-size:13px;line-height:1.75;color:#5d5266">'+esc(main.tip)+'</p><button class="btn secondary small" onclick="startQuick()">'+tr('⚡ 오늘 30초 기록하기','⚡ Log 30 seconds today')+'</button></div>';
   el.innerHTML=html;
@@ -2567,7 +2569,7 @@ function renderSettings(){
   html+='<div class="note">'+tr('키를 넣으면 <b>이 브라우저(localStorage)에만</b> 저장되고, 기록 백업 파일에도 포함되지 않아요. AI 코멘트를 요청할 때만 기록 내용과 함께 Google Gemini 서버로 전송돼요. 공용 기기에서는 쓰지 마세요.<br>키 발급: aistudio.google.com/app/apikey','If you add one it is stored <b>only in this browser (localStorage)</b> and is not included in backups. It is sent to Google’s Gemini server only when you request an AI comment. Do not use it on a shared device.<br>Get a key: aistudio.google.com/app/apikey')+'</div>';
   html+='</div>';
   html+='<div class="sec"><div class="sec-h">'+tr('⚙︎ 자동 코멘트','⚙︎ Automatic comment')+'</div><p>'+tr('기록을 저장할 때마다 AI 솔루션을 자동으로 요청할지 정해요. 끄면 원할 때만 요청해서 기다리지 않아도 돼요.','Choose whether to request the AI solution automatically each time you save. Turn it off to ask only when you want, with no waiting.')+'</p><button class="btn '+(settings.aiAuto?'':'secondary')+' small" onclick="toggleAuto()">'+(settings.aiAuto?tr('자동 요청 켜짐 · 누르면 끄기','Automatic on · tap to turn off'):tr('자동 요청 꺼짐 · 누르면 켜기','Automatic off · tap to turn on'))+'</button></div>';
-  html+='<div class="sec"><div class="sec-h">'+tr('📦 데이터','📦 Data')+'</div><p>'+tr('총 '+records.length+'개의 기록이 이 기기에 저장돼 있어요.',records.length+' entries are saved on this device.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('JSON 내보내기','Export JSON')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('JSON 가져오기','Import JSON')+'</button></div></div>';
+  html+='<div class="sec"><div class="sec-h">'+tr('📦 데이터','📦 Data')+'</div><p>'+tr('총 '+records.length+'개의 기록이 이 기기에 저장돼 있어요.',ent(records.length).charAt(0).toUpperCase()+ent(records.length).slice(1)+' saved on this device.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('JSON 내보내기','Export JSON')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('JSON 가져오기','Import JSON')+'</button></div></div>';
   html+=cloudHTML();
   html+='<p class="quiet" style="padding:0 4px">'+tr('‘마음의 빙산’ v3.2 · 기록은 이 기기에 남고, 클라우드 동기화에 로그인하면 내 계정에도 사본이 보관돼요.','Mind’s Iceberg v3.2 · entries stay on this device; if you sign in to cloud sync a copy is kept in your own account.')+'</p>';
   document.getElementById('settingsContent').innerHTML=html;
