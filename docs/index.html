@@ -498,7 +498,7 @@ function syncLangUI(){
   try{ document.title=isEN()?"Mind’s Iceberg · a little space for you":'마음의 빙산'; }catch(e){}
   var q=document.getElementById('quickNote'); if(q) q.placeholder=tr('지금 가장 걸리는 생각 한 줄','One line about what is on your mind');
   var t1=document.getElementById('iceTxtSit'); if(t1) t1.textContent=tr('상황','Situation');
-  var t2=document.getElementById('iceTxtFeel'); if(t2) t2.textContent=tr('♡ 느낌','♡ Feeling');
+  var t2=document.getElementById('iceTxtFeel'); if(t2) t2.textContent=tr('♡ 감정','♡ Feeling');
   var t3=document.getElementById('iceTxtNeed'); if(t3) t3.textContent=tr('✧ 욕구','✧ Need');
   var g=document.getElementById('gearBtn'); if(g) g.setAttribute('aria-label',tr('AI·백업 설정','AI and backup settings'));
   var o=document.getElementById('orgInput'); if(o) o.placeholder=tr('예) CAMPUS-01 (기관에서 받은 코드)','e.g. CAMPUS-01 (code from your organisation)');
@@ -5751,6 +5751,13 @@ function setAppbarTitle(id){
   var m = BS_SUB[id] || BS_SUB.home;
   var en = (typeof isEN === 'function') ? isEN() : document.body.classList.contains('en');
   el.textContent = en ? m[1] : m[0];
+  syncTabLabels();
+}
+var BS_TAB = {home:['홈','Home'], write:['기록','Write'], map:['내 빙산','Iceberg'], report:['리포트','Report'], archive:['보관소','Archive']};
+function syncTabLabels(){
+  var en = (typeof isEN === 'function') ? isEN() : document.body.classList.contains('en');
+  var b = document.querySelectorAll('.navbtn');
+  for(var i=0;i<b.length;i++){ var m = BS_TAB[b[i].dataset.view]; if(m) b[i].setAttribute('aria-label', en ? m[1] : m[0]); }
 }
 
 /* ---------- 바텀시트 공통 ---------- */
