@@ -5855,7 +5855,8 @@ function safetyReportHTML(){
     var m = sheetOf(e.target);
     if(!m) return;
     if(m.scrollTop > 2) return;
-    drag = {m:m, ov:m.parentNode, y:e.clientY, dy:0, id:e.pointerId, active:false};
+    drag = {m:m, ov:m.parentNode, y:e.clientY, dy:0, id:e.pointerId, active:false, ta:m.style.touchAction};
+    try{ if(m.scrollHeight <= m.clientHeight + 4) m.style.touchAction = 'none'; }catch(x){}
   }, {passive:true});
   document.addEventListener('pointermove', function(e){
     if(!drag || e.pointerId !== drag.id) return;
@@ -5873,6 +5874,7 @@ function safetyReportHTML(){
   function endDrag(e){
     if(!drag || (e && e.pointerId != null && e.pointerId !== drag.id)) return;
     var d = drag; drag = null;
+    setTimeout(function(){ try{ d.m.style.touchAction = d.ta || ''; }catch(x){} }, 0);
     if(!d.active) return;
     var m = d.m, ov = d.ov;
     m.style.transition = 'transform .26s cubic-bezier(.22,1,.36,1)';
