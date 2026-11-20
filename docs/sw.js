@@ -4,7 +4,7 @@
      다른 주소로 나가는 요청은 절대 캐시하지 않습니다(기록·로그인 응답 보호).
    · 새 버전이 올라오면 캐시 이름이 바뀌고, 이전 캐시는 activate에서 지웁니다.
      (예전에 겪은 '캐시가 꼬여 수정이 반영되지 않는' 문제 방지) */
-var SW_VERSION = '2026-11-18-v8';
+var SW_VERSION = '2026-11-20-v9';
 var CACHE_NAME = 'maeum-bingsan-' + SW_VERSION;
 var CORE = [
   './',

@@ -161,7 +161,7 @@ def main():
         # 8) 기록 삭제 시 분석 갱신
         ctx, page = new_page(SEED_3DAYS)
         before = patterns(page)['n']
-        page.click(".navbtn[data-view='records']"); page.wait_for_timeout(300)
+        page.evaluate("show('records')"); page.wait_for_timeout(300)
         page.locator('#allRecords .entry').first.click(); page.wait_for_timeout(300)
         page.on('dialog', lambda d: d.accept())
         page.click("text=삭제"); page.wait_for_timeout(500)
@@ -182,7 +182,7 @@ def main():
         # 10) AI 실패해도 저장·조회 정상
         ctx, page = new_page(SEED_LEGACY, extra="window.AI_WORKER_OVERRIDE='https://127.0.0.1:9/ai';")
         page.evaluate("AI_WORKER='https://127.0.0.1:9/ai'")
-        page.click(".navbtn[data-view='records']"); page.wait_for_timeout(300)
+        page.evaluate("show('records')"); page.wait_for_timeout(300)
         page.locator('#allRecords .entry').first.click(); page.wait_for_timeout(300)
         page.click("text=심층 리포트"); page.wait_for_timeout(400)
         page.click("text=AI 심리 솔루션 받기"); page.wait_for_timeout(2500)

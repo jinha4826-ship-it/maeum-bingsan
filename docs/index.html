@@ -14,9 +14,16 @@
 <script>window.__maeumErrors=[];window.addEventListener('error',function(e){try{window.__maeumErrors.push(String(e.message||e))}catch(x){}});window.addEventListener('unhandledrejection',function(e){try{window.__maeumErrors.push('rejection:'+String(e.reason))}catch(x){}});</script>
 <style>
 :root{--bg:#fbf7f3;--paper:#fffefa;--ink:#40364a;--muted:#94899b;--lav:#b9a4d0;--lavdeep:#8871a4;--lavp:#f0e9f7;--pink:#f8e8ec;--mint:#e8f1eb;--line:#eee5ed;--shadow:0 9px 26px #59466b12}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-tap-highlight-color:transparent}
-.app{max-width:520px;min-height:100dvh;margin:auto;padding:env(safe-area-inset-top) 18px calc(92px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 90% 10%,#f4eefa 0,transparent 30%),linear-gradient(180deg,#fcf9f6,#faf6f2)}
-header{height:62px;display:flex;align-items:center;justify-content:space-between}header h1{font-size:19px;letter-spacing:-.7px;margin:0;font-weight:850}.logo{width:36px;height:36px;border-radius:13px;background:var(--lavp);display:grid;place-items:center;font-size:20px}.view{display:none}.view.active{display:block}
+*{box-sizing:border-box}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+.app{max-width:520px;height:100dvh;margin:auto;display:flex;flex-direction:column;overflow:hidden;padding:0 0 calc(60px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 90% 10%,#f4eefa 0,transparent 30%),linear-gradient(180deg,#fcf9f6,#faf6f2)}
+.viewport{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:none;padding:0 18px 22px}
+.viewport::-webkit-scrollbar{display:none;width:0;height:0}
+header.appbar{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:calc(7px + env(safe-area-inset-top)) 12px 7px 14px;background:rgba(255,254,250,.9);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid #eee5ed;position:relative;z-index:6}
+header h1{font-size:16.5px;letter-spacing:-.6px;margin:0;font-weight:850;line-height:1.15}
+.logo{width:30px;height:30px;border-radius:11px;background:var(--lavp);display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+.view{display:none}.view.active{display:block}
 .hero{padding:20px 3px 12px}.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--lavdeep);font-weight:850}.hero h2{font-size:27px;line-height:1.35;letter-spacing:-1.2px;margin:9px 0}.hero p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:17px;margin:13px 0;box-shadow:var(--shadow)}.card-title{font-size:15px;font-weight:850;margin-bottom:13px}
 .iceberg-wrap{background:linear-gradient(180deg,#f5f0fa,#f0f5f3);border-radius:20px;padding:13px 10px 12px;overflow:hidden}.iceberg{width:100%;height:170px;display:block}.ice-layer{cursor:pointer;outline:none}.ice-layer:focus path{stroke:#72568f;stroke-width:3}.ice-hint{text-align:center;color:#897b92;font-size:11px;margin:4px 0 0}.layer-info{background:#fffdfa;border:1px solid var(--line);border-radius:15px;padding:11px 13px;margin-top:10px;font-size:12px;line-height:1.6;color:#756a7d;min-height:56px}
@@ -66,7 +73,11 @@ details.ev[open] summary .ev-a{transform:rotate(180deg)}
 .entry{background:#fffefa;border:1px solid var(--line);border-radius:18px;padding:14px;margin:9px 0;cursor:pointer;touch-action:manipulation}.entry-top{display:flex;justify-content:space-between;color:#a096a4;font-size:11px}.entry h3{font-size:14px;margin:8px 0 5px}.entry p{font-size:12px;color:#82778a;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .empty{text-align:center;padding:28px 12px;color:#a096a4;font-size:13px;line-height:1.8}
 .detail-label{font-size:11px;font-weight:850;color:var(--lavdeep);margin:16px 0 5px}.detail-text{font-size:13px;line-height:1.7;white-space:pre-wrap}
-.nav{position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);padding:9px 20px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;background:#fffefaed;backdrop-filter:blur(14px);border-top:1px solid var(--line)}.navbtn{border:0;background:transparent;color:#a197a6;min-width:65px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;cursor:pointer;touch-action:manipulation}.navbtn .ico{font-size:19px}.navbtn.active{color:var(--lavdeep);font-weight:850}
+.nav{position:fixed;z-index:30;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);height:calc(60px + env(safe-area-inset-bottom));padding:0 6px env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(5,1fr);align-items:stretch;background:rgba(255,254,250,.94);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);transition:transform .22s cubic-bezier(.22,1,.36,1)}
+.navbtn{position:relative;border:0;background:transparent;color:#a89caf;margin:6px 2px;padding:0;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-family:inherit;font-size:9.5px;font-weight:780;letter-spacing:-.2px;cursor:pointer;touch-action:manipulation;transition:background .18s ease,color .18s ease,transform .12s ease}
+.navbtn svg{width:21px;height:21px;display:block;transition:transform .18s ease}
+.navbtn.active{color:#6b4f8c;background:linear-gradient(180deg,#f5eefb,#efe5f8)}
+.navbtn.active svg{transform:translateY(-1px) scale(1.06)}
 .recent-head{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 8px}.recent-head b{font-size:15px}.recent-head button{border:0;background:transparent;color:var(--lavdeep);font-size:11px;font-weight:800;padding:8px}
 .bubble{display:inline-flex;align-items:center;gap:5px;background:#f7eef2;color:#a17d91;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:800}
 .detail-actions{display:flex;gap:8px;margin-top:14px}.detail-actions button{flex:1}
@@ -104,8 +115,14 @@ details.ev[open] summary .ev-a{transform:rotate(180deg)}
 .ai-text{font-size:13px;line-height:1.78;color:#514661;white-space:pre-wrap}
 .ai-q{font-size:12.5px;font-weight:800;color:#6b5583;margin-top:8px;line-height:1.6}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid #d9c9ea;border-top-color:#8a6fac;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-1px;margin-right:6px}@keyframes sp{to{transform:rotate(360deg)}}
-.overlay{position:fixed;inset:0;background:#2f24384d;display:grid;place-items:center;padding:22px;z-index:60}.modal{background:#fffefa;border-radius:22px;padding:18px;width:100%;max-width:360px;box-shadow:0 20px 50px #35264a3d}.modal h3{font-size:15px;margin:0 0 8px}.modal p{font-size:12.5px;line-height:1.7;color:#7c7186;margin:0 0 14px}.modal .row{margin-top:9px}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));background:#40364ae8;color:#fff;font-size:12px;font-weight:700;padding:11px 16px;border-radius:999px;z-index:70;opacity:0;transition:opacity .2s;pointer-events:none}.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(47,36,56,.45);display:flex;align-items:flex-end;justify-content:center;z-index:60;animation:ovIn .18s ease;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.modal{background:#fffefa;border-radius:26px 26px 0 0;padding:20px 18px calc(16px + env(safe-area-inset-bottom));width:100%;max-width:520px;box-shadow:0 -14px 46px rgba(53,38,74,.28);animation:sheetUp .3s cubic-bezier(.22,1,.36,1);overscroll-behavior:contain;touch-action:pan-y}
+.modal:before{content:'';display:block;width:40px;height:4px;border-radius:99px;background:#e6dbee;margin:-8px auto 14px}
+.modal h3{font-size:16px;margin:0 0 8px;letter-spacing:-.3px}.modal p{font-size:12.5px;line-height:1.7;color:#7c7186;margin:0 0 14px}.modal .row{margin-top:9px}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.toast{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom));transform:translate(-50%,14px);background:rgba(58,47,71,.96);color:#fff;font-size:12.5px;font-weight:700;line-height:1.45;padding:12px 18px;border-radius:16px;z-index:70;opacity:0;transition:opacity .22s ease,transform .22s ease;pointer-events:none;max-width:min(420px,calc(100% - 36px));text-align:center;box-shadow:0 10px 30px rgba(38,28,50,.28)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 /* ---- 가면 감정 · 무의식 방어기제 ---- */
 .def-phrase{background:linear-gradient(135deg,#f7f1fb,#eef4f2);border-radius:18px;padding:14px;font-size:13.5px;font-weight:800;line-height:1.72;color:#54456a}.def-phrase b{color:#6a4f8c}
 .def-hero{background:linear-gradient(140deg,#f7f0fa,#eaf1ef);border:1px solid #e6dcf0;border-radius:20px;padding:14px;margin-top:10px}
@@ -317,7 +334,7 @@ body.ko .en{display:none!important}body.en .ko{display:none!important}
 #printReport{display:none}
 @media print{
   @page{size:A4;margin:14mm}
-  html,body{background:#fff!important;margin:0!important;padding:0!important;color:#1e1826!important}
+  html,body{background:#fff!important;margin:0!important;padding:0!important;color:#1e1826!important;overflow:visible!important;height:auto!important}
   header,.app,.nav,.toast,.overlay,#importFile,.hero,.card{display:none!important}
   #printReport{display:block!important;padding:0!important;margin:0!important}
   #printReport *{box-shadow:none!important;text-shadow:none!important}
@@ -346,8 +363,64 @@ details.legacy-ref>summary:before{content:'▸';margin-right:6px;color:#a894bd}
 details.legacy-ref[open]>summary:before{content:'▾'}
 details.legacy-ref .card{margin:6px 0 12px;background:#fffdfa}
 
+
+/* ================= v9 · 네이티브 앱 셸 ================= */
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.view.active{animation:viewIn .26s cubic-bezier(.22,1,.36,1)}
+.hero{padding:14px 2px 10px}.hero h2{font-size:25px;letter-spacing:-1px;margin:8px 0}.hero p{font-size:12.5px}
+.ab-brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1 1 auto}
+.ab-text{display:flex;flex-direction:column;min-width:0}
+.ab-text h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ab-text i{font-style:normal;font-size:10px;color:#a295ad;letter-spacing:.1px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.ab-actions{display:flex;align-items:center;gap:4px;margin-left:auto;flex:0 0 auto}
+.ab-btn{border:0;background:transparent;color:#a48db8;width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-size:17px;line-height:1;cursor:pointer;padding:0}
+.ab-btn:active{background:#f3ecf9;transform:scale(.94)}
+.pill.safety{display:inline-flex;align-items:center;gap:4px;border:1px solid #f0dee0;background:linear-gradient(180deg,#fdf6f6,#fbeeee);color:#a4676e;font-size:10.5px;font-weight:850;font-family:inherit;border-radius:999px;padding:7px 10px;line-height:1;cursor:pointer;white-space:nowrap;letter-spacing:-.2px}
+.pill.safety:active{transform:scale(.95)}
+.appbar .langtog button{padding:6px 7px;font-size:10px}
+.gearbtn{padding:0!important;width:34px;height:34px;border-radius:12px;display:grid;place-items:center}
+/* 터치 감각 */
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,select,.field,.input,.timeinput{-webkit-user-select:text;user-select:text}
+.field,.input,.timeinput,input[type=text],input[type=email],input[type=password],input[type=search],textarea{font-size:16px}
+button,.chip,.entry,.tag,.seg button,.stage-chip,.navbtn,.switch,.copybtn,.gearbtn,.ab-btn,.pill,.langtog button,summary,.quick-teaser,.chal,.ice-layer,.call-row,.info-row{-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.btn,.chip,.entry,.tag,.seg button,.stage-chip,.quick-teaser,.chal,.copybtn{transition:transform .12s ease,background .16s ease,box-shadow .16s ease,color .16s ease}
+.btn:active,.chip:active,.entry:active,.tag:active,.seg button:active,.stage-chip:active,.quick-teaser:active,.chal:active,.copybtn:active{transform:scale(.97)}
+.navbtn:active{transform:scale(.94)}
+/* 바텀시트 내용 */
+.sheet-title{font-size:17px;font-weight:900;letter-spacing:-.4px;margin:0 0 6px;color:#4a3d5c}
+.sheet-lead{font-size:13px;line-height:1.72;color:#6c5f78;margin:0 0 13px}
+.sheet-lead b{color:#5b4675}
+.call-grid{display:grid;gap:8px;margin:0 0 13px}
+.call-row{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fffdfa;border-radius:16px;padding:12px 14px;text-decoration:none;color:inherit}
+.call-row:active{transform:scale(.98);background:#faf6fd}
+.call-row b{flex:0 0 86px;font-size:16.5px;font-weight:900;color:#7a5f9a;letter-spacing:-.4px}
+.call-row span{font-size:12px;color:#5f5469;line-height:1.45;font-weight:700}
+.call-row em{display:block;font-style:normal;font-size:10px;color:#a294ad;margin-top:2px;font-weight:600}
+.info-row{display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:12.5px;line-height:1.62;color:#5d5266}
+.info-row:first-of-type{border-top:0;padding-top:2px}
+.info-row b{flex:0 0 76px;font-size:11px;font-weight:850;color:#9485a2;padding-top:1px}
+.disc{border:1px solid #efe3cd;background:#fdf9f1;border-radius:14px;padding:11px 12px;font-size:11.5px;line-height:1.7;color:#8a7355;margin:13px 0 0}
+.disc b{color:#7a6040}
+.sheet-close{margin-top:13px}
+.info-sec{margin:14px 0 0}
+.info-sec h4{font-size:11px;font-weight:850;color:#9485a2;letter-spacing:.3px;margin:0 0 4px}
+img{-webkit-touch-callout:default}
+@media (prefers-reduced-motion: reduce){.view.active,.overlay,.modal,.navbtn svg{animation:none!important;transition:none!important}}
+/* 키보드가 올라오면 탭바 숨김 */
+body.kbd .nav{transform:translateX(-50%) translateY(110%)}
+body.kbd .app{padding-bottom:0}
+@media(min-width:520px){
+  body{padding:16px 0}
+  .app{height:calc(100dvh - 32px);min-height:0;border-radius:26px;box-shadow:0 14px 54px #3b2d4018}
+  .nav{bottom:16px;border-radius:0 0 26px 26px}
+}
 </style></head><body class="ko"><main class="app">
-<header><div class="logo">🧊</div><h1><span class="ko">마음의 빙산</span><span class="en">Mind’s Iceberg</span></h1><div class="header-right"><div class="langtog" role="group" aria-label="Language"><button type="button" id="langKo" onclick="setLang('ko')">KO</button><button type="button" id="langEn" onclick="setLang('en')">EN</button></div><button class="gearbtn" id="gearBtn" aria-label="설정" onclick="show('settings')">✦</button></div></header>
+<header class="appbar">
+<div class="ab-brand"><div class="logo">🧊</div><div class="ab-text"><h1><span class="ko">마음의 빙산</span><span class="en">Mind&rsquo;s Iceberg</span></h1><i id="abSub">홈</i></div></div>
+<div class="ab-actions"><button class="pill safety" id="safetyBtn" type="button" onclick="openSafety()" aria-label="위기 안전 안내 · Crisis support">🆘<span class="ko">안전</span><span class="en">SOS</span></button><div class="langtog" role="group" aria-label="Language"><button type="button" id="langKo" onclick="setLang('ko')">KO</button><button type="button" id="langEn" onclick="setLang('en')">EN</button></div><button class="ab-btn gearbtn" id="gearBtn" aria-label="설정" onclick="show('settings')">✦</button></div>
+</header>
+<div class="viewport" id="viewport">
 
 <section id="home" class="view active"><div id="checkinBanner"></div><div class="hero"><div class="eyebrow">A LITTLE SPACE FOR YOU ☁️</div><h2><span class="ko">보이는 마음 아래,<br>반복되는 내 마음을 천천히</span><span class="en">Under what shows,<br>the feelings that keep returning</span></h2><p><span class="ko">오늘 있었던 일과 그때의 마음을 적어두면,<br>자주 돌아오는 상황과 감정, 그 아래 바람이 보이기 시작해요.</span><span class="en">Write down what happened and how it felt,<br>and the situations, feelings and wishes that keep returning begin to show.</span></p></div>
 <div id="foundHome"></div>
@@ -384,9 +457,10 @@ details.legacy-ref .card{margin:6px 0 12px;background:#fffdfa}
 <section id="detail" class="view"><button class="btn ghost" onclick="show('records')"><span class="ko">← 기록 목록</span><span class="en">← All entries</span></button><div id="detailContent"></div></section>
 
 <section id="settings" class="view"><button class="btn ghost" onclick="show('home')"><span class="ko">← 홈</span><span class="en">← Home</span></button><div class="hero"><div class="eyebrow">SETTINGS ⚙︎</div><h2><span class="ko">설정</span><span class="en">Settings</span></h2><p><span class="ko">매일 체크인 알림, AI, 백업과 클라우드 동기화를 여기서 관리해요.</span><span class="en">Check-in reminders, AI, backup and cloud sync live here.</span></p></div><div class="card" id="settingsContent"></div></section>
+</div>
 </main>
 <div id="printReport" aria-hidden="true"></div>
-<nav class="nav"><button class="navbtn active" data-view="home" onclick="show('home')"><span class="ico">⌂</span><span class="ko">홈</span><span class="en">Home</span></button><button class="navbtn" data-view="records" onclick="show('records')"><span class="ico">♡</span><span class="ko">기록</span><span class="en">Entries</span></button><button class="navbtn" data-view="map" onclick="show('map')"><span class="ico">🗺</span><span class="ko">빙하 지도</span><span class="en">Map</span></button><button class="navbtn" data-view="report" onclick="show('report')"><span class="ico">✿</span><span class="ko">리포트</span><span class="en">Report</span></button></nav>
+<nav class="nav" id="tabbar" role="tablist" aria-label="주요 화면"><button class="navbtn active" type="button" role="tab" data-view="home" onclick="tabGo('home')" aria-selected="true" aria-label="홈"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.6 10.4 12 3.7l8.4 6.7V19a1.1 1.1 0 0 1-1.1 1.1h-4.8v-6.1H9.5v6.1H4.7A1.1 1.1 0 0 1 3.6 19z"/></svg><span class="ko">홈</span><span class="en">Home</span></button><button class="navbtn" type="button" role="tab" data-view="write" onclick="tabGo('write')" aria-selected="false" aria-label="기록"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20.1h4.2L20 8.3a2.2 2.2 0 0 0 0-3.1l-1.2-1.2a2.2 2.2 0 0 0-3.1 0L4 15.9z"/><path d="M13.9 5.9l4.2 4.2"/></svg><span class="ko">기록</span><span class="en">Write</span></button><button class="navbtn" type="button" role="tab" data-view="map" onclick="tabGo('map')" aria-selected="false" aria-label="내 빙산"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.8 17.4 8.3 7.9l2.7 4.4 2.4-3.5 5.8 8.6z"/><path d="M2.4 20.3h19.2"/></svg><span class="ko">내 빙산</span><span class="en">Iceberg</span></button><button class="navbtn" type="button" role="tab" data-view="report" onclick="tabGo('report')" aria-selected="false" aria-label="리포트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.8 19.3v-7.1"/><path d="M12 19.3V5.2"/><path d="M19.2 19.3v-4.6"/><path d="M3.2 19.3h17.6"/></svg><span class="ko">리포트</span><span class="en">Report</span></button><button class="navbtn" type="button" role="tab" data-view="archive" onclick="tabGo('archive')" aria-selected="false" aria-label="보관소"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 8.6h15.6v9.9a1.4 1.4 0 0 1-1.4 1.4H5.6a1.4 1.4 0 0 1-1.4-1.4z"/><path d="M3.2 4.3h17.6v4.3H3.2z"/><path d="M9.7 12.7h4.6"/></svg><span class="ko">보관소</span><span class="en">Archive</span></button></nav>
 <div class="toast" id="toast"></div>
 <input type="file" id="importFile" accept=".json,application/json" style="display:none">
 
@@ -622,7 +696,7 @@ function show(id){
   if(id==='tap') renderTap();
   if(id==='deep') renderDeep();
   if(id==='type') renderType();
-  window.scrollTo({top:0,behavior:'smooth'});
+  appScrollTop();
 }
 
 /* ---------- 기록 작성 ---------- */
@@ -3020,6 +3094,7 @@ function renderSettings(){
   var masked=key? (key.slice(0,6)+'…'+key.slice(-4)) : '';
   var html='';
   var rem=loadReminder(), perm=notifPerm(), org=loadOrg();
+  html+=safetySettingsHTML();
   html+='<div class="sec"><div class="sec-h">'+tr('🌐 언어','🌐 Language')+'</div>';
   html+='<p>'+tr('앱 전체의 언어를 바꿔요. 감정·욕구 라벨, 빙하 지도, 리포트, AI 요청 언어까지 함께 바뀌고, 선택은 이 기기에 저장돼요.','Changes the language of the whole app — feeling and need labels, the glacier map, reports and the language sent to AI. The choice is saved on this device.')+'</p>';
   html+='<div class="row"><button class="btn '+(LANG==='ko'?'':'secondary')+' small" onclick="setLang(\'ko\')">한국어</button><button class="btn '+(LANG==='en'?'':'secondary')+' small" onclick="setLang(\'en\')">English</button></div>';
@@ -3059,9 +3134,9 @@ function renderSettings(){
   html+='<div class="note">'+tr('키를 넣으면 <b>이 브라우저(localStorage)에만</b> 저장되고, 기록 백업 파일에도 포함되지 않아요. AI 코멘트를 요청할 때만 기록 내용과 함께 Google Gemini 서버로 전송돼요. 공용 기기에서는 쓰지 마세요.<br>키 발급: aistudio.google.com/app/apikey','If you add one it is stored <b>only in this browser (localStorage)</b> and is not included in backups. It is sent to Google’s Gemini server only when you request an AI comment. Do not use it on a shared device.<br>Get a key: aistudio.google.com/app/apikey')+'</div>';
   html+='</div>';
   html+='<div class="sec"><div class="sec-h">'+tr('⚙︎ 자동 코멘트','⚙︎ Automatic comment')+'</div><p>'+tr('기록을 저장할 때마다 AI 솔루션을 자동으로 요청할지 정해요. 끄면 원할 때만 요청해서 기다리지 않아도 돼요.','Choose whether to request the AI solution automatically each time you save. Turn it off to ask only when you want, with no waiting.')+'</p><button class="btn '+(settings.aiAuto?'':'secondary')+' small" onclick="toggleAuto()">'+(settings.aiAuto?tr('자동 요청 켜짐 · 누르면 끄기','Automatic on · tap to turn off'):tr('자동 요청 꺼짐 · 누르면 켜기','Automatic off · tap to turn on'))+'</button></div>';
-  html+='<div class="sec"><div class="sec-h">'+tr('📦 데이터','📦 Data')+'</div><p>'+tr('총 '+records.length+'개의 기록이 이 기기에 저장돼 있어요.',ent(records.length).charAt(0).toUpperCase()+ent(records.length).slice(1)+' saved on this device.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('JSON 내보내기','Export JSON')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('JSON 가져오기','Import JSON')+'</button></div></div>';
+  html+='<div class="sec"><div class="sec-h">'+tr('📦 데이터 · 백업','📦 Data · backup')+'</div><p>'+tr('총 '+records.length+'개의 기록이 이 기기 브라우저에만 저장돼 있어요. 계정·로그인 없이, 인터넷이 없어도 기록·리포트·PDF가 모두 동작해요.',ent(records.length).charAt(0).toUpperCase()+ent(records.length).slice(1)+' saved on this device.')+'</p><div class="row"><button class="btn secondary small" onclick="exportData()">'+tr('JSON 내보내기','Export JSON')+'</button><button class="btn secondary small" onclick="triggerImport()">'+tr('JSON 가져오기','Import JSON')+'</button></div></div>';
   html+=cloudHTML();
-  html+='<p class="quiet" style="padding:0 4px">'+tr('‘마음의 빙산’ v3.2 · 기록은 이 기기에 남고, 클라우드 동기화에 로그인하면 내 계정에도 사본이 보관돼요.','Mind’s Iceberg v3.2 · entries stay on this device; if you sign in to cloud sync a copy is kept in your own account.')+'</p>';
+  html+='<p class="quiet" style="padding:0 4px">'+tr('‘마음의 빙산’ v9 · 기록은 이 기기에 남고, 클라우드 동기화에 로그인하면 내 계정에도 사본이 보관돼요.','Mind’s Iceberg v9 · entries stay on this device; if you sign in to cloud sync a copy is kept in your own account.')+'</p>';
   document.getElementById('settingsContent').innerHTML=html;
   syncLangUI();
 }
@@ -3545,6 +3620,21 @@ function normalizeRecord(r){
   return rec;
 }
 
+/* ---------- v9 앱 셸: 탭 매핑 · 스크롤 ---------- */
+function appScrollTop(){ var vp=document.getElementById('viewport'); if(vp){ vp.scrollTop=0; } else { try{ window.scrollTo(0,0); }catch(e){} } }
+function tabOf(id){
+  if(id==='layer'||id==='deep'||id==='type') return 'map';
+  if(id==='quick'||id==='tap'||id==='records'||id==='detail'||id==='discovery') return 'write';
+  if(id==='settings') return '';
+  return id;
+}
+function tabGo(v){
+  if(v==='write'){
+    if(currentView==='write'||currentView==='quick'||currentView==='tap'){ appScrollTop(); return; }
+    startNew(); return;
+  }
+  show(v);
+}
 /* ---------- 화면 전환 ---------- */
 function show2(id){
   var i;
@@ -3553,8 +3643,9 @@ function show2(id){
   for(i=0;i<views.length;i++) views[i].classList.remove('active');
   var el=document.getElementById(id); if(el) el.classList.add('active');
   var btns=document.querySelectorAll('.navbtn');
-  var navId=(id==='layer'||id==='deep')?'map':(id==='archive'?'report':id);
-  for(i=0;i<btns.length;i++) btns[i].classList.toggle('active',btns[i].dataset.view===navId);
+  var navId=tabOf(id);
+  for(i=0;i<btns.length;i++){ btns[i].classList.toggle('active',btns[i].dataset.view===navId); btns[i].setAttribute('aria-selected',btns[i].dataset.view===navId?'true':'false'); }
+  if(window.setAppbarTitle) try{ setAppbarTitle(id); }catch(e){}
   if(id==='records') renderRecords();
   if(id==='home'){ renderHomeTop(); renderRecent(); }
   if(id==='report') renderReport();
@@ -3568,7 +3659,7 @@ function show2(id){
   if(id==='discovery'){ if(detailId!=null) renderDiscovery(detailId); }
   if(id==='settings') renderSettings();
   if(id==='type') renderType();
-  window.scrollTo({top:0,behavior:'smooth'});
+  appScrollTop();
 }
 function show(id){ show2(id); }
 function refreshView(){ show2(currentView); }
@@ -3718,16 +3809,16 @@ function collectCurrent(){
 }
 function nextStep(){
   collectCurrent();
-  if(idx<5){ idx++; renderStep(); window.scrollTo({top:0,behavior:'smooth'}); }
+  if(idx<5){ idx++; renderStep(); appScrollTop(); }
   else saveRecord();
 }
 function prevStep(){
   collectCurrent();
-  if(idx>0){ idx--; renderStep(); window.scrollTo({top:0,behavior:'smooth'}); } else show('home');
+  if(idx>0){ idx--; renderStep(); appScrollTop(); } else show('home');
 }
 function skipStep(){
   collectCurrent();
-  if(idx<5){ idx++; renderStep(); window.scrollTo({top:0,behavior:'smooth'}); }
+  if(idx<5){ idx++; renderStep(); appScrollTop(); }
   else saveRecord();
 }
 function saveEarly(){ collectCurrent(); saveRecord(); }
@@ -5103,7 +5194,7 @@ function renderReport(){
     +'<p class="prompt">'+tr('30일 전의 나와 지금의 나를 견주고, 내가 의미 있다고 느낀 발견을 모아둘 수 있어요. 리포트나 오늘의 발견에서 ‘📌 변화 보관소에 저장’을 누르면 여기 쌓여요.','Compare the me of 30 days ago with now, and keep the findings you found meaningful. Tap “📌 Save to the change archive” on a report clue or today’s discovery and it gathers here.')+'</p>'
     +'<button class="btn secondary small" onclick="show(\'archive\')">'+tr('보관소 열기','Open the archive')+'</button></div>';
 
-  html+='<p class="quiet" style="padding:0 4px">'+tr('기록을 세어 정리한 리포트예요. 진단이 아니에요.','A report that counts your entries — not a diagnosis.')+'</p>';
+  html+=safetyReportHTML();
   html+=backupCardHTML();
   el.innerHTML=html;
 }
@@ -5438,7 +5529,7 @@ function buildPrintReport(){
     });
   }
   h+='</section>';
-  h+='<div class="pr-foot">'+tr('마음의 빙산 · 상담이나 진료에 참고용으로 쓰려면 이 리포트를 그대로 가져가세요. 기록 원문은 앱의 ‘기록 백업’에서 내려받을 수 있어요.','Mind’s Iceberg · Take this report as it is if it helps a conversation with a counsellor. The original entries can be exported from the app’s backup.')+'</div>';
+  h+='<div class="pr-foot">'+tr('위기 시 109(자살예방) · 1577-0199(정신건강) · 119 · 112','In crisis: 109 · 1577-0199 · 119 · 112')+'<br>'+tr('마음의 빙산 · 상담이나 진료에 참고용으로 쓰려면 이 리포트를 그대로 가져가세요. 기록 원문은 앱의 ‘기록 백업’에서 내려받을 수 있어요.','Mind’s Iceberg · Take this report as it is if it helps a conversation with a counsellor. The original entries can be exported from the app’s backup.')+'</div>';
   h+='</div>';
   el.innerHTML=h;
   return h;
@@ -5640,6 +5731,184 @@ function askSentenceAI(){
   try{ syncLangUI2(); }catch(e){}
   try{ renderHomeTop(); renderRecent(); }catch(e){}
   try{ var el=document.getElementById('layerInfo'); if(el) el.setAttribute('data-ready','1'); }catch(e){}
+})();
+
+</script>
+<script>
+/* =========================================================
+   v9 · 네이티브 앱 셸 — 앱바 제목 · 탭 이동 · 바텀시트
+   · 기존 기능은 하나도 바꾸지 않고 화면 틀만 다듬습니다.
+   ========================================================= */
+var BS_SUB = {
+  home:['홈','Home'], write:['오늘 기록','Today'], quick:['30초 기록','Quick log'], tap:['3초 기록','One-tap'],
+  discovery:['오늘의 발견','Discovery'], records:['나의 기록','Entries'], detail:['기록 자세히','Entry'],
+  map:['내 빙산','My iceberg'], layer:['빙산의 층','A layer'], deep:['깊은 마음','Deep read'],
+  report:['월간 리포트','Monthly report'], archive:['변화 보관소','Archive'],
+  settings:['설정','Settings'], type:['무의식 유형','Type']
+};
+function setAppbarTitle(id){
+  var el = document.getElementById('abSub'); if(!el) return;
+  var m = BS_SUB[id] || BS_SUB.home;
+  var en = (typeof isEN === 'function') ? isEN() : document.body.classList.contains('en');
+  el.textContent = en ? m[1] : m[0];
+}
+
+/* ---------- 바텀시트 공통 ---------- */
+function bsSheet(title, body, opts){
+  opts = opts || {};
+  var ov = document.createElement('div');
+  ov.className = 'overlay';
+  ov.setAttribute('role','dialog');
+  ov.setAttribute('aria-modal','true');
+  if(title) ov.setAttribute('aria-label', title);
+  var h = '<div class="modal">';
+  if(title) h += '<h3 class="sheet-title">' + title + '</h3>';
+  h += body;
+  h += '<button class="btn ghost small sheet-close" type="button">' + tr('닫기','Close') + '</button>';
+  h += '</div>';
+  ov.innerHTML = h;
+  document.body.appendChild(ov);
+  var box = ov.querySelector('.modal');
+  function close(){
+    box.style.transition = 'transform .24s cubic-bezier(.22,1,.36,1)';
+    ov.style.transition = 'opacity .24s ease';
+    box.style.transform = 'translateY(103%)';
+    ov.style.opacity = '0';
+    setTimeout(function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); }, 250);
+    if(opts.onClose) try{ opts.onClose(); }catch(e){}
+  }
+  ov.querySelector('.sheet-close').onclick = close;
+  ov.addEventListener('click', function(e){ if(e.target === ov) close(); });
+  return {el:ov, box:box, close:close};
+}
+
+function bsCallRow(href, num, label, note){
+  return '<a class="call-row" href="' + href + '"><b>' + num + '</b><span>' + label + '<em>' + note + '</em></span></a>';
+}
+
+/* ---------- 위기 안전 안내 ---------- */
+function openSafety(){
+  var body = '<p class="sheet-lead">' + tr('지금 많이 힘들다면, 혼자 견디지 않아도 돼요. 아래 번호는 언제든 연결돼요. 통화가 어려우면 문자·채팅 상담도 있어요.',
+    'If it feels like too much right now, you do not have to carry it alone. These lines are open any hour, and text or chat support is there if a call feels hard.') + '</p>'
+    + '<div class="call-grid">'
+    + bsCallRow('tel:109','109', tr('자살예방 상담전화','Suicide prevention line'), tr('24시간 · 무료','24 hours · free'))
+    + bsCallRow('tel:15770199','1577-0199', tr('정신건강 상담전화','Mental health line'), tr('24시간 · 무료','24 hours · free'))
+    + bsCallRow('tel:119','119', tr('응급 상황','Emergency'), tr('구급차 · 응급실','Ambulance · ER'))
+    + bsCallRow('tel:112','112', tr('경찰','Police'), tr('지금 바로 도움이 필요할 때','If you need help right now'))
+    + '</div>'
+    + '<div class="disc">' + tr('<b>이 앱은 기록 도구예요.</b> 의료·진단·치료나 전문 상담을 대체하지 않아요. 남긴 기록을 정리해 상담자에게 가져가는 데 쓰는 걸 권해요.',
+      '<b>This app is a record notebook, not care.</b> It does not replace medical advice, diagnosis, treatment or professional counselling. It is meant to help you bring your notes to a counsellor.') + '</div>';
+  return bsSheet(tr('지금 많이 힘들다면','If it feels like too much'), body);
+}
+
+/* ---------- 앱 정보 · 데이터 ---------- */
+function bsInfoRow(k, v){ return '<div class="info-row"><b>' + k + '</b><span>' + v + '</span></div>'; }
+
+function openInfo(){
+  var n = (typeof records !== 'undefined' && records) ? records.length : 0;
+  var body = '<p class="sheet-lead">' + tr('‘마음의 빙산’은 하루의 감정과 반복되는 패턴을 스스로 적어보는 <b>일상 기록 노트</b>예요. 진단이나 치료가 아니라, 나를 알아가기 위한 라이프스타일 도구입니다.',
+    'Mind’s Iceberg is a <b>daily record notebook</b> for writing down today’s feelings and the patterns that return. A lifestyle tool for getting to know yourself — not diagnosis or treatment.') + '</p>'
+    + '<div class="info-row"><b>' + tr('분류','Category') + '</b><span>' + tr('라이프스타일 · 자기관찰 기록 노트','Lifestyle · self-observation journal') + '</span></div>'
+    + bsInfoRow(tr('저장','Storage'), tr('이 기기 브라우저에만 저장 · 계정·로그인 없이 동작 · 지금 <b>' + n + '개</b> 기록','Saved only in this browser · no account or sign-in · <b>' + n + '</b> entries now'))
+    + bsInfoRow(tr('오프라인','Offline'), tr('인터넷이 없어도 기록·리포트·PDF가 모두 동작해요','Writing, reports and PDF all work without a connection'))
+    + bsInfoRow(tr('백업','Backup'), tr('JSON으로 내보내고 다시 불러올 수 있어요 (기기 변경·데이터 삭제 대비)','Export and re-import as JSON — safe across devices or cleared data'))
+    + bsInfoRow(tr('리포트','Report'), tr('월간 리포트 4섹션을 A4 PDF·인쇄로 남길 수 있어요','The four-part monthly report can be saved as A4 PDF or printed'))
+    + bsInfoRow(tr('안내','Notice'), tr('의료·진단·치료를 대체하지 않아요. 위기 시 109 · 1577-0199 · 119 · 112','Not a substitute for medical care, diagnosis or treatment. In crisis: 109 · 1577-0199 · 119 · 112'))
+    + bsInfoRow(tr('버전','Version'), 'v9 · 2026-11-20')
+    + '<div class="row" style="margin-top:12px"><button class="btn secondary small" type="button" onclick="exportData()">' + tr('JSON 내보내기','Export JSON') + '</button><button class="btn secondary small" type="button" onclick="triggerImport()">' + tr('JSON 가져오기','Import JSON') + '</button></div>'
+    + '<div class="row" style="margin-top:8px"><button class="btn secondary small" type="button" onclick="printReport()">📄 ' + tr('A4 PDF · 인쇄','A4 PDF · print') + '</button><button class="btn secondary small" type="button" onclick="openSafety()">🆘 ' + tr('안전 안내','Crisis support') + '</button></div>'
+    + '<p class="quiet" style="margin-top:10px"><a href="privacy.html" target="_blank" rel="noopener" style="color:#8871a4;font-weight:800;text-decoration:none">' + tr('개인정보처리방침 보기 ›','Privacy policy ›') + '</a></p>';
+  return bsSheet(tr('앱 정보','About this app'), body);
+}
+
+/* ---------- 설정 · 리포트에 들어가는 안내 블록 ---------- */
+function safetySettingsHTML(){
+  return '<div class="sec"><div class="sec-h">🆘 ' + tr('안전 안내 · 앱 정보','Safety · about this app') + '</div>'
+    + '<p>' + tr('이 앱은 하루의 감정과 반복되는 패턴을 적어보는 <b>일상 기록 노트</b>예요. 의료·진단·치료나 전문 상담을 대체하지 않아요.',
+      'A <b>daily record notebook</b> for feelings and repeating patterns. It does not replace medical care, diagnosis, treatment or counselling.') + '</p>'
+    + '<div class="row"><button class="btn secondary small" type="button" onclick="openSafety()">🆘 ' + tr('위기 안전 안내','Crisis support') + '</button><button class="btn secondary small" type="button" onclick="openInfo()">ℹ️ ' + tr('앱 정보 · 백업','About · backup') + '</button></div>'
+    + '<p class="quiet" style="margin-top:9px">' + tr('지금 많이 힘들다면 109 · 1577-0199 · 119 · 112 로 연락해 주세요. 기록은 이 기기에만 저장되고, 인터넷 없이도 동작해요.',
+      'If it feels like too much: 109 · 1577-0199 · 119 · 112. Entries stay on this device and work offline.') + '</p></div>';
+}
+function safetyReportHTML(){
+  return '<div class="card" style="border-color:#eee0d3;background:linear-gradient(180deg,#fffdfa,#fdf8f1)">'
+    + '<div class="card-title">🆘 ' + tr('이 리포트를 쓰는 법','How to use this report') + '</div>'
+    + '<p class="prompt" style="margin-bottom:8px">' + tr('이 리포트는 내 기록을 세어 정리한 <b>자기관찰 노트</b>예요. 진단이나 심리 평가가 아니고, 의료·상담을 대체하지 않아요. 상담자에게 보여줄 참고 자료로 쓰기 좋아요.',
+      'This report is a <b>self-observation note</b> built by counting your own entries. It is not a diagnosis or an assessment, and does not replace care or counselling. It is good to bring to a counsellor.') + '</p>'
+    + '<p class="quiet" style="margin:0">' + tr('기록은 이 기기에만 저장돼요. 아래에서 JSON 백업과 A4 PDF로 남겨둘 수 있어요. 지금 많이 힘들다면 109 · 1577-0199 · 119 · 112.',
+      'Entries stay on this device. Keep a JSON backup and an A4 PDF below. If it feels like too much: 109 · 1577-0199 · 119 · 112.') + '</p>'
+    + '<div class="row" style="margin-top:10px"><button class="btn secondary small" type="button" onclick="openSafety()">🆘 ' + tr('안전 안내','Crisis support') + '</button><button class="btn secondary small" type="button" onclick="printReport()">📄 ' + tr('A4 PDF','A4 PDF') + '</button></div></div>';
+}
+
+/* ---------- 바텀시트: 아래로 끌어 닫기 ---------- */
+(function(){
+  var drag = null;
+  function sheetOf(t){ return (t && t.closest) ? t.closest('.overlay .modal') : null; }
+  document.addEventListener('pointerdown', function(e){
+    var m = sheetOf(e.target);
+    if(!m) return;
+    if(m.scrollTop > 2) return;
+    drag = {m:m, ov:m.parentNode, y:e.clientY, dy:0, id:e.pointerId, active:false};
+  }, {passive:true});
+  document.addEventListener('pointermove', function(e){
+    if(!drag || e.pointerId !== drag.id) return;
+    var dy = e.clientY - drag.y;
+    if(!drag.active){
+      if(dy < 7) return;
+      drag.active = true; drag.m.style.transition = 'none';
+    }
+    if(dy < 0) dy = dy / 5;
+    drag.dy = dy;
+    var v = Math.max(0, dy);
+    drag.m.style.transform = 'translateY(' + v + 'px)';
+    drag.ov.style.opacity = String(Math.max(0.15, 1 - v / 560));
+  }, {passive:true});
+  function endDrag(e){
+    if(!drag || (e && e.pointerId != null && e.pointerId !== drag.id)) return;
+    var d = drag; drag = null;
+    if(!d.active) return;
+    var m = d.m, ov = d.ov;
+    m.style.transition = 'transform .26s cubic-bezier(.22,1,.36,1)';
+    ov.style.transition = 'opacity .26s ease';
+    if(d.dy > 96){
+      m.style.transform = 'translateY(103%)'; ov.style.opacity = '0';
+      setTimeout(function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); }, 270);
+    }else{
+      m.style.transform = ''; ov.style.opacity = '';
+      setTimeout(function(){ m.style.transition = ''; ov.style.transition = ''; }, 290);
+    }
+  }
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+})();
+
+/* ---------- 입력창: 키보드에 가리지 않게 / 탭바 숨김 ---------- */
+(function(){
+  document.addEventListener('focusin', function(e){
+    var t = e.target;
+    if(!t || !/^(INPUT|TEXTAREA)$/.test(t.tagName)) return;
+    setTimeout(function(){ try{ t.scrollIntoView({block:'center', behavior:'smooth'}); }catch(x){} }, 320);
+    if(bsKbd) bsKbd();
+  });
+  document.addEventListener('focusout', function(){ setTimeout(function(){ if(bsKbd) bsKbd(); }, 180); });
+  function kbdCheck(){
+    if(!window.visualViewport) return;
+    var vv = window.visualViewport;
+    var a = document.activeElement;
+    var typing = !!(a && /^(INPUT|TEXTAREA)$/.test(a.tagName));
+    var gap = window.innerHeight - vv.height;
+    document.body.classList.toggle('kbd', typing && gap > 150);
+  }
+  window.bsKbd = kbdCheck;
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', kbdCheck);
+    window.visualViewport.addEventListener('scroll', kbdCheck);
+  }
+})();
+
+/* ---------- 첫 화면: 앱바 제목 ---------- */
+(function(){
+  try{ setAppbarTitle(document.querySelector('.view.active') ? document.querySelector('.view.active').id : 'home'); }catch(e){}
 })();
 
 </script>
