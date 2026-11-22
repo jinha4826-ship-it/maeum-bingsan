@@ -1,8 +1,12 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "kr.maeumbingsan.app",
-        "sha256_cert_fingerprints": ["B2:CB:05:54:9A:5C:0E:00:42:BA:E5:DE:3E:C2:98:3A:78:A9:8B:4B:5D:50:49:56:EC:5B:C2:E7:A9:F9:B4:0D"]
-      }
-    }]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.maeumbingsan.app",
+      "sha256_cert_fingerprints": [
+        "C2:C3:2A:0B:65:6A:81:09:70:F6:80:4A:E3:60:26:24:AD:AE:EC:49:00:9F:12:EA:D7:D7:E0:77:44:A7:D3:8D"
+      ]
+    }
+  }
+]
