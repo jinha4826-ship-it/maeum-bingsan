@@ -154,20 +154,6 @@ details.ev[open] summary .ev-a{transform:rotate(180deg)}
 .switch.on{background:#9d84bd}.switch.on i{left:24px}
 .timeinput{border:1px solid var(--line);border-radius:12px;padding:9px 11px;font:inherit;font-size:14px;font-weight:800;color:#544a60;background:#fffdfa}
 .badgeline{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:#7f7189;background:#f4eef8;border-radius:999px;padding:5px 10px;margin-top:9px;line-height:1.5}
-/* ---- 프리미엄 리포트 미리보기 ---- */
-.premium{background:linear-gradient(150deg,#fbf6ef,#f6eefb 60%,#eef4f2);border:1px solid #ecdfd0}
-.premium .ph{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:850;letter-spacing:1px;color:#a3814f;margin-bottom:7px}
-.premium .ph span{margin-left:auto;background:#fffefa;border:1px solid #eadfce;color:#a3814f;border-radius:999px;padding:3px 8px;font-size:9px;letter-spacing:0}
-.premium h3{font-size:16px;margin:0 0 6px;letter-spacing:-.5px}
-.premium p{margin:0;font-size:12px;line-height:1.7;color:#7c7186}
-.price-row{display:flex;gap:8px;margin:12px 0 0}
-.price{flex:1;background:#fffefa;border:1px solid #eee5ed;border-radius:15px;padding:10px 8px;text-align:center}
-.price b{display:block;font-size:15px;color:#54405f;letter-spacing:-.3px}
-.price span{font-size:9.5px;color:#a096a4;font-weight:700}
-.price.hot{border-color:#d9c6ea;background:#fff;box-shadow:0 4px 12px #6a4b8c14}
-.prem-list{margin:12px 0 0;padding:0;list-style:none;font-size:12px;line-height:1.8;color:#5d5266}
-.prem-list li{padding-left:15px;position:relative}
-.prem-list li:before{content:'✦';position:absolute;left:0;top:2px;color:#b9a4d0;font-size:10px}
 /* ---- 기관 대시보드 미리보기 ---- */
 .orgbox{background:#f7f9fb;border:1px solid #e3eaf0;border-radius:16px;padding:12px;margin-top:10px}
 .orgbox .oh{font-size:10px;font-weight:850;color:#6b86a0;letter-spacing:.4px;margin-bottom:7px}
@@ -473,7 +459,7 @@ body.kbd .app{padding-bottom:0}
    마음의 빙산 v3.2 — 심층 리포트(NVC·CBT) + 감정 패턴 + 빙하 지도
    + 30초 퀵 기록 · 무의식 방어기제 · AI 심리 솔루션 · KO/EN
    + 7일 무의식 빙하 탐험 챌린지 · 방어기제 유형 카드(PNG 공유)
-   + 매일 체크인 리마인더(브라우저 알림/배너) + 월간 정밀 리포트 미리보기
+   + 매일 체크인 리마인더(브라우저 알림/배너)
    + 기관·스터디 코드(B2B 파일럿 프로토타입)
    · 기록은 기본으로 이 기기의 localStorage에만 저장됩니다.
    · 설정에서 '클라우드 동기화'에 로그인하면, 그때만 기록 사본이 내
@@ -481,7 +467,7 @@ body.kbd .app{padding-bottom:0}
    · AI는 기본으로 Cloudflare Worker(maeum-bingsan-ai)를 통해 동작하며,
      사용자가 'AI 심리 솔루션'을 요청할 때만 그 기록이 전송되고 서버에는
      저장되지 않습니다. 내 Gemini 키를 넣으면 서버 실패 시 보조로만 쓰입니다.
-   · 언어 설정·알림 시간·기관 코드·사전 알림 신청도 모두 이 기기에만 남습니다.
+   · 언어 설정·알림 시간·기관 코드도 모두 이 기기에만 남습니다.
    ========================================================= */
 'use strict';
 var LS_RECORDS='maeum-records', LS_KEY='maeum-gemini-key', LS_SET='maeum-settings';
@@ -1660,7 +1646,7 @@ function changeFlowHTML(){
 function renderReport(){
   var el=document.getElementById('reportContent');
   if(!records.length){
-    el.innerHTML='<div class="card"><div class="empty">'+tr('아직 기록이 없어요 🌷<br>기록이 두세 개만 쌓여도 이번 주 마음의 모양이 보이기 시작해요.','No entries yet 🌷<br>Two or three entries and this week’s shape begins to appear.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 첫 기록 남기기','☁️ Write the first entry')+'</button></div>'+premiumCardHTML();
+    el.innerHTML='<div class="card"><div class="empty">'+tr('아직 기록이 없어요 🌷<br>기록이 두세 개만 쌓여도 이번 주 마음의 모양이 보이기 시작해요.','No entries yet 🌷<br>Two or three entries and this week’s shape begins to appear.')+'</div><button class="btn" style="margin-top:6px" onclick="startNew()">'+tr('☁️ 첫 기록 남기기','☁️ Write the first entry')+'</button></div>';
     return;
   }
   var d=patternData(patternRange);
@@ -1723,7 +1709,6 @@ function renderReport(){
     interp=tr('이 기간에는 기록이 없어요. 기록이 쌓이면 감정과 욕구의 흐름을 보여드릴게요.','There are no entries in this period. As they gather, I will show the flow of feelings and needs.');
   }
   html+='<div class="card"><div class="card-title">'+tr('✧ 이 기간의 해석','✧ What this period shows')+'</div><p style="margin:0;font-size:13px;line-height:1.78;color:#5d5266">'+interp+'</p></div>';
-  html+=premiumCardHTML();
 
   var avgFeel=d.feelRec? (d.feelTotal/d.feelRec).toFixed(1):'0';
   var actionPct=d.list.length? Math.round(d.actionRec/d.list.length*100):0;
@@ -3183,12 +3168,12 @@ function testKey(){
 }
 
 /* =========================================================
-   매일 체크인 리마인더 · 프리미엄 미리보기 · 기관 파일럿 코드
+   매일 체크인 리마인더 · 기관 파일럿 코드
    · 알림 시간·설정은 이 기기(localStorage)에만 저장됩니다.
    · 브라우저 알림은 앱이 열려 있을 때만 동작하고, 그 밖에는
      홈 상단 배너로 대신 안내합니다.
    ========================================================= */
-var LS_REMIND='maeum-reminder', LS_ORG='maeum-org', LS_PRE='maeum-preorder';
+var LS_REMIND='maeum-reminder', LS_ORG='maeum-org';
 function readStore(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||'null'); return (v&&typeof v==='object')?Object.assign({},d,v):Object.assign({},d); }catch(e){ return Object.assign({},d); } }
 function writeStore(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 function dayKey(d){ d=d||new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
@@ -3322,62 +3307,6 @@ function startRemindLoop(){
     fireCheckinNotification(false);
     renderBanner();
   },20000);
-}
-
-/* ---- 프리미엄 · 월간 정밀 리포트 미리보기 ---- */
-function monthRecords(){
-  var now=new Date();
-  return records.filter(function(r){
-    var d=new Date(r.date);
-    return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();
-  });
-}
-function monthPreview(){
-  var list=monthRecords();
-  var surf=mapSurface(list);
-  var needs=mapNeeds(list,surf);
-  return {n:list.length, surf:surf, needs:needs, def:defAnalyze(list), st:stageOf(list.length)};
-}
-function premiumCardHTML(){
-  return '<div class="card premium"><div class="ph">✦ PREMIUM REPORT<span>'+tr('출시 예정 · 미리보기','coming soon · preview')+'</span></div>'
-    +'<h3>'+tr('월간 AI 무의식 정밀 리포트','Monthly AI unconscious report')+'</h3>'
-    +'<p>'+tr('한 달 기록을 모아 <b>빙하 지도 변화 · 방어기제 추세 · 욕구 지도</b>를 6~8쪽 PDF로 정리해 드려요. 매일의 30초가 한 달 단위의 한 장이 돼요.','A month of entries gathered into a 6–8 page PDF: <b>how the glacier changed · defence trends · a map of needs</b>. Thirty seconds a day becomes one page a month.')+'</p>'
-    +'<div class="price-row"><div class="price hot"><b>'+tr('2,900원','₩2,900')+'</b><span>'+tr('1회 단건','one report')+'</span></div><div class="price"><b>'+tr('3,900원','₩3,900')+'</b><span>'+tr('월 패스 · 무제한','monthly pass')+'</span></div></div>'
-    +'<ul class="prem-list"><li>'+tr('이달의 빙산 지도 + 지난달 대비 변화','This month’s glacier and how it changed')+'</li><li>'+tr('방어기제 5유형 추세와 바뀐 지점','Trends across the five defence types')+'</li><li>'+tr('욕구 TOP3 · 채워진 욕구와 비어 있는 욕구','Top 3 needs · met and unmet')+'</li><li>'+tr('다음 달 5분 실험 3개 + 나에게 던질 질문','Three five-minute experiments and a question')+'</li></ul>'
-    +'<button class="btn" style="margin-top:13px" onclick="openPremium()">'+tr('미리보기 열기 · 사전 알림 신청','Open the preview · get notified')+'</button>'
-    +'<p class="quiet" style="margin-top:9px">'+tr('지금은 <b>결제가 되지 않아요.</b> 출시 전 미리보기이고, 신청은 이 기기에만 저장돼요.','<b>No payment is taken.</b> This is a preview before launch and the request stays on this device.')+'</p></div>';
-}
-function openPremium(){
-  var mp=monthPreview(), m=new Date().getMonth()+1;
-  var pre=readStore(LS_PRE,{on:false,at:''});
-  var surfTxt=mp.surf.length? mp.surf.map(function(s){return fName(s[0])}).join(' · ') : tr('아직 이번 달 기록이 없어요','no entries this month yet');
-  var needTxt=mp.needs.length? mp.needs.map(function(n){return nLabel(n[0])}).join(' · ') : tr('욕구를 고른 기록이 없어요','no entry picked a need');
-  var defTxt=mp.n? mp.def.main.name : tr('기록 1개부터 열려요','opens from the first entry');
-  var ov=document.createElement('div');
-  ov.className='overlay';
-  ov.innerHTML='<div class="modal" style="max-width:400px;max-height:88vh;overflow:auto">'
-    +'<h3>'+tr(m+'월 정밀 리포트 미리보기',(m)+' month report preview')+'</h3>'
-    +'<p>'+tr('이번 달 기록 <b>'+mp.n+'개</b>로 만든 실제 미리보기예요. 정식 리포트는 이 내용을 6~8쪽 PDF로 정리해 드려요.','A real preview made from <b>'+mp.n+'</b> entries this month. The full report turns this into a 6–8 page PDF.')+'</p>'
-    +'<div class="mini"><div class="k">'+tr('01 · 이달의 빙산 지도','01 · this month’s glacier')+'</div><b>'+esc(surfTxt)+'</b><div style="margin-top:4px">'+tr('수면 위 감정과 그 아래 욕구를 한 장에 그려요.','Feelings above and needs below, drawn on one page.')+'</div></div>'
-    +'<div class="mini"><div class="k">'+tr('02 · 무의식 방어기제 추세','02 · defence trends')+'</div><b>'+esc(defTxt)+'</b><div style="margin-top:4px">'+tr('지난달과 비교해 어느 결이 옅어지고 짙어졌는지 보여줘요.','Which thread grew lighter or deeper than last month.')+'</div></div>'
-    +'<div class="mini"><div class="k">'+tr('03 · 욕구 지도','03 · map of needs')+'</div><b>'+esc(needTxt)+'</b><div style="margin-top:4px">'+tr('자주 채워진 욕구와 계속 비어 있던 욕구를 나눠요.','Needs often met, and needs left empty.')+'</div></div>'
-    +'<div class="mini"><div class="k">'+tr('04 · 다음 달 실험 3개','04 · three experiments')+'</div><b>'+tr('5분 안에 해볼 수 있는 크기로','small enough for five minutes')+'</b><div style="margin-top:4px">'+tr('분석으로 끝내지 않고, 다음 달에 움직일 세 가지만 남겨요.','Not ending at analysis — just three things to move with next month.')+'</div></div>'
-    +'<div class="note">'+tr('지금은 <b>결제 화면이 아니에요.</b> 정식 출시 전까지는 사전 알림 신청만 받고, 결제·개인정보 입력은 하지 않아요. 신청 정보는 이 기기에만 저장돼요.','This is <b>not a checkout.</b> Until launch we only collect a notification request — no payment or personal details. It stays on this device.')+'</div>'
-    +'<button class="btn small" id="premApply"'+(pre.on?' disabled':'')+'>'+(pre.on?tr('사전 알림 신청 완료 ✓','You are on the list ✓'):tr('사전 알림 신청하기','Notify me at launch'))+'</button>'
-    +'<div class="row" style="margin-top:9px"><button class="btn secondary small" id="premClose">'+tr('닫기','Close')+'</button></div></div>';
-  document.body.appendChild(ov);
-  function close(){ ov.remove(); }
-  document.getElementById('premClose').onclick=close;
-  var applyBtn=document.getElementById('premApply');
-  if(applyBtn&&!pre.on){
-    applyBtn.onclick=function(){
-      writeStore(LS_PRE,{on:true,at:new Date().toISOString()});
-      applyBtn.textContent=tr('사전 알림 신청 완료 ✓','You are on the list ✓');
-      applyBtn.disabled=true;
-      toast(tr('사전 알림 명단에 올렸어요 · 결제는 일어나지 않았어요','Added to the launch list · no payment was made'));
-    };
-  }
-  ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
 }
 
 /* ---- 기관·스터디 코드 (B2B 파일럿 프로토타입) ---- */
